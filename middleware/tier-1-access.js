@@ -1,0 +1,1 @@
+// tier 1 access is for site admins only.  tier 1 access allows posting and editing articles

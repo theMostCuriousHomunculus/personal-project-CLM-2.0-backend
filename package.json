@@ -1,0 +1,22 @@
+{
+  "name": "clm-2.0",
+  "version": "1.0.0",
+  "description": "The new and improved backend for Cube Level Midnight",
+  "main": "server.js",
+  "scripts": {
+    "connect": "/Users/Casey/mongodb/bin/mongod.exe --dbpath=/Users/Casey/mongodb-data"
+  },
+  "author": "Casey Johnson",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.18"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.4"
+  }
+}
