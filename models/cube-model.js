@@ -37,11 +37,11 @@ const cardSchema = new mongoose.Schema({
     power: {
         type: Number
     },
-    purchase_link: {
+    printing: {
+        required: true,
         type: String
     },
-    set: {
-        required: true,
+    purchase_link: {
         type: String
     },
     toughness: {

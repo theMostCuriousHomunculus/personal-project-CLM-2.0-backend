@@ -61,7 +61,7 @@ async function editCube (req, res) {
                 }
                 
                 await req.cube.save();
-                return res.status(200).json({ message: 'Card successfully added.' });
+                return res.status(200).json(req.cube);
 
             case 'edit_card':
 
@@ -189,8 +189,8 @@ async function editCube (req, res) {
 
 async function fetchCube (req, res) {
     try {
-        const cube = await Cube.findOne({ _id: req.params.cubeId });
-        res.status(201).json({ cube });
+        const cube = await Cube.findOne({ _id: req.params.cubeId }).select('creator description mainboard modules name rotations sideboard');
+        res.status(201).json(cube);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

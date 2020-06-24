@@ -1,6 +1,5 @@
 require('dotenv').config();
 
-const cookieParser = require('cookie-parser');
 const express = require('express');
 const mongoose = require('mongoose');
 
@@ -17,7 +16,6 @@ mongoose.connect(process.env.DB_CONNECTION, {
 
 const server = express();
 
-server.use(cookieParser());
 server.use(express.json());
 server.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');

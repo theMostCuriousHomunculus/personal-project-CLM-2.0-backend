@@ -12,7 +12,8 @@ const t2 = async function (req, res, next) {
     }
 
     try {
-        const token = req.cookies['authentication_token'];
+        // const token = req.cookies['authentication_token'];
+        const token = req.header('Authorization').replace('Bearer ', '');
 
         if (!token) {
             throw new Error('You must be logged in to perform this action.');
