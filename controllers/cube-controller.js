@@ -66,6 +66,10 @@ async function editCube (req, res) {
             case 'edit_card':
 
                 card = req.body;
+                // the following 3 properties are not valid properties of the card schema
+                delete card.action;
+                delete card.card_id;
+                delete card.component;
                 // don't want to allow users to change a card's unique identifier
                 delete card._id;
 
@@ -80,7 +84,7 @@ async function editCube (req, res) {
                 }
 
                 await req.cube.save();
-                return res.status(200).json({ message: 'Card successfully edited.' });
+                return res.status(200).json(req.cube);
 
             case 'move_or_delete_card':
 
@@ -121,19 +125,13 @@ async function editCube (req, res) {
                 
                 req.cube.modules.push({ name: req.body.name });
                 await req.cube.save();
-                return res.status(200).json({
-                    _id: req.cube.modules[req.cube.modules.length - 1]._id,
-                    message: 'Module successfully created.'
-                });
+                return res.status(200).json(req.cube);
 
             case 'add_rotation':
     
                 req.cube.rotations.push({ name: req.body.name, size: 0 });
                 await req.cube.save();
-                return res.status(200).json({
-                    _id: req.cube.rotations[req.cube.rotations.length - 1]._id,
-                    message: 'Rotation successfully created.'
-                });
+                return res.status(200).json(req.cube);
 
             case 'edit_module':
 
