@@ -48,7 +48,6 @@ const cardSchema = new mongoose.Schema({
         type: Number
     },
     type_line: {
-        required: true,
         type: String
     }
 });
