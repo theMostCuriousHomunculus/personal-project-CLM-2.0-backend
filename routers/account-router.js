@@ -16,9 +16,9 @@ const router = new express.Router();
 
 router.delete('/', t3, deleteAccount);
 
-router.get('/:accountId', fetchAccount);
-
 router.get('/', fetchAccounts);
+
+router.get('/:accountId', fetchAccount);
 
 router.patch('/', t3, editAccount);
 

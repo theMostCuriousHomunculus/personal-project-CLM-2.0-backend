@@ -130,14 +130,18 @@ async function fetchAccount (req, res) {
 
 async function fetchAccounts (req, res) {
     try {
-        const matchingUsers = await Account.find(
-            { $text: { $search: req.query.name } },
-            { score: { $meta: 'textScore' } }
-        )
-        .select('avatar name')
-        .sort({ score: { $meta: 'textScore' } });
+        // const matchingUsers = await Account.find(
+        //     { $text: { $search: req.query.name } },
+        //     { score: { $meta: 'textScore' } }
+        // )
+        // .select('avatar name')
+        // .sort({ score: { $meta: 'textScore' } });
+        let matchingUsers = await Account.find({});
+        matchingUsers = matchingUsers.filter(function (account) {
+          return account.name.toLowerCase().includes(req.query.name.toLowerCase());
+        });
 
-        res.status(200).json({ users: matchingUsers });
+        res.status(200).json(matchingUsers);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -185,7 +189,7 @@ async function register (req, res) {
     try {
         await user.save();
         const token = await user.generateAuthenticationToken();
-        res.status(200).cookie('authentication_token', token).json({ message: 'Welcome to Cube Level Midnight!' });
+        res.status(200).cookie('authentication_token', token).json({ message: 'Welcome to Cube Level Midnight!', userId: user._id, token });
     } catch(error) {
         res.status(401).json({ message: error.message });
     }

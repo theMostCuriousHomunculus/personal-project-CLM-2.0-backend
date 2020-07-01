@@ -58,8 +58,7 @@ const moduleSchema = new mongoose.Schema({
         maxlength: 30,
         required: true,
         trim: true,
-        type: String,
-        unique: true
+        type: String
     }
 });
 
@@ -69,8 +68,7 @@ const rotationSchema = new mongoose.Schema({
         maxlength: 30,
         required: true,
         trim: true,
-        type: String,
-        unique: true
+        type: String
     },
     size: {
         type: Number,
