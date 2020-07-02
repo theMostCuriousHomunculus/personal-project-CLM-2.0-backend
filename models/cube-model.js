@@ -23,7 +23,6 @@ const cardSchema = new mongoose.Schema({
         type: Number
     },
     mana_cost: {
-        required: true,
         type: String
     },
     name: {
