@@ -4,7 +4,8 @@
   "description": "The new and improved backend for Cube Level Midnight",
   "main": "server.js",
   "scripts": {
-    "connect": "/Users/Casey/mongodb/bin/mongod.exe --dbpath=/Users/Casey/mongodb-data"
+    "connect": "/Users/Casey/mongodb/bin/mongod.exe --dbpath=/Users/Casey/mongodb-data",
+    "start": "node server.js"
   },
   "author": "Casey Johnson",
   "license": "ISC",
@@ -13,6 +14,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.5.9",
     "mongoose": "^5.9.18"
   },
   "devDependencies": {
