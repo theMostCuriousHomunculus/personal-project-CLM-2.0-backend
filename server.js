@@ -1,12 +1,12 @@
-require('dotenv').config();
+// require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
 
 const accountRouter = require('./routers/account-router');
-const blogRouter = require('./routers/blog-router');
+// const blogRouter = require('./routers/blog-router');
 const cubeRouter = require('./routers/cube-router');
-const draftRouter = require('./routers/draft-router');
+// const draftRouter = require('./routers/draft-router');
 
 mongoose.connect(process.env.DB_CONNECTION, {
   useCreateIndex: true,
