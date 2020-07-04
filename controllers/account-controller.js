@@ -128,16 +128,12 @@ async function fetchAccount (req, res) {
 
 async function fetchAccounts (req, res) {
     try {
-        // const matchingUsers = await Account.find(
-        //     { $text: { $search: req.query.name } },
-        //     { score: { $meta: 'textScore' } }
-        // )
-        // .select('avatar name')
-        // .sort({ score: { $meta: 'textScore' } });
-        let matchingUsers = await Account.find({});
-        matchingUsers = matchingUsers.filter(function (account) {
-          return account.name.toLowerCase().includes(req.query.name.toLowerCase());
-        });
+        const matchingUsers = await Account.find(
+            { $text: { $search: req.query.name } },
+            { score: { $meta: 'textScore' } }
+        )
+        .select('avatar name')
+        .sort({ score: { $meta: 'textScore' } });
 
         res.status(200).json(matchingUsers);
     } catch (error) {
