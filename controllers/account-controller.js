@@ -93,14 +93,14 @@ async function fetchAccount (req, res) {
         let user;
 
         if (!token) {
-            // the requester is not logged in, so only showing certain fields
+            // the requester is not logged in, so not sending email address
             user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds cubes name');
         } else {
             // the requester has a token, so verifying that it is valid
             const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
             if (decodedToken._id !== req.params.accountId) {
-                // the requester is not the user for whom account information has been requested, so only showing certain fields
-                user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds cubes name');
+                // the requester is not the user for whom account information has been requested, so not sending email address
+                user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds cubes name received_bud_requests sent_bud_requests');
             } else {
                 // the requester is requesting their own account information, so returning all their info except their status as an administrator, their password and their tokens (since there is no reason they would need to see these things)
                 user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds cubes email name received_bud_requests sent_bud_requests');
