@@ -208,7 +208,7 @@ async function fetchCubes (req, res) {
       options = { score: { $meta: 'textScore' } }
     }
 
-    const cubes = await Cube.find(query, 'creator description name', options);
+    const cubes = await Cube.find(query, options);
     res.status(200).json({ cubes });
   } catch (error) {
     res.status(500).json({ message: error.message });

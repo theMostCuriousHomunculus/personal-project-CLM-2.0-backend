@@ -4,4 +4,6 @@ async function asyncArray(array, callback) {
     }
 }
 
-module.exports = asyncArray;
+module.exports = {
+  asyncArray
+};
