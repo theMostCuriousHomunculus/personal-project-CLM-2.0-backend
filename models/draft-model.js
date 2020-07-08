@@ -9,7 +9,8 @@ const drafterSchema = new mongoose.Schema({
   },
   queue: [[cardSchema]],
   packs: [[cardSchema]],
-  picks: [cardSchema]
+  picks: [cardSchema],
+  socketId: String
 });
 
 const draftSchema = new mongoose.Schema({

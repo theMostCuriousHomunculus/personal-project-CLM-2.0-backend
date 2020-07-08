@@ -38,7 +38,8 @@ async function createDraft (req, res) {
   
     // dish out packs to drafters
     for (let i = 0; i < drafters.length; i++) {
-      for (let j = 0; j < packsPerDrafter; j++) {
+      drafters[i].queue.push(cardpool.splice(0, cardsPerPack));
+      for (let j = 1; j < packsPerDrafter; j++) {
         drafters[i].packs.push(cardpool.splice(0, cardsPerPack));
       }
     }
@@ -56,90 +57,90 @@ async function createDraft (req, res) {
   }
 };
 
-async function fetchDraft (req, res) {
-  try{
-    const draft = await Draft.findById(req.params.draftId);
+// async function fetchDraft (req, res) {
+//   try{
+//     const draft = await Draft.findById(req.params.draftId);
 
-    if (!draft) {
-      return res.status(404).json({ message: 'Could not find a draft with that ID.'});
-    }
+//     if (!draft) {
+//       return res.status(404).json({ message: 'Could not find a draft with that ID.'});
+//     }
 
-    if (!draft.drafters.find(function (drafter) {
-      return drafter.drafter.toString() === req.user._id.toString();
-    })) {
-      return res.status(401).json({ message: 'You were not invited to this draft.' });
-    }
+//     if (!draft.drafters.find(function (drafter) {
+//       return drafter.drafter.toString() === req.user._id.toString();
+//     })) {
+//       return res.status(401).json({ message: 'You were not invited to this draft.' });
+//     }
 
-    const drafterIndex = draft.drafters.findIndex(function (drafter) {
-      return drafter.drafter.toString() === req.user._id.toString();
-    });
+//     const drafterIndex = draft.drafters.findIndex(function (drafter) {
+//       return drafter.drafter.toString() === req.user._id.toString();
+//     });
 
-    // populate the drafters with their names and avatars
-    await asyncArray(draft.drafters, async function (drafter) {
-      const user = await Account.findById(drafter.drafter);
-      drafter.name = user.name;
-      drafter.avatar = user.avatar;
-    });
+//     // populate the drafters with their names and avatars
+//     await asyncArray(draft.drafters, async function (drafter) {
+//       const user = await Account.findById(drafter.drafter);
+//       drafter.name = user.name;
+//       drafter.avatar = user.avatar;
+//     });
 
-    const displayedDraftersInfo = draft.drafters.map(function (drafter) {
-      return {
-        avatar: drafter.avatar,
-        drafter: drafter.drafter,
-        name: drafter.name
-      };
-    });
+//     const displayedDraftersInfo = draft.drafters.map(function (drafter) {
+//       return {
+//         avatar: drafter.avatar,
+//         drafter: drafter.drafter,
+//         name: drafter.name
+//       };
+//     });
 
-    // check to see if the lobby is ready for the next pack or if at least one drafter still needs to make a pick
-    let nextPack = 1;
+//     // check to see if the lobby is ready for the next pack or if at least one drafter still needs to make a pick
+//     let nextPack = 1;
 
-    for (let i = 0; i < draft.drafters.length; i++) {
-      if (draft.drafters[i].queue.length === 0 || draft.drafters[i].queue[0].length === 0) {
-        nextPack = 1;
-      } else {
-        nextPack = 0;
-      }
-    }
+//     for (let i = 0; i < draft.drafters.length; i++) {
+//       if (draft.drafters[i].queue.length === 0 || draft.drafters[i].queue[0].length === 0) {
+//         nextPack = 1;
+//       } else {
+//         nextPack = 0;
+//       }
+//     }
 
-    if (nextPack === 1 && draft.drafters[drafterIndex].packs.length === 0) {
-      // the drafter has made all of his picks and can now begin to build his or her deck
-      res.status(200).json({
-        drafters: displayedDraftersInfo,
-        lobby_name: draft.name,
-        picks: draft.drafters[drafterIndex].picks
-      });
-    } else if (nextPack === 1) {
-      // ready to start a new round of packs
-      for (let i = 0; i < draft.drafters.length; i++) {
-        draft.drafters[i].queue.shift();
-        draft.drafters[i].queue.push(draft.drafters[i].packs[0]);
-        draft.drafters[i].packs.shift();
-      }
-      await draft.save();
-      res.status(200).json({
-        drafters: displayedDraftersInfo,
-        lobby_name: draft.name,
-        pack: draft.drafters[drafterIndex].queue[0]
-      });
-    } else if (nextPack === 0 && draft.drafters[drafterIndex].queue.length === 0) {
-      // the drafter who passes their pack to this drafter has not made a pick yet
-      res.status(200).json({
-        drafters: displayedDraftersInfo,
-        lobby_name: draft.name
-      });
-    } else {
-      // there is a pack in the drafter's queue that they can go ahead and make a pick from
-      res.status(200).json({
-        drafters: displayedDraftersInfo,
-        lobby_name: draft.name,
-        pack: draft.drafters[drafterIndex].queue[0]
-      });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+//     if (nextPack === 1 && draft.drafters[drafterIndex].packs.length === 0) {
+//       // the drafter has made all of his picks and can now begin to build his or her deck
+//       res.status(200).json({
+//         drafters: displayedDraftersInfo,
+//         lobby_name: draft.name,
+//         picks: draft.drafters[drafterIndex].picks
+//       });
+//     } else if (nextPack === 1) {
+//       // ready to start a new round of packs
+//       for (let i = 0; i < draft.drafters.length; i++) {
+//         draft.drafters[i].queue.shift();
+//         draft.drafters[i].queue.push(draft.drafters[i].packs[0]);
+//         draft.drafters[i].packs.shift();
+//       }
+//       await draft.save();
+//       res.status(200).json({
+//         drafters: displayedDraftersInfo,
+//         lobby_name: draft.name,
+//         pack: draft.drafters[drafterIndex].queue[0]
+//       });
+//     } else if (nextPack === 0 && draft.drafters[drafterIndex].queue.length === 0) {
+//       // the drafter who passes their pack to this drafter has not made a pick yet
+//       res.status(200).json({
+//         drafters: displayedDraftersInfo,
+//         lobby_name: draft.name
+//       });
+//     } else {
+//       // there is a pack in the drafter's queue that they can go ahead and make a pick from
+//       res.status(200).json({
+//         drafters: displayedDraftersInfo,
+//         lobby_name: draft.name,
+//         pack: draft.drafters[drafterIndex].queue[0]
+//       });
+//     }
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
 
 module.exports = {
   createDraft,
-  fetchDraft
+  // fetchDraft
 }
