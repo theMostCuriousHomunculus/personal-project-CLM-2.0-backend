@@ -5,11 +5,29 @@ const {
   createDraft,
   fetchDraft
 } = require('../controllers/draft-controller');
+const { Draft } = require('../models/draft-model');
 
 const router = new express.Router();
 
-router.get('/:draftId', t3, fetchDraft);
+const routerWithSocketIO = function (io) {
 
-router.post('/', t3, createDraft);
+  io.on('connect', function (socket) {
 
-module.exports = router;
+    socket.on('join', async function (draftId, userId) {
+      socket.join(draftId);
+
+      const draft = await Draft.findById(draftId);
+
+      socket.emit('admittance', { host: draft.host, name: draft.name });
+    });
+
+  });
+
+  // router.get('/:draftId', t3, fetchDraft);
+
+  router.post('/', t3, createDraft);
+
+  return router;
+}
+
+module.exports = routerWithSocketIO;

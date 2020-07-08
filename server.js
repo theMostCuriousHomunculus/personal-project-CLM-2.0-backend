@@ -9,6 +9,7 @@ const accountRouter = require('./routers/account-router');
 // const blogRouter = require('./routers/blog-router');
 const cubeRouter = require('./routers/cube-router');
 const draftRouter = require('./routers/draft-router');
+// draft router is handled differently since it utilizes socket.io
 
 const { Draft } = require('./models/draft-model');
 
@@ -41,25 +42,7 @@ app.use(express.urlencoded({
 app.use('/api/account', accountRouter);
 // app.use('/api/blog', blogRouter);
 app.use('/api/cube', cubeRouter);
-app.use('/api/draft', draftRouter);
-
-io.on('connection', function (socket) {
-
-  // const socketId = socket.id;
-
-  socket.on('createDraft', async function (draftName, userId) {
-
-    const draft = new Draft({ name: draftName, host: userId });
-
-    try {
-      await draft.save();
-      io.emit('newDraft', draft);
-    } catch {
-      io.emit('error', 'The draft was not created.');
-    }
-
-  });
-});
+app.use('/api/draft', draftRouter(io));
 
 server.listen(port = process.env.PORT || 5000, function () {
     console.log(`Server is up on port ${port}.`);
