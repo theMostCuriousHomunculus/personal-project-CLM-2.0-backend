@@ -3,7 +3,8 @@ const express = require('express');
 const t3 = require('../middleware/tier-3-access');
 const { asyncArray } = require('../utils/async-array');
 const {
-  createDraft
+  createDraft,
+  fetchDrafts
 } = require('../controllers/draft-controller');
 const { Account } = require('../models/account-model');
 const { Draft } = require('../models/draft-model');
@@ -11,6 +12,8 @@ const { Draft } = require('../models/draft-model');
 const router = new express.Router();
 
 const routerWithSocketIO = function (io) {
+
+  router.get('/', fetchDrafts);
 
   router.post('/', t3, createDraft);
 

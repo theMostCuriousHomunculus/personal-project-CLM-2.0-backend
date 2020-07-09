@@ -25,6 +25,8 @@ const draftSchema = new mongoose.Schema({
     ref: 'User'
   },
   drafters: [drafterSchema]
+}, {
+  timestamps: true
 });
 
 const Draft = mongoose.model('Draft', draftSchema);
