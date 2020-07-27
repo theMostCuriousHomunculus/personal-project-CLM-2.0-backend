@@ -60,11 +60,30 @@ const routerWithSocketIO = function (io) {
           return drftr.packs.length + drftr.queue.length === 0;
         });
 
+        // the draft host needs a way to download a csv file for each other drafter that contains the picks that drafter made so trades can be made
+        let otherDraftersPicks = [];
+        if (finished && draft.host.toString() === userId) {
+          let otherDrafters = draft.drafters.filter(function (drftr) {
+            return drftr.drafter.toString() !== userId;
+          });
+          for (let drftr of otherDrafters) {
+            otherDraftersPicks.push({
+              name: displayedDraftersInfo.find(function (x) {
+                return x.drafter.toString() === drftr.drafter.toString();
+              }).name,
+              picks: drftr.picks.map(function (pick) {
+                return pick.mtgo_id;
+              })
+            })
+          }
+        }
+
         socket.emit('admittance', 
           finished ?
           {
             drafters: displayedDraftersInfo,
             name: draft.name,
+            other_drafters_picks: otherDraftersPicks,
             pack: [],
             picks: drafter.picks
           } :

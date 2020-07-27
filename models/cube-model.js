@@ -25,6 +25,9 @@ const cardSchema = new mongoose.Schema({
     mana_cost: {
         type: String
     },
+    mtgo_id: {
+      type: Number
+    },
     name: {
         required: true,
         type: String
