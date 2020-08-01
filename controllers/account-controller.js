@@ -183,7 +183,7 @@ async function register (req, res) {
     try {
         await user.save();
         const token = await user.generateAuthenticationToken();
-        res.status(201).cookie('authentication_token', token).json({ message: 'Welcome to Cube Level Midnight!', userId: user._id, token });
+        res.status(201)./*cookie('authentication_token', token).*/header('Authorization', `Bearer ${token}`).json({ message: 'Welcome to Cube Level Midnight!', userId: user._id, token });
     } catch(error) {
         res.status(401).json({ message: error.message });
     }
