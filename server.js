@@ -1,4 +1,4 @@
-// require('dotenv').config();
+require('dotenv').config();
 
 const http = require('http');
 const express = require('express');
@@ -8,10 +8,10 @@ const socketio = require('socket.io');
 const accountRouter = require('./routers/account-router');
 // const blogRouter = require('./routers/blog-router');
 const cubeRouter = require('./routers/cube-router');
-const draftRouter = require('./routers/draft-router');
-// draft router is handled differently since it utilizes socket.io
+const eventRouter = require('./routers/event-router');
+// event router is handled differently since it utilizes socket.io
 
-const { Draft } = require('./models/draft-model');
+// const { Event } = require('./models/event-model');
 
 mongoose.connect(process.env.DB_CONNECTION, {
   useCreateIndex: true,
@@ -42,7 +42,11 @@ app.use(express.urlencoded({
 app.use('/api/account', accountRouter);
 // app.use('/api/blog', blogRouter);
 app.use('/api/cube', cubeRouter);
-app.use('/api/draft', draftRouter(io));
+app.use('/api/event', eventRouter(io));
+
+app.use(function (req, res, next) {
+  res.status(404).send();
+});
 
 server.listen(port = process.env.PORT || 5000, function () {
     console.log(`Server is up on port ${port}.`);

@@ -1,19 +1,19 @@
 const mongoose = require('mongoose');
 const { cardSchema } = require('./cube-model');
 
-const drafterSchema = new mongoose.Schema({
-  drafter: {
+const playerSchema = new mongoose.Schema({
+  player: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'User'
   },
   queue: [[cardSchema]],
   packs: [[cardSchema]],
-  picks: [cardSchema],
+  card_pool: [cardSchema],
   socketId: String
 });
 
-const draftSchema = new mongoose.Schema({
+const eventSchema = new mongoose.Schema({
   name: {
     required: true,
     trim: true,
@@ -24,13 +24,13 @@ const draftSchema = new mongoose.Schema({
     required: true,
     ref: 'User'
   },
-  drafters: [drafterSchema]
+  players: [playerSchema]
 }, {
   timestamps: true
 });
 
-const Draft = mongoose.model('Draft', draftSchema);
+const Event = mongoose.model('Event', eventSchema);
 
 module.exports = {
-  Draft
+  Event
 }
