@@ -11,8 +11,6 @@ const cubeRouter = require('./routers/cube-router');
 const eventRouter = require('./routers/event-router');
 // event router is handled differently since it utilizes socket.io
 
-// const { Event } = require('./models/event-model');
-
 mongoose.connect(process.env.DB_CONNECTION, {
   useCreateIndex: true,
   useNewUrlParser: true,

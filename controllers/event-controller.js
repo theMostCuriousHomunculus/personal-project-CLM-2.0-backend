@@ -27,11 +27,11 @@ async function createEvent (req, res) {
     shuffle(eventCardPool);
 
     // creating an initial players array that only contains one player (the user who is creating the event)
-    let players = [{ player: req.user._id, queue: [], packs: [], card_pool: [] }];
+    let players = [{ playerId: req.user._id, queue: [], packs: [], card_pool: [] }];
 
     if (req.body['other_players[]']) {
       req.body['other_players[]'].forEach(function (other_player) {
-        players.push({ player: other_player, queue: [], packs: [], card_pool: [] });
+        players.push({ playerId: other_player, queue: [], packs: [], card_pool: [] });
       });
     }
   
@@ -70,7 +70,7 @@ async function createEvent (req, res) {
 async function fetchEvents (req, res) {
   try{
     const player = req.query.player;
-    const events = await Event.find({ "players.player": player }).select('createdAt host name');
+    const events = await Event.find({ "players.playerId": player }).select('createdAt host name');
 
     // populate the hosts with their names and avatars
     await asyncArray(events, async function (event) {

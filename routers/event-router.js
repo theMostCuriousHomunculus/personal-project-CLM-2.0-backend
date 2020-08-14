@@ -27,14 +27,14 @@ const routerWithSocketIO = function (io) {
         socket.emit('bounce', 'You must be logged in to visit event pages.');
       } else if (!event) {
         socket.emit('bounce', 'Could not find an event with that ID.');
-      } else if (!event.players.find(function (player) {
-        return player.player.toString() === userId.toString();
+      } else if (!event.players.find(function (plr) {
+        return plr.playerId.toString() === userId.toString();
       })) {
         socket.emit('bounce', 'You were not invited to this event.');
       } else {
 
-        const player = event.players.find(function (player) {
-          return player.player.toString() === userId.toString();
+        const player = event.players.find(function (plr) {
+          return plr.playerId.toString() === userId.toString();
         });
         player.socketId = socket.id;
         await event.save();
@@ -43,16 +43,16 @@ const routerWithSocketIO = function (io) {
 
         // populate the players with their names and avatars
         await asyncArray(event.players, async function (player) {
-          const user = await Account.findById(player.player);
+          const user = await Account.findById(player.playerId);
           player.name = user.name;
           player.avatar = user.avatar;
         });
 
-        const displayedPlayersInfo = event.players.map(function (player) {
+        const displayedPlayersInfo = event.players.map(function (plr) {
           return {
-            avatar: player.avatar,
-            player: player.player,
-            name: player.name
+            avatar: plr.avatar,
+            playerId: plr.playerId,
+            name: plr.name
           };
         });
 
@@ -64,12 +64,12 @@ const routerWithSocketIO = function (io) {
         let otherPlayersCardPools = [];
         if (finished && event.host.toString() === userId) {
           let otherPlayers = event.players.filter(function (plr) {
-            return plr.player.toString() !== userId;
+            return plr.playerId.toString() !== userId;
           });
           for (let plr of otherPlayers) {
             otherPlayersCardPools.push({
               name: displayedPlayersInfo.find(function (x) {
-                return x.player.toString() === plr.player.toString();
+                return x.player.toString() === plr.playerId.toString();
               }).name,
               card_pool: plr.card_pool.map(function (card) {
                 return card.mtgo_id;
@@ -99,60 +99,82 @@ const routerWithSocketIO = function (io) {
     });
 
     socket.on('selectCard', async function (cardId, eventId, userId) {
-      const event = await Event.findById(eventId);
+      try {
+        
+        const event = await Event.findById(eventId);
+        const player = event.players.find(function (plr) {
+          return plr.playerId.toString() === userId.toString();
+        });
+        const cardDrafted = player.queue[0].find(function (crd) {
+          return crd._id.toString() === cardId.toString();
+        });
+        const packMinusCardDrafted = player.queue[0].filter(function (crd) {
+          return crd._id !== cardDrafted._id;
+        });
+        const updatedCardPool = [...player.card_pool, cardDrafted]
 
-      const player = event.players.find(function (plr) {
-        return plr.player.toString() === userId.toString();
-      });
-
-      const cardDrafted = player.queue[0].find(function (crd) {
-        return crd._id.toString() === cardId.toString();
-      });
-
-      player.queue[0].pull(cardDrafted);
-      player.card_pool.push(cardDrafted);
-      await event.save();
-      
-      if (player.queue[0].length > 0) {
-        if (event.players.indexOf(player) === event.players.length - 1) {
-          event.players[0].queue.push(player.queue[0]);
+        const passRight = player.packs.length % 2 === 0;
+        const passLeft = player.packs.length % 2 === 1;
+        const playerIndex = event.players.indexOf(player);
+        let otherPlayerIndex;
+        if (playerIndex === event.players.length - 1 && passRight) {
+          otherPlayerIndex = 0;
+        } else if (playerIndex === event.players.length - 1 && passLeft) {
+          otherPlayerIndex = playerIndex - 1;
+        } else if (playerIndex === 0 && passRight) {
+          otherPlayerIndex = 1;
+        } else if (playerIndex === 0 && passLeft) {
+          otherPlayerIndex = event.players.length - 1;
+        } else if (passRight) {
+          otherPlayerIndex = playerIndex + 1;
         } else {
-          event.players[event.players.indexOf(player) + 1].queue.push(player.queue[0]);
+          otherPlayerIndex = playerIndex - 1;
         }
-      }
-      player.queue.shift();
-      await event.save();
+        
+        const otherPlayerUpdatedQueue = packMinusCardDrafted.length > 0 ?
+          [...event.players[otherPlayerIndex].queue, packMinusCardDrafted] :
+          event.players[otherPlayerIndex].queue;
+          
+        const updatedQueue = player.queue.length > 1 ? player.queue.slice(1) : [];
 
-      let finished = event.players.every(function (plr) {
-        return plr.packs.length + plrr.queue.length === 0;
-      });
+        event.players[playerIndex].card_pool = updatedCardPool;
+        event.players[playerIndex].queue = updatedQueue;
+        event.players[otherPlayerIndex].queue = otherPlayerUpdatedQueue;
 
-      let nextPack = event.players.every(function (plr) {
-        return plr.queue.length === 0 && plr.packs.length > 0;
-      });
+        let finished = event.players.every(function (plr) {
+          return plr.packs.length + plr.queue.length === 0;
+        });
 
-      if (nextPack) {
-        for (plr of event.players) {
-          plr.queue.push(plr.packs[0]);
-          plr.packs.shift();
+        let nextPack = event.players.every(function (plr) {
+          return plr.queue.length === 0 && plr.packs.length > 0;
+        });
+
+        if (nextPack) {
+          for (plr of event.players) {
+            plr.queue.push(plr.packs[0]);
+            plr.packs.shift();
+          }
         }
+
         await event.save();
-      }
 
-      for (plr of event.players) {
-        io.to(plr.socketId).emit('updateEventStatus',
-          finished ?
-          { pack: [], card_pool: plr.card_pool } :
-          { pack: (plrr.queue.length > 0 ? plr.queue[0] : []) }
-        );
-      }
+        for (plr of event.players) {
+          io.to(plr.socketId).emit('updateEventStatus',
+            finished ?
+            { pack: [], card_pool: plr.card_pool } :
+            { pack: (plr.queue.length > 0 ? plr.queue[0] : []) }
+          );
+        }
 
+      } catch (error) {
+        console.log(error);
+      }
     });
 
     socket.on('leave', async function (eventId, userId) {
       const event = await Event.findById(eventId);
       event.players.find(function (plr) {
-        return plr.player.toString() === userId.toString();
+        return plr.playerId.toString() === userId.toString();
       }).socketId = undefined;
       await event.save();
     });
