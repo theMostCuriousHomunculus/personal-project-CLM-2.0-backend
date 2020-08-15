@@ -69,7 +69,7 @@ const routerWithSocketIO = function (io) {
           for (let plr of otherPlayers) {
             otherPlayersCardPools.push({
               name: displayedPlayersInfo.find(function (x) {
-                return x.player.toString() === plr.playerId.toString();
+                return x.playerId.toString() === plr.playerId.toString();
               }).name,
               card_pool: plr.card_pool.map(function (card) {
                 return card.mtgo_id;
