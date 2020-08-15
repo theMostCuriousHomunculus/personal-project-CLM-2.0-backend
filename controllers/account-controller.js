@@ -4,7 +4,7 @@ const { asyncArray } = require('../utils/async-array');
 const { Account } = require('../models/account-model');
 
 async function deleteAccount (req, res) {
-    // still need to write this code; it needs to remove the deleted user's id from the buds, received_bud_requests, and sent_bud_requests arrays of all other users
+  // still need to write this code; it needs to remove the deleted user's id from the buds, received_bud_requests, and sent_bud_requests arrays of all other users
 };
 
 async function editAccount (req, res) {
@@ -85,117 +85,117 @@ async function editAccount (req, res) {
 };
 
 async function fetchAccount (req, res) {
-    // this route is not protected (i.e. has not gone through any middleware) so the user account has not been attached to req yet
-    try {
+  // this route is not protected (i.e. has not gone through any middleware) so the user account has not been attached to req yet
+  try {
 
-        // const token = req.cookies['authentication_token'];
-        const token = req.header('Authorization') ? req.header('Authorization').replace('Bearer ', '') : false;
-        let user;
+    // const token = req.cookies['authentication_token'];
+    const token = req.header('Authorization') ? req.header('Authorization').replace('Bearer ', '') : false;
+    let user;
 
-        if (!token) {
-            // the requester is not logged in, so not sending email address
-            user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds cubes name');
-        } else {
-            // the requester has a token, so verifying that it is valid
-            const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-            if (decodedToken._id !== req.params.accountId) {
-                // the requester is not the user for whom account information has been requested, so not sending email address
-                user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds cubes name received_bud_requests sent_bud_requests');
-            } else {
-                // the requester is requesting their own account information, so returning all their info except their status as an administrator, their password and their tokens (since there is no reason they would need to see these things)
-                user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds cubes email name received_bud_requests sent_bud_requests');
-                await asyncArray(user.received_bud_requests, async function (aspiringBud, index, aspiringBuds) {
-                    aspiringBuds[index] = await Account.findById(aspiringBud._id).select('avatar name');
-                });
-                await asyncArray(user.sent_bud_requests, async function (potentialBud, index, potentialBuds) {
-                    potentialBuds[index] = await Account.findById(potentialBud._id).select('avatar name');
-                });
-            }
-        }
-        
-        if (!user) {
-            res.status(404).json({ message: 'Profile not found!' });
-        } else {
-            await asyncArray(user.buds, async function (bud, index, buds) {
-                buds[index] = await Account.findById(bud._id).select('avatar name');
-            });
-            res.status(200).json(user);
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+    if (!token) {
+      // the requester is not logged in, so not sending email address
+      user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds cubes name');
+    } else {
+      // the requester has a token, so verifying that it is valid
+      const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+      if (decodedToken._id !== req.params.accountId) {
+        // the requester is not the user for whom account information has been requested, so not sending email address
+        user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds cubes name received_bud_requests sent_bud_requests');
+      } else {
+        // the requester is requesting their own account information, so returning all their info except their status as an administrator, their password and their tokens (since there is no reason they would need to see these things)
+        user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds cubes email name received_bud_requests sent_bud_requests');
+        await asyncArray(user.received_bud_requests, async function (aspiringBud, index, aspiringBuds) {
+          aspiringBuds[index] = await Account.findById(aspiringBud._id).select('avatar name');
+        });
+        await asyncArray(user.sent_bud_requests, async function (potentialBud, index, potentialBuds) {
+          potentialBuds[index] = await Account.findById(potentialBud._id).select('avatar name');
+        });
+      }
     }
+    
+    if (!user) {
+        res.status(404).json({ message: 'Profile not found!' });
+    } else {
+      await asyncArray(user.buds, async function (bud, index, buds) {
+        buds[index] = await Account.findById(bud._id).select('avatar name');
+      });
+      res.status(200).json(user);
+    }
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
 };
 
 async function fetchAccounts (req, res) {
-    try {
-        const matchingUsers = await Account.find(
-            { $text: { $search: req.query.name } },
-            { score: { $meta: 'textScore' } }
-        )
-        .select('avatar name')
-        .sort({ score: { $meta: 'textScore' } });
+  try {
+    const matchingUsers = await Account.find(
+      { $text: { $search: req.query.name } },
+      { score: { $meta: 'textScore' } }
+    )
+    .select('avatar name')
+    .sort({ score: { $meta: 'textScore' } });
 
-        res.status(200).json(matchingUsers);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+    res.status(200).json(matchingUsers);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 async function login (req, res) {
-    // this route is not protected (i.e. has not gone through any middleware) so the user account has not been attached to req yet
-    try {
-        const user = await Account.findByCredentials(req.body.email, req.body.password);
-        const token = await user.generateAuthenticationToken();
-        res.status(200)./*cookie('authentication_token', token).*/header('Authorization', `Bearer ${token}`).json({ message: 'Welcome Back!', userId: user._id, token });
-    } catch (error) {
-        res.status(401).json({ message: error.message });
-    }
+  // this route is not protected (i.e. has not gone through any middleware) so the user account has not been attached to req yet
+  try {
+    const user = await Account.findByCredentials(req.body.email, req.body.password);
+    const token = await user.generateAuthenticationToken();
+    res.status(200)./*cookie('authentication_token', token).*/header('Authorization', `Bearer ${token}`).json({ message: 'Welcome Back!', userId: user._id, token });
+  } catch (error) {
+    res.status(401).json({ message: error.message });
+  }
 };
 
 async function logoutAll (req, res) {
-    // this route is protected (i.e. has gone through middleware) so the user account has already been attached to req
-    try {
-        req.user.tokens = [];
-        await req.user.save();
-        res.status(200).json({ message: 'Successfully logged out on all devices!' });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+  // this route is protected (i.e. has gone through middleware) so the user account has already been attached to req
+  try {
+    req.user.tokens = [];
+    await req.user.save();
+    res.status(200).json({ message: 'Successfully logged out on all devices!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 async function logoutThis (req, res) {
-    // this route is protected (i.e. has gone through middleware) so the user account has already been attached to req
-    try {
-        req.user.tokens = req.user.tokens.filter((token) => {
-          return token.token !== req.cookies['authentication_token'];
-        });
-        await req.user.save();
-        res.status(200).json({ message: 'Successfully logged out on this device!' });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+  // this route is protected (i.e. has gone through middleware) so the user account has already been attached to req
+  try {
+    req.user.tokens = req.user.tokens.filter((token) => {
+      return token.token !== req.cookies['authentication_token'];
+    });
+    await req.user.save();
+    res.status(200).json({ message: 'Successfully logged out on this device!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 async function register (req, res) {
-    // this route is not protected (i.e. has not gone through any middleware) so the user account has not been attached to req yet
-    const { avatar, email, name, password } = req.body;
-    const user = new Account({ avatar, email, name, password });
-    try {
-        await user.save();
-        const token = await user.generateAuthenticationToken();
-        res.status(201)./*cookie('authentication_token', token).*/header('Authorization', `Bearer ${token}`).json({ message: 'Welcome to Cube Level Midnight!', userId: user._id, token });
-    } catch(error) {
-        res.status(401).json({ message: error.message });
-    }
+  // this route is not protected (i.e. has not gone through any middleware) so the user account has not been attached to req yet
+  const { avatar, email, name, password } = req.body;
+  const user = new Account({ avatar, email, name, password });
+  try {
+    await user.save();
+    const token = await user.generateAuthenticationToken();
+    res.status(201)./*cookie('authentication_token', token).*/header('Authorization', `Bearer ${token}`).json({ message: 'Welcome to Cube Level Midnight!', userId: user._id, token });
+  } catch(error) {
+    res.status(401).json({ message: error.message });
+  }
 };
 
 module.exports = {
-    deleteAccount,
-    editAccount,
-    fetchAccount,
-    fetchAccounts,
-    login,
-    logoutAll,
-    logoutThis,
-    register
+  deleteAccount,
+  editAccount,
+  fetchAccount,
+  fetchAccounts,
+  login,
+  logoutAll,
+  logoutThis,
+  register
 };

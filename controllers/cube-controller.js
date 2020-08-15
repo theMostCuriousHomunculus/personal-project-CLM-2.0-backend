@@ -176,7 +176,7 @@ async function editCube (req, res) {
 
         req.cube.set(changes);
         req.cube.save();
-        return res.status(200).json({ message: 'Cube info successfully edited.' });
+        return res.status(200).json(req.cube);
 
       default:
         throw new HttpError('Invalid action.', 400);
