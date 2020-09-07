@@ -21,7 +21,7 @@ const eventSchema = new mongoose.Schema({
     trim: true,
     type: String    
   },
-  host: {
+  hostId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Account',
     required: true
@@ -29,6 +29,20 @@ const eventSchema = new mongoose.Schema({
   players: [playerSchema]
 }, {
   timestamps: true
+});
+
+eventSchema.virtual('host', {
+  foreignField: '_id',
+  justOne: true,
+  localField: 'hostId',
+  ref: 'Account'
+});
+
+playerSchema.virtual('player', {
+  foreignField: '_id',
+  justOne: true,
+  localField: 'playerId',
+  ref: 'Account'
 });
 
 const Event = mongoose.model('Event', eventSchema);

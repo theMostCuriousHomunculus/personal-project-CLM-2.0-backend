@@ -4,7 +4,7 @@ const { HttpError } = require('../models/http-error');
 async function createCube (req, res) {
   try {
     const cube = new Cube({
-      creator: req.user._id,
+      creatorId: req.user._id,
       description: req.body.description,
       name: req.body.name
     });
@@ -169,7 +169,7 @@ async function editCube (req, res) {
 
         delete changes.action;
         // don't want to allow users to change a cube's creator property
-        delete changes.creator;
+        delete changes.creatorId;
         delete changes.cube_id;
         // don't want to allow users to change a cube's unique identifier
         delete changes._id;
@@ -188,8 +188,9 @@ async function editCube (req, res) {
 
 async function fetchCube (req, res) {
   try {
-    const cube = await Cube.findOne({ _id: req.params.cubeId }).select('creator description mainboard modules name rotations sideboard');
-    res.status(201).json(cube);
+    const cube = await Cube.findById(req.params.cubeId).populate({ path: 'creator', select: 'avatar name' });
+    const creator = cube.creator;
+    res.status(201).json({ cube, creator });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

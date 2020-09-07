@@ -28,7 +28,7 @@ const t2 = async function (req, res, next) {
         }
 
         const cube = await Cube.findById(req.body.cube_id)
-        if (!user._id.equals(cube.creator)) {
+        if (!user._id.equals(cube.creatorId)) {
             throw new Error('You are do not have permission to perform the requested action.');
         } else {
             req.cube = cube;

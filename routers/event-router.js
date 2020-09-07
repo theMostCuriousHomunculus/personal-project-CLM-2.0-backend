@@ -62,7 +62,7 @@ const routerWithSocketIO = function (io) {
 
         // the event host needs a way to download a csv file for each other player that contains that player's card pool so trades can be made
         let otherPlayersCardPools = [];
-        if (finished && event.host.toString() === userId) {
+        if (finished && event.hostId.toString() === userId) {
           let otherPlayers = event.players.filter(function (plr) {
             return plr.playerId.toString() !== userId;
           });

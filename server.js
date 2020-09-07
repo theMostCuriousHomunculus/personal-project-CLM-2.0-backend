@@ -1,15 +1,13 @@
-// require('dotenv').config();
-
 const http = require('http');
 const express = require('express');
 const mongoose = require('mongoose');
 const socketio = require('socket.io');
 
 const accountRouter = require('./routers/account-router');
-// const blogRouter = require('./routers/blog-router');
+const blogRouter = require('./routers/blog-router');
 const cubeRouter = require('./routers/cube-router');
-const eventRouter = require('./routers/event-router');
 // event router is handled differently since it utilizes socket.io
+const eventRouter = require('./routers/event-router');
 
 mongoose.connect(process.env.DB_CONNECTION, {
   useCreateIndex: true,
@@ -38,7 +36,7 @@ app.use(express.urlencoded({
 }));
 
 app.use('/api/account', accountRouter);
-// app.use('/api/blog', blogRouter);
+app.use('/api/blog', blogRouter);
 app.use('/api/cube', cubeRouter);
 app.use('/api/event', eventRouter(io));
 

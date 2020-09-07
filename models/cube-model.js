@@ -79,7 +79,7 @@ const rotationSchema = new mongoose.Schema({
 });
 
 const cubeSchema = new mongoose.Schema({
-    creator: {
+    creatorId: {
         ref: 'User',
         required: true,
         type: mongoose.Schema.Types.ObjectId
@@ -107,11 +107,12 @@ const cubeSchema = new mongoose.Schema({
     sideboard: [cardSchema]    
 });
 
-// Return all cubes a user has created
-// cubeSchema.statics.findByCreator = async (creator) => {
-//     const cubes = await Cube.find({ creator });
-//     return cubes;
-// };
+cubeSchema.virtual('creator', {
+  foreignField: '_id',
+  justOne: true,
+  localField: 'creatorId',
+  ref: 'Account'
+});
 
 // allows searching for other users by name for bud request purposes
 cubeSchema.index({ name: "text", description: "text" });
