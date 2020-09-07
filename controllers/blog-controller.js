@@ -3,8 +3,8 @@ const { Blog } = require('../models/blog-model');
 async function createBlogPost (req, res) {
   try {
     const blogPost = new Blog({
-      // authorId: req.user._id,
-      authorId: req.body.authorId,
+      authorId: req.user._id,
+      // authorId: req.body.authorId,
       body: req.body.body,
       comments: [],
       image: req.body.image,
@@ -32,6 +32,7 @@ async function editBlogPost (req, res) {
   try {
     const changes = {
       body: req.body.body,
+      image: req.body.image,
       subtitle: req.body.subtitle,
       title: req.body.title
     };

@@ -94,16 +94,16 @@ async function fetchAccount (req, res) {
 
     if (!token) {
       // the requester is not logged in, so not sending email address
-      user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds cubes name');
+      user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds name');
     } else {
       // the requester has a token, so verifying that it is valid
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
       if (decodedToken._id !== req.params.accountId) {
         // the requester is not the user for whom account information has been requested, so not sending email address
-        user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds cubes name received_bud_requests sent_bud_requests');
+        user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds name received_bud_requests sent_bud_requests');
       } else {
         // the requester is requesting their own account information, so returning all their info except their status as an administrator, their password and their tokens (since there is no reason they would need to see these things)
-        user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds cubes email name received_bud_requests sent_bud_requests');
+        user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds email name received_bud_requests sent_bud_requests');
         await asyncArray(user.received_bud_requests, async function (aspiringBud, index, aspiringBuds) {
           aspiringBuds[index] = await Account.findById(aspiringBud._id).select('avatar name');
         });
@@ -146,7 +146,7 @@ async function login (req, res) {
   try {
     const user = await Account.findByCredentials(req.body.email, req.body.password);
     const token = await user.generateAuthenticationToken();
-    res.status(200)./*cookie('authentication_token', token).*/header('Authorization', `Bearer ${token}`).json({ message: 'Welcome Back!', userId: user._id, token });
+    res.status(200)./*cookie('authentication_token', token).*/header('Authorization', `Bearer ${token}`).json({ isAdmin: user.admin, token, userId: user._id });
   } catch (error) {
     res.status(401).json({ message: error.message });
   }
@@ -183,7 +183,7 @@ async function register (req, res) {
   try {
     await user.save();
     const token = await user.generateAuthenticationToken();
-    res.status(201)./*cookie('authentication_token', token).*/header('Authorization', `Bearer ${token}`).json({ message: 'Welcome to Cube Level Midnight!', userId: user._id, token });
+    res.status(201)./*cookie('authentication_token', token).*/header('Authorization', `Bearer ${token}`).json({ token, userId: user._id });
   } catch(error) {
     res.status(401).json({ message: error.message });
   }
