@@ -12,13 +12,13 @@ const {
 
 const router = new express.Router();
 
-router.delete('/', t2, deleteCube);
+router.delete('/:cubeId', t2, deleteCube);
 
 router.get('/:cubeId', fetchCube);
 
 router.get('/', fetchCubes);
 
-router.patch('/', t2, editCube);
+router.patch('/:cubeId', t2, editCube);
 
 router.post('/', t3, createCube);
 

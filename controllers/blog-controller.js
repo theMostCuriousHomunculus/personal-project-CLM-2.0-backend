@@ -1,15 +1,17 @@
-const { Blog } = require('../models/blog-model');
+const { Blog, Comment } = require('../models/blog-model');
 
 async function createBlogPost (req, res) {
   try {
+    const date = new Date();
     const blogPost = new Blog({
-      authorId: req.user._id,
-      // authorId: req.body.authorId,
+      author: req.user._id,
       body: req.body.body,
       comments: [],
+      createdAt: date,
       image: req.body.image,
       subtitle: req.body.subtitle,
-      title: req.body.title
+      title: req.body.title,
+      updatedAt: date
     });
   
     await blogPost.save();
@@ -34,7 +36,8 @@ async function editBlogPost (req, res) {
       body: req.body.body,
       image: req.body.image,
       subtitle: req.body.subtitle,
-      title: req.body.title
+      title: req.body.title,
+      updatedAt: new Date()
     };
     await Blog.findByIdAndUpdate(req.params.blogPostId, changes, { new: true });
     res.status(200).json({ message: 'Blog post successfully edited!' });
@@ -45,9 +48,10 @@ async function editBlogPost (req, res) {
 
 async function fetchBlogPost (req, res) {
   try {
-    const article = await Blog.findById(req.params.blogPostId).populate({ path: 'author', select: 'avatar name' });
-    const author = article.author;
-    res.status(200).json({ article, author });
+    const article = await Blog.findById(req.params.blogPostId)
+      .populate({ path: 'author', select: 'avatar name' })
+      .populate({ path: 'comments.author', select: 'avatar name' });
+    res.status(200).json(article);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -74,7 +78,21 @@ async function fetchBlogPosts (req, res) {
 }
 
 async function createComment (req, res) {
-  res.status(200).json({ id: req.params.blogPostId, message: "Create Comment Works!" });
+  try {
+    const article = await Blog.findById(req.params.blogPostId);
+    const comment = new Comment({
+      author: req.user._id,
+      body: req.body.body
+    });
+    article.comments.push(comment);
+    await article.save();
+    await article.populate({ path: 'author', select: 'avatar name' })
+      .populate({ path: 'comments.author', select: 'avatar name' })
+      .execPopulate();
+    res.status(200).json(article);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 async function deleteComment (req, res) {

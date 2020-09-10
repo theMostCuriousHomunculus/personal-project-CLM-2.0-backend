@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const commentSchema = new mongoose.Schema({
-  authorId: {
+  author/*Id*/: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Account',
     required: true
@@ -15,7 +15,7 @@ const commentSchema = new mongoose.Schema({
 });
 
 const blogSchema = new mongoose.Schema({
-  authorId: {
+  author/*Id*/: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Account',
     required: true
@@ -25,6 +25,7 @@ const blogSchema = new mongoose.Schema({
     type: String
   },
   comments: [commentSchema],
+  createdAt: Date,
   image: {
     required: true,
     type: String
@@ -40,29 +41,31 @@ const blogSchema = new mongoose.Schema({
     trim: true,
     type: String,
     unique: true
-  }
-}, {
-  timestamps: true
+  },
+  updatedAt: Date
 });
 
-commentSchema.virtual('author', {
-  foreignField: '_id',
-  justOne: true,
-  localField: 'authorId',
-  ref: 'Account'
-});
+// commentSchema.virtual('author', {
+//   foreignField: '_id',
+//   justOne: true,
+//   localField: 'authorId',
+//   ref: 'Account'
+// });
 
-blogSchema.virtual('author', {
-  foreignField: '_id',
-  justOne: true,
-  localField: 'authorId',
-  ref: 'Account'
-});
+// blogSchema.virtual('author', {
+//   foreignField: '_id',
+//   justOne: true,
+//   localField: 'authorId',
+//   ref: 'Account'
+// });
 
 blogSchema.index({ title: "text", subtitle: "text" });
 
 const Blog = mongoose.model('Blog', blogSchema);
 
+const Comment = mongoose.model('Comment', commentSchema);
+
 module.exports = {
-  Blog
+  Blog,
+  Comment
 };

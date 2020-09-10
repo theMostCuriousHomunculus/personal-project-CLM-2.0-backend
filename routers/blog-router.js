@@ -2,7 +2,7 @@ const express = require('express');
 
 const t1 = require('../middleware/tier-1-access');
 const t2 = require('../middleware/tier-2-access');
-// const t3 = require('../middleware/tier-3-access');
+const t3 = require('../middleware/tier-3-access');
 const {
   createBlogPost,
   deleteBlogPost,
@@ -28,7 +28,7 @@ router.patch('/:blogPostId/:commentId', editComment);
 
 router.patch('/:blogPostId', t2, editBlogPost);
 
-router.post('/:blogPostId/', /*t3, */createComment);
+router.post('/:blogPostId', t3, createComment);
 
 router.post('/', t1, createBlogPost);
 

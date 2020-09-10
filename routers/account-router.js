@@ -1,6 +1,6 @@
 const express = require('express');
 
-const t3 = require('../middleware/tier-3-access');
+const t2 = require('../middleware/tier-2-access');
 const {
     deleteAccount,
     editAccount,
@@ -14,19 +14,19 @@ const {
 
 const router = new express.Router();
 
-router.delete('/', t3, deleteAccount);
+router.delete('/', t2, deleteAccount);
 
 router.get('/', fetchAccounts);
 
 router.get('/:accountId', fetchAccount);
 
-router.patch('/', t3, editAccount);
+router.patch('/', t2, editAccount);
 
 router.patch('/login', login);
 
-router.patch('/logoutAll', t3, logoutAll);
+router.patch('/logoutAll', t2, logoutAll);
 
-router.patch('/logoutCurrent', t3, logoutThis);
+router.patch('/logoutCurrent', t2, logoutThis);
 
 router.post('/', register);
 

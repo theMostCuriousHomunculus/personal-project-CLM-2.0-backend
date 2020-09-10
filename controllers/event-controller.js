@@ -69,8 +69,7 @@ async function createEvent (req, res) {
 
 async function fetchEvents (req, res) {
   try{
-    const player = req.query.player;
-    const events = await Event.find({ "players.playerId": player }).select('createdAt hostId name');
+    const events = await Event.find({ "players.playerId": req.query.playerId }).select('createdAt hostId name');
 
     // populate the hosts with their names and avatars
     await asyncArray(events, async function (event) {

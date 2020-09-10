@@ -17,7 +17,7 @@ async function createCube (req, res) {
 };
 
 async function deleteCube (req, res) {
-  await Cube.deleteOne({ _id: req.cube._id });
+  await Cube.findByIdAndDelete(req.cube._id);
   res.status(200).json({ message: 'Successfully deleted the cube.' });
 };
 
@@ -37,7 +37,6 @@ async function editCube (req, res) {
         // the following 3 properties are not valid properties of the card schema
         delete card.action;
         delete card.component;
-        delete card.cube_id;
         
         if (card.power && isNaN(card.power)) {
           card.power = 0;
@@ -71,7 +70,6 @@ async function editCube (req, res) {
         delete cardChanges.action;
         delete cardChanges.card_id;
         delete cardChanges.component;
-        delete cardChanges.cube_id;
         // don't want to allow users to change a card's unique identifier
         delete cardChanges._id;
 
@@ -145,7 +143,6 @@ async function editCube (req, res) {
 
         delete changes.action;
         delete changes.component;
-        delete changes.cube_id;
         // don't want to allow users to change a rotation's unique identifier
         delete changes._id;
 
@@ -170,8 +167,6 @@ async function editCube (req, res) {
         delete changes.action;
         // don't want to allow users to change a cube's creator property
         delete changes.creatorId;
-        delete changes.cube_id;
-        // don't want to allow users to change a cube's unique identifier
         delete changes._id;
 
         req.cube.set(changes);
@@ -202,7 +197,7 @@ async function fetchCubes (req, res) {
     let options = null;
 
     if (query.name || query.description) {
-      const searchString = (query.name ? query.name : '') + ' ' + (query.description ? query.description : '');
+      const searchString = (query.name ? `${query.name} ` : '') + (query.description ? query.description : '');
       query.$text = { $search: searchString };
       delete query.name;
       delete query.description;

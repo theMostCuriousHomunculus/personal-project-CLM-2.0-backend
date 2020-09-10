@@ -28,8 +28,8 @@ const t2 = async function (req, res, next) {
           req.user = user;
       }
 
-      if (req.body.cube_id) {
-        const cube = await Cube.findById(req.body.cube_id);
+      if (req.params.cubeId) {
+        const cube = await Cube.findById(req.params.cubeId);
         if (user._id.equals(cube.creatorId)) {
           req.cube = cube;
         } else {
