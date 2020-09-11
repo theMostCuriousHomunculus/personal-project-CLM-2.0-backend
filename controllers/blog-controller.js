@@ -24,7 +24,8 @@ async function createBlogPost (req, res) {
 async function deleteBlogPost (req, res) {
   try {
     await Blog.findByIdAndDelete(req.params.blogPostId);
-    res.status(200).json({ message: "Successfully deleted the blog post." });
+    const remainingBlogPosts = await Blog.find().select('author createdAt image subtitle title updatedAt').sort('-createdAt');
+    res.status(200).json(remainingBlogPosts);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -65,10 +66,10 @@ async function fetchBlogPosts (req, res) {
         { $text: { $search: req.query.includes } },
         { score: { $meta: 'textScore' } }
       )
-      .select('createdAt image subtitle title updatedAt')
+      .select('author createdAt image subtitle title updatedAt')
       .sort({ score: { $meta: 'textScore' } });
     } else {
-      matchingBlogPosts = await Blog.find().select('createdAt image subtitle title updatedAt').sort('-createdAt');
+      matchingBlogPosts = await Blog.find().select('author createdAt image subtitle title updatedAt').sort('-createdAt');
     }
 
     res.status(200).json(matchingBlogPosts);
@@ -96,7 +97,17 @@ async function createComment (req, res) {
 }
 
 async function deleteComment (req, res) {
-  res.status(200).json({ id: `${req.params.blogPostId} + ${req.params.commentId}`, message: "Delete Comment Works!" });
+  try {
+    const article = await Blog.findById(req.params.blogPostId);
+    article.comments.pull({ _id: req.params.commentId });
+    await article.save();
+    await article.populate({ path: 'author', select: 'avatar name' })
+      .populate({ path: 'comments.author', select: 'avatar name' })
+      .execPopulate();
+    res.status(200).json(article);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 async function editComment (req, res) {

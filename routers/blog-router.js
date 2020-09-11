@@ -18,7 +18,7 @@ const router = new express.Router();
 
 router.delete('/:blogPostId', t2, deleteBlogPost);
 
-router.delete('/:blogPostId/:commentId', deleteComment);
+router.delete('/:blogPostId/:commentId', t2, deleteComment);
 
 router.get('/:blogPostId', fetchBlogPost);
 

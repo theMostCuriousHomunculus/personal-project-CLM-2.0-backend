@@ -39,7 +39,7 @@ const t2 = async function (req, res, next) {
 
       if (req.params.blogPostId) {
         const blogPost = await Blog.findById(req.params.blogPostId);
-        if (user._id.equals(blogPost.authorId)) {
+        if (user._id.equals(blogPost.author)) {
           req.blogPost = blogPost;
         } else {
           throw new Error('You are do not have permission to perform the requested action.');
