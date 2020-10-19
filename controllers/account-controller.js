@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 
-const { asyncArray } = require('../utils/async-array');
 const { Account } = require('../models/account-model');
 
 async function deleteAccount (req, res) {
@@ -87,38 +86,27 @@ async function editAccount (req, res) {
 async function fetchAccount (req, res) {
   // this route is not protected (i.e. has not gone through any middleware) so the user account has not been attached to req yet
   try {
-
-    // const token = req.cookies['authentication_token'];
-    const token = req.header('Authorization') ? req.header('Authorization').replace('Bearer ', '') : false;
+    const token = req.header('Authorization') ? req.header('Authorization').replace('Bearer ', '') : undefined;
+    const decodedToken = token ? jwt.verify(token, process.env.JWT_SECRET) : undefined;
     let user;
 
-    if (!token) {
-      // the requester is not logged in, so not sending email address
-      user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds name');
+    if (!token || decodedToken._id !== req.params.accountId) {
+      // the requester is not requesting their own account information, so not sending email address, sent or received requests
+      user = await Account.findById(req.params.accountId)
+        .populate({ path: 'buds', select: 'avatar name' })
+        .select('avatar buds name');
     } else {
-      // the requester has a token, so verifying that it is valid
-      const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-      if (decodedToken._id !== req.params.accountId) {
-        // the requester is not the user for whom account information has been requested, so not sending email address
-        user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds name received_bud_requests sent_bud_requests');
-      } else {
-        // the requester is requesting their own account information, so returning all their info except their status as an administrator, their password and their tokens (since there is no reason they would need to see these things)
-        user = await Account.findOne({ _id: req.params.accountId }).select('avatar buds email name received_bud_requests sent_bud_requests');
-        await asyncArray(user.received_bud_requests, async function (aspiringBud, index, aspiringBuds) {
-          aspiringBuds[index] = await Account.findById(aspiringBud._id).select('avatar name');
-        });
-        await asyncArray(user.sent_bud_requests, async function (potentialBud, index, potentialBuds) {
-          potentialBuds[index] = await Account.findById(potentialBud._id).select('avatar name');
-        });
-      }
+      // the requester is requesting their own account information, so returning all their info except their status as an administrator, their password and their tokens (since there is no reason they would need to see these things)
+      user = await Account.findById(req.params.accountId)
+        .populate({ path: 'buds', select: 'avatar name' })
+        .populate({ path: 'received_bud_requests', select: 'avatar name' })
+        .populate({ path: 'sent_bud_requests', select: 'avatar name' })
+        .select('avatar buds email name received_bud_requests sent_bud_requests');
     }
     
     if (!user) {
         res.status(404).json({ message: 'Profile not found!' });
     } else {
-      await asyncArray(user.buds, async function (bud, index, buds) {
-        buds[index] = await Account.findById(bud._id).select('avatar name');
-      });
       res.status(200).json(user);
     }
   } catch (error) {
@@ -183,7 +171,7 @@ async function register (req, res) {
   try {
     await user.save();
     const token = await user.generateAuthenticationToken();
-    res.status(201)./*cookie('authentication_token', token).*/header('Authorization', `Bearer ${token}`).json({ token, userId: user._id });
+    res.status(201).header('Authorization', `Bearer ${token}`).json({ token, userId: user._id });
   } catch(error) {
     res.status(401).json({ message: error.message });
   }

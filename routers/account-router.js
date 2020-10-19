@@ -2,14 +2,14 @@ const express = require('express');
 
 const t2 = require('../middleware/tier-2-access');
 const {
-    deleteAccount,
-    editAccount,
-    fetchAccount,
-    fetchAccounts,
-    login,
-    logoutAll,
-    logoutThis,
-    register
+  deleteAccount,
+  editAccount,
+  fetchAccount,
+  fetchAccounts,
+  login,
+  logoutAll,
+  logoutThis,
+  register
 } = require('../controllers/account-controller');
 
 const router = new express.Router();

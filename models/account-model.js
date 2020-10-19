@@ -2,8 +2,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
-var ObjectId = mongoose.Schema.Types.ObjectId;
-
 const accountSchema = new mongoose.Schema({
   admin: {
     default: false,
@@ -13,10 +11,8 @@ const accountSchema = new mongoose.Schema({
     type: String
   },
   buds: [{
-    bud: {
-        ref: 'Account',
-        type: ObjectId
-    }
+    ref: 'Account',
+    type: mongoose.Schema.Types.ObjectId
   }],
   email: {
     lowercase: true,
@@ -42,16 +38,12 @@ const accountSchema = new mongoose.Schema({
     type: String
   },
   received_bud_requests: [{
-    aspiring_bud: {
-      ref: 'Account',
-      type: ObjectId
-    }
+    ref: 'Account',
+    type: mongoose.Schema.Types.ObjectId
   }],
   sent_bud_requests: [{
-    potential_bud: {
-      ref: 'Account',
-      type: ObjectId
-    }
+    ref: 'Account',
+    type: mongoose.Schema.Types.ObjectId
   }],
   tokens: [{
     token: {

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const commentSchema = new mongoose.Schema({
-  author/*Id*/: {
+  author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Account',
     required: true
@@ -15,7 +15,7 @@ const commentSchema = new mongoose.Schema({
 });
 
 const blogSchema = new mongoose.Schema({
-  author/*Id*/: {
+  author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Account',
     required: true
