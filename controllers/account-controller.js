@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 
 const { Account } = require('../models/account-model');
+const { Cube } = require('../models/cube-model');
+const { Event } = require('../models/event-model');
 
 async function deleteAccount (req, res) {
   // still need to write this code; it needs to remove the deleted user's id from the buds, received_bud_requests, and sent_bud_requests arrays of all other users
@@ -107,10 +109,15 @@ async function fetchAccount (req, res) {
     if (!user) {
         res.status(404).json({ message: 'Profile not found!' });
     } else {
-      res.status(200).json(user);
+      const cubes = await Cube.find({ creator: req.params.accountId })
+        .select('description modules._id modules.name name rotations._id rotations.name');
+      const events = await Event.find({ "players.account": req.params.accountId })
+        .populate({ path: 'host', select: 'avatar name' })
+        .select('createdAt host name');
+      res.status(200).json({ cubes, events, user });
     }
   } catch (error) {
-      res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 

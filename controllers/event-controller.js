@@ -1,8 +1,6 @@
-const { Account } = require('../models/account-model');
 const { Cube } = require('../models/cube-model');
 const { Event } = require('../models/event-model');
 
-const { asyncArray } = require('../utils/async-array');
 const { randomSampleWithoutReplacement } = require('../utils/random-sample-wo-replacement');
 const { shuffle } = require('../utils/shuffle');
 
@@ -67,37 +65,6 @@ async function createEvent (req, res) {
   }
 };
 
-async function fetchEvents (req, res) {
-  try{
-    const events = await Event.find({ "players.playerId": req.query.playerId }).select('createdAt hostId name');
-
-    // populate the hosts with their names and avatars
-    await asyncArray(events, async function (event) {
-      const user = await Account.findById(event.hostId);
-      event.host_name = user.name;
-      event.host_avatar = user.avatar;
-    });
-
-    const eventsWithHostInfo = events.map(function (event) {
-      return {
-        createdAt: event.createdAt,
-        host: {
-          avatar: event.host_avatar,
-          _id: event.hostId,
-          name: event.host_name
-        },
-        _id: event._id,
-        name: event.name
-      };
-    });
-
-    res.status(200).json({ events: eventsWithHostInfo });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
 module.exports = {
-  createEvent,
-  fetchEvents
+  createEvent
 }

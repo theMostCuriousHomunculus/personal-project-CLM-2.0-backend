@@ -191,6 +191,7 @@ async function fetchCube (req, res) {
   }
 };
 
+// with the account page refactor, i don't believe this is being used anywhere yet
 async function fetchCubes (req, res) {
   try {
     let query = req.query;
