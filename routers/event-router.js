@@ -49,13 +49,11 @@ const routerWithSocketIO = function (io) {
           });
           for (let plr of otherPlayers) {
             otherPlayersCardPools.push({
-              name: event.players.find(function (x) {
-                return x.account._id.toString() === plr.account._id.toString();
-              }).name,
+              account: plr.account,
               card_pool: plr.card_pool.map(function (card) {
                 return card.mtgo_id;
               })
-            })
+            });
           }
         }
 
