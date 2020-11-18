@@ -88,15 +88,15 @@ async function editAccount (req, res) {
 async function fetchAccount (req, res) {
   // this route is not protected (i.e. has not gone through any middleware) so the user account has not been attached to req yet
   try {
-    const token = req.header('Authorization') ? req.header('Authorization').replace('Bearer ', '') : undefined;
-    const decodedToken = token ? jwt.verify(token, process.env.JWT_SECRET) : undefined;
+    const token = req.header('Authorization') ? req.header('Authorization').replace('Bearer ', '') : null;
+    const decodedToken = token ? jwt.verify(token, process.env.JWT_SECRET) : null;
     let user;
 
     if (!token || decodedToken._id !== req.params.accountId) {
       // the requester is not requesting their own account information, so not sending email address, sent or received requests
       user = await Account.findById(req.params.accountId)
         .populate({ path: 'buds', select: 'avatar name' })
-        .select('avatar buds name');
+        .select('avatar buds name received_bud_requests sent_bud_requests');
     } else {
       // the requester is requesting their own account information, so returning all their info except their status as an administrator, their password and their tokens (since there is no reason they would need to see these things)
       user = await Account.findById(req.params.accountId)
@@ -107,7 +107,7 @@ async function fetchAccount (req, res) {
     }
     
     if (!user) {
-        res.status(404).json({ message: 'Profile not found!' });
+      res.status(404).json({ message: 'Profile not found!' });
     } else {
       const cubes = await Cube.find({ creator: req.params.accountId })
         .select('description modules._id modules.name name rotations._id rotations.name');
