@@ -13,7 +13,7 @@ async function createEvent (req, res) {
     let eventCardPool = cube.mainboard;
 
     cube.modules.forEach(function (module) {
-      if (req.body['modules[]'] && req.body['modules[]'].includes(module._id.toString())) {
+      if (req.body['modules[]'].includes(module._id.toString())) {
         eventCardPool = eventCardPool.concat(module.cards);
       }
     });
@@ -25,13 +25,11 @@ async function createEvent (req, res) {
     shuffle(eventCardPool);
 
     // creating an initial players array that only contains one player (the user who is creating the event)
-    let players = [{ playerId: req.user._id, queue: [], packs: [], card_pool: [] }];
+    let players = [{ account: req.user._id, queue: [], packs: [], card_pool: [] }];
 
-    if (req.body['other_players[]']) {
-      req.body['other_players[]'].forEach(function (other_player) {
-        players.push({ playerId: other_player, queue: [], packs: [], card_pool: [] });
-      });
-    }
+    req.body['other_players[]'].forEach(function (other_player) {
+      players.push({ account: other_player, queue: [], packs: [], card_pool: [] });
+    });
   
     shuffle(players);
   
@@ -53,8 +51,8 @@ async function createEvent (req, res) {
     }
 
     const event = new Event({
+      host: req.user._id,
       name: req.body.name,
-      hostId: req.user._id,
       players
     });
 

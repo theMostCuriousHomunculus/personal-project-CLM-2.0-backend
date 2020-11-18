@@ -7,24 +7,24 @@ const playerSchema = new mongoose.Schema({
     ref: 'Account',
     required: true
   },
-  queue: [[cardSchema]],
-  packs: [[cardSchema]],
   card_pool: [cardSchema],
+  packs: [[cardSchema]],
+  queue: [[cardSchema]],
   socketId: String
 }, {
   _id: false
 });
 
 const eventSchema = new mongoose.Schema({
-  name: {
-    required: true,
-    trim: true,
-    type: String    
-  },
   host: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Account',
     required: true
+  },
+  name: {
+    required: true,
+    trim: true,
+    type: String    
   },
   players: [playerSchema]
 }, {
