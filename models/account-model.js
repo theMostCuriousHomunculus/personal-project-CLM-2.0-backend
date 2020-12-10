@@ -1,6 +1,6 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 
 const accountSchema = new mongoose.Schema({
   admin: {
@@ -92,6 +92,4 @@ accountSchema.pre('save', async function (next) {
 
 const Account = mongoose.model('Account', accountSchema);
 
-module.exports = {
-  Account
-};
+export { Account };

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const commentSchema = new mongoose.Schema({
   author: {
@@ -45,27 +45,10 @@ const blogSchema = new mongoose.Schema({
   updatedAt: Date
 });
 
-// commentSchema.virtual('author', {
-//   foreignField: '_id',
-//   justOne: true,
-//   localField: 'authorId',
-//   ref: 'Account'
-// });
-
-// blogSchema.virtual('author', {
-//   foreignField: '_id',
-//   justOne: true,
-//   localField: 'authorId',
-//   ref: 'Account'
-// });
-
 blogSchema.index({ title: "text", subtitle: "text" });
 
 const Blog = mongoose.model('Blog', blogSchema);
 
 const Comment = mongoose.model('Comment', commentSchema);
 
-module.exports = {
-  Blog,
-  Comment
-};
+export { Blog, Comment };

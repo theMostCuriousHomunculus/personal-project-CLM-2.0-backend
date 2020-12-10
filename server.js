@@ -1,13 +1,12 @@
-const http = require('http');
-const express = require('express');
-const mongoose = require('mongoose');
-const socketio = require('socket.io');
+import http from 'http';
+import express from 'express';
+import mongoose from 'mongoose';
+import socketio from 'socket.io';
 
-const accountRouter = require('./routers/account-router');
-const blogRouter = require('./routers/blog-router');
-const cubeRouter = require('./routers/cube-router');
-// event router is handled differently since it utilizes socket.io
-const eventRouter = require('./routers/event-router');
+import accountRouter from './routers/account-router.js';
+import blogRouter from './routers/blog-router.js';
+import cubeRouter from './routers/cube-router.js';
+import eventRouter from './routers/event-router.js';
 
 mongoose.connect(process.env.DB_CONNECTION, {
   useCreateIndex: true,
@@ -44,6 +43,6 @@ app.use(function (req, res, next) {
   res.status(404).send();
 });
 
-server.listen(port = process.env.PORT || 5000, function () {
-    console.log(`Server is up on port ${port}.`);
+server.listen(process.env.PORT, function () {
+    console.log(`Server is up on port ${process.env.PORT}.`);
 });

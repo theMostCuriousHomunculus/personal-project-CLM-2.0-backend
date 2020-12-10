@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const cardSchema = new mongoose.Schema({
   back_image: {
@@ -112,7 +112,4 @@ cubeSchema.index({ name: "text", description: "text" });
 
 const Cube = mongoose.model('Cube', cubeSchema);
 
-module.exports = {
-    Cube,
-    cardSchema
-};
+export { cardSchema, Cube };

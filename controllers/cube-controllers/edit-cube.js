@@ -1,30 +1,8 @@
-const { Cube } = require('../models/cube-model');
-const { HttpError } = require('../models/http-error');
+import { HttpError } from '../../models/http-error.js';
 
-async function createCube (req, res) {
+// modify this code; too long, some bad practices and should not send back the entire cube
+export default async function (req, res) {
   try {
-    const cube = new Cube({
-      creatorId: req.user._id,
-      description: req.body.description,
-      name: req.body.name
-    });
-  
-    await cube.save();
-    res.status(201).json({ _id: cube._id, message: 'Cube successfully created!' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-async function deleteCube (req, res) {
-  await Cube.findByIdAndDelete(req.cube._id);
-  res.status(200).json({ message: 'Successfully deleted the cube.' });
-};
-
-async function editCube (req, res) {
-
-  try {
-
     const cardId = req.body.card_id;
     const component = req.body.component;
     let card;
@@ -116,8 +94,6 @@ async function editCube (req, res) {
           // the card was deleted, not moved, so nothing more should be done
         }
 
-        const verb = destination === 'delete' ? 'deleted' : 'moved';
-
         await req.cube.save();
         return res.status(200).json(req.cube);
       
@@ -180,42 +156,3 @@ async function editCube (req, res) {
       res.status(error.code || 500).json({ message: error.message });
   } 
 };
-
-async function fetchCube (req, res) {
-  try {
-    const cube = await Cube.findById(req.params.cubeId).populate({ path: 'creator', select: 'avatar name' });
-    const creator = cube.creator;
-    res.status(201).json({ cube, creator });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// with the account page refactor, i don't believe this is being used anywhere yet
-async function fetchCubes (req, res) {
-  try {
-    let query = req.query;
-    let options = null;
-
-    if (query.name || query.description) {
-      const searchString = (query.name ? `${query.name} ` : '') + (query.description ? query.description : '');
-      query.$text = { $search: searchString };
-      delete query.name;
-      delete query.description;
-      options = { score: { $meta: 'textScore' } }
-    }
-
-    const cubes = await Cube.find(query, options);
-    res.status(200).json({ cubes });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-module.exports = {
-    createCube,
-    deleteCube,
-    editCube,
-    fetchCube,
-    fetchCubes
-}

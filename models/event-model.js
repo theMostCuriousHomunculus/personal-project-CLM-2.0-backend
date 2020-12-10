@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
-const { cardSchema } = require('./cube-model');
+import mongoose from 'mongoose';
+
+import { cardSchema } from './cube-model.js';
 
 const playerSchema = new mongoose.Schema({
   account: {
@@ -7,15 +8,21 @@ const playerSchema = new mongoose.Schema({
     ref: 'Account',
     required: true
   },
-  card_pool: [cardSchema],
+  chaff: [cardSchema],
+  mainboard: [cardSchema],
   packs: [[cardSchema]],
   queue: [[cardSchema]],
-  socketId: String
+  sideboard: [cardSchema]
 }, {
   _id: false
 });
 
 const eventSchema = new mongoose.Schema({
+  finished: {
+    default: false,
+    required: true,
+    type: Boolean
+  },
   host: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Account',
@@ -33,6 +40,4 @@ const eventSchema = new mongoose.Schema({
 
 const Event = mongoose.model('Event', eventSchema);
 
-module.exports = {
-  Event
-}
+export { Event };

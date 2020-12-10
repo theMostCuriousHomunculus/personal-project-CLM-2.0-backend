@@ -1,4 +1,4 @@
-function randomSampleWithoutReplacement (array, sampleSize) {
+export default function (array, sampleSize) {
   let sampleArray = [];
   let randomNumber;
   let randomCard;
@@ -11,8 +11,4 @@ function randomSampleWithoutReplacement (array, sampleSize) {
   }
 
   return sampleArray
-}
-
-module.exports = {
-  randomSampleWithoutReplacement
-}
+};

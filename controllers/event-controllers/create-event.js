@@ -1,10 +1,9 @@
-const { Cube } = require('../models/cube-model');
-const { Event } = require('../models/event-model');
+import { Cube } from '../../models/cube-model.js';
+import { Event } from '../../models/event-model.js';
+import randomSampleWithoutReplacement from '../../utils/random-sample-wo-replacement.js';
+import shuffle from '../../utils/shuffle.js';
 
-const { randomSampleWithoutReplacement } = require('../utils/random-sample-wo-replacement');
-const { shuffle } = require('../utils/shuffle');
-
-async function createEvent (req, res) {
+export default async function (req, res) {
   try {
     const cube = await Cube.findById(req.body.cube);
     const cardsPerPack = req.body.cards_per_pack;
@@ -25,10 +24,24 @@ async function createEvent (req, res) {
     shuffle(eventCardPool);
 
     // creating an initial players array that only contains one player (the user who is creating the event)
-    let players = [{ account: req.user._id, queue: [], packs: [], card_pool: [] }];
+    let players = [{
+      account: req.user._id,
+      chaff: [],
+      mainboard: [],
+      packs: [],
+      queue: [],
+      sideboard: []
+    }];
 
     req.body['other_players[]'].forEach(function (other_player) {
-      players.push({ account: other_player, queue: [], packs: [], card_pool: [] });
+      players.push({
+        account: other_player,
+        chaff: [],
+        mainboard: [],
+        packs: [],
+        queue: [],
+        sideboard: []
+      });
     });
   
     shuffle(players);
@@ -45,12 +58,13 @@ async function createEvent (req, res) {
       // dish out cards to players if event type is sealed
       for (let i = 0; i < players.length; i++) {
         for (let j = 0; j < cardsPerPack * packsPerPlayer; j++) {
-          players[i].card_pool.push(eventCardPool.pop());
+          players[i].mainboard.push(eventCardPool.pop());
         }
       }
     }
 
     const event = new Event({
+      finished: eventType === 'sealed',
       host: req.user._id,
       name: req.body.name,
       players
@@ -62,7 +76,3 @@ async function createEvent (req, res) {
     res.status(500).json({ message : error.message });
   }
 };
-
-module.exports = {
-  createEvent
-}

@@ -1,10 +1,10 @@
 // tier 1 access is for site admins only.  tier 1 access allows posting articles
 
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-const { Account } = require('../models/account-model');
+import { Account } from '../models/account-model.js';
 
-const t1 = async function (req, res, next) {
+export default async function (req, res, next) {
   if (req.method === 'OPTIONS') {
       return next();
   }
@@ -30,5 +30,3 @@ const t1 = async function (req, res, next) {
       res.status(401).json({ message: error.message });
   }
 };
-
-module.exports = t1;

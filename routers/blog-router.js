@@ -1,18 +1,15 @@
-const express = require('express');
+import express from 'express';
 
-const t1 = require('../middleware/tier-1-access');
-const t2 = require('../middleware/tier-2-access');
-const t3 = require('../middleware/tier-3-access');
-const {
-  createBlogPost,
-  deleteBlogPost,
-  editBlogPost,
-  fetchBlogPost,
-  fetchBlogPosts,
-  createComment,
-  deleteComment,
-  editComment
-} = require('../controllers/blog-controller');
+import createBlogPost from '../controllers/blog-controllers/create-blog-post.js';
+import createComment from '../controllers/blog-controllers/create-comment.js';
+import deleteBlogPost from '../controllers/blog-controllers/delete-blog-post.js';
+import deleteComment from '../controllers/blog-controllers/delete-comment.js';
+import editBlogPost from '../controllers/blog-controllers/edit-blog-post.js';
+import fetchAllBlogPosts from '../controllers/blog-controllers/fetch-all-blog-posts.js';
+import fetchBlogPostById from '../controllers/blog-controllers/fetch-blog-post-by-id.js';
+import t1 from '../middleware/tier-1-access.js';
+import t2 from '../middleware/tier-2-access.js';
+import t3 from '../middleware/tier-3-access.js';
 
 const router = new express.Router();
 
@@ -20,11 +17,12 @@ router.delete('/:blogPostId', t2, deleteBlogPost);
 
 router.delete('/:blogPostId/:commentId', t2, deleteComment);
 
-router.get('/:blogPostId', fetchBlogPost);
+router.get('/:blogPostId', fetchBlogPostById);
 
-router.get('/', fetchBlogPosts);
+router.get('/', fetchAllBlogPosts);
 
-router.patch('/:blogPostId/:commentId', editComment);
+// have not set this route up yet
+// router.patch('/:blogPostId/:commentId', editComment);
 
 router.patch('/:blogPostId', t2, editBlogPost);
 
@@ -32,4 +30,4 @@ router.post('/:blogPostId', t3, createComment);
 
 router.post('/', t1, createBlogPost);
 
-module.exports = router;
+export default router;

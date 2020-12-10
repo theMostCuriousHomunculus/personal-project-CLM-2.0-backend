@@ -1,6 +1,7 @@
 {
   "name": "clm-2.0",
   "version": "1.0.0",
+  "type": "module",
   "description": "The new and improved backend for Cube Level Midnight",
   "main": "server.js",
   "scripts": {
@@ -10,6 +11,7 @@
   "author": "Casey Johnson",
   "license": "ISC",
   "dependencies": {
+    "array-move": "^3.0.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
