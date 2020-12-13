@@ -3,7 +3,7 @@ import { Cube } from '../../models/cube-model.js';
 export default async function (req, res) {
   try {
     const cube = new Cube({
-      creatorId: req.user._id,
+      creator: req.user._id,
       description: req.body.description,
       name: req.body.name
     });
