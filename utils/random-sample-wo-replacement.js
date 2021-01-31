@@ -3,7 +3,7 @@ export default function (array, sampleSize) {
   let randomNumber;
   let randomCard;
 
-  for (index = 0; index < sampleSize; index++) {
+  for (let index = 0; index < sampleSize; index++) {
     randomNumber = Math.floor(Math.random() * array.length);
     randomCard = array[randomNumber];
     sampleArray.push(randomCard);
