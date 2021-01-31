@@ -51,4 +51,4 @@ const Blog = mongoose.model('Blog', blogSchema);
 
 const Comment = mongoose.model('Comment', commentSchema);
 
-export { Blog, Comment };
+export { Blog as default, Comment };

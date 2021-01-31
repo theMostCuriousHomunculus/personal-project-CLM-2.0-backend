@@ -1,158 +1,174 @@
-import { HttpError } from '../../models/http-error.js';
+import HttpError from '../../models/http-error.js';
+import returnComponent from '../../utils/return-component.js';
 
-// modify this code; too long, some bad practices and should not send back the entire cube
+class CardProperty {
+  constructor(name, specialNumeric) {
+    this.name = name;
+    this.specialNumeric = specialNumeric;
+  }
+}
+
 export default async function (req, res) {
-  try {
-    const cardId = req.body.card_id;
-    const component = req.body.component;
-    let card;
-    let changes = req.body;
+  const validCardProperties = [
+    new CardProperty('back_image', false),
+    new CardProperty('cmc', false),
+    new CardProperty('color_identity', false),
+    new CardProperty('image', false),
+    new CardProperty('keywords', false),
+    new CardProperty('loyalty', true),
+    new CardProperty('mana_cost', false),
+    new CardProperty('mtgo_id', false),
+    new CardProperty('name', false),
+    new CardProperty('oracle_id', false),
+    new CardProperty('power', true),
+    new CardProperty('printing', false),
+    new CardProperty('purchase_link', false),
+    new CardProperty('toughness', true),
+    new CardProperty('type_line', false)
+  ];
+  const validCubeProperties = [
+    'description',
+    'name'
+  ];
+  const validModuleProperties = [
+    'name'
+  ];
+  const validRotationProperties = [
+    'name',
+    'size'
+  ]
+  let card;
+  let component;
 
+  try {
     switch (req.body.action) {
       case 'add_card':
-          
-        card = req.body;
-        // the following 3 properties are not valid properties of the card schema
-        delete card.action;
-        delete card.component;
+
+        component = await returnComponent(req.cube, req.body.component);
+        card = {};
         
-        if (card.power && isNaN(card.power)) {
-          card.power = 0;
-        }
-        
-        if (card.toughness && isNaN(card.toughness)) {
-          card.toughness = 0;
-        }
-        
-        if (card.loyalty && isNaN(card.loyalty)) {
-          card.loyalty = 0;
+        for (let property of validCardProperties) {
+          if (typeof req.body[property.name] !== 'undefined') {
+            if (property.specialNumeric && isNaN(req.body[property.name])){
+              card[property.name] = 0;
+            } else {
+              card[property.name] = req.body[property.name];
+            }
+          }
         }
 
-        if (component === 'sideboard') {
-          req.cube.sideboard.push(card);
-        } else if (req.cube.modules.id(component)) {
-          req.cube.modules.id(component).cards.push(card);
-        } else if (req.cube.rotations.id(component)) {
-          req.cube.rotations.id(component).cards.push(card);
-        } else {
-          req.cube.mainboard.push(card);
-        }
-        
+        component.push(card);
         await req.cube.save();
-        return res.status(200).json(req.cube);
+        res.status(201).json({ _id: component[component.length - 1]._id });
+        break;
 
       case 'edit_card':
 
-        let cardChanges = req.body;
-        // the following 4 properties are not valid properties of the card schema
-        delete cardChanges.action;
-        delete cardChanges.card_id;
-        delete cardChanges.component;
-        // don't want to allow users to change a card's unique identifier
-        delete cardChanges._id;
+        component = await returnComponent(req.cube, req.body.component);
+        card = component.id(req.body.cardId);
 
-        if (component === 'sideboard') {
-          req.cube.sideboard.id(cardId).set(cardChanges);
-        } else if (req.cube.modules.id(component)) {
-          req.cube.modules.id(component).cards.id(cardId).set(cardChanges);
-        } else if (req.cube.rotations.id(component)) {
-          req.cube.rotations.id(component).cards.id(cardId).set(cardChanges);
-        } else {
-          req.cube.mainboard.id(cardId).set(cardChanges);
+        if (!card) {
+          throw new HttpError('Could not find a card with the provided ID in the provided component.', 404);
+        }
+        
+        for (let property of validCardProperties) {
+          if (typeof req.body[property.name] !== 'undefined') {
+            if (property.specialNumeric && isNaN(req.body[property.name])) {
+              card[property.name] = 0;
+            } else {
+              card[property.name] = req.body[property.name];
+            }
+          }
         }
 
         await req.cube.save();
-        return res.status(200).json(req.cube);
+        res.status(204).send();
+        break;
 
       case 'move_or_delete_card':
 
-        const destination = req.body.destination;
+        component = await returnComponent(req.cube, req.body.component);
+        card = component.id(req.body.cardId);
 
-        if (component === 'sideboard') {
-          card = req.cube.sideboard.id(cardId);
-          req.cube.sideboard.pull({ _id: cardId });
-        } else if (req.cube.modules.id(component)) {
-          card = req.cube.modules.id(component).cards.id(cardId);
-          req.cube.modules.id(component).cards.pull({ _id: cardId });
-        } else if (req.cube.rotations.id(component)) {
-          card = req.cube.rotations.id(component).cards.id(cardId);
-          req.cube.rotations.id(component).cards.pull({ _id: cardId });
-        } else {
-          card = req.cube.mainboard.id(cardId);
-          req.cube.mainboard.pull({ _id: cardId });
+        if (!card) {
+          throw new HttpError('Could not find a card with the provided ID in the provided component.', 404);
         }
 
-        if (destination === 'mainboard') {
-          req.cube.mainboard.push(card);
-        } else if (destination === 'sideboard') {
-          req.cube.sideboard.push(card);
-        } else if (req.cube.modules.id(destination)) {
-          req.cube.modules.id(destination).cards.push(card);
-        } else if (req.cube.rotations.id(destination)) {
-          req.cube.rotations.id(destination).cards.push(card);
-        } else {
-          // the card was deleted, not moved, so nothing more should be done
+        component.pull(req.body.cardId);
+
+        if (req.body.destination) {
+          const destination = await returnComponent(req.cube, req.body.destination);
+          destination.push(card);
         }
 
         await req.cube.save();
-        return res.status(200).json(req.cube);
+        res.status(204).send();
+        break;
       
       case 'add_module':
-          
+        
         req.cube.modules.push({ name: req.body.name });
         await req.cube.save();
-        return res.status(200).json(req.cube);
+        res.status(201).json({ _id: req.cube.modules[req.cube.modules.length - 1]._id });
+        break;
 
       case 'add_rotation':
 
         req.cube.rotations.push({ name: req.body.name, size: 0 });
         await req.cube.save();
-        return res.status(200).json(req.cube);
+        res.status(201).json({ _id: req.cube.rotations[req.cube.rotations.length - 1]._id });
+        break;
 
       case 'edit_module':
 
-        req.cube.modules.id(component).name = req.body.name;
-        req.cube.save();
-        return res.status(200).json(req.cube);
+        for (let property of validModuleProperties) {
+          if (typeof req.body[property] !== 'undefined') req.cube.modules.id(req.body.component)[property] = req.body[property];
+        }
+
+        await req.cube.save();
+        res.status(204).send();
+        break;
 
       case 'edit_rotation':
 
-        delete changes.action;
-        delete changes.component;
-        // don't want to allow users to change a rotation's unique identifier
-        delete changes._id;
+        for (let property of validRotationProperties) {
+          if (typeof req.body[property] !== 'undefined') req.cube.rotations.id(req.body.component)[property] = req.body[property];
+        }
 
-        req.cube.rotations.id(component).set(changes);
-        req.cube.save();
-        return res.status(200).json(req.cube);
+        await req.cube.save();
+        res.status(204).send();
+        break;
 
       case 'delete_module':
 
-        req.cube.modules.pull({ _id: component });
+        req.cube.modules.pull(req.body.component);
         await req.cube.save();
-        return res.status(200).json(req.cube);
+        res.status(204).send();
+        break;
 
       case 'delete_rotation':
 
-        req.cube.rotations.pull({ _id: component });
+        req.cube.rotations.pull(req.body.component);
         await req.cube.save();
-        return res.status(200).json(req.cube);
+        res.status(204).send();
+        break;
 
       case 'edit_cube_info':
 
-        delete changes.action;
-        // don't want to allow users to change a cube's creator property
-        delete changes.creatorId;
-        delete changes._id;
+        for (let property of validCubeProperties) {
+          if (typeof req.body[property] !== 'undefined') req.cube[property] = req.body[property];
+        }
 
-        req.cube.set(changes);
-        req.cube.save();
-        return res.status(200).json(req.cube);
+        await req.cube.save();
+        res.status(204).send();
+        break;
 
       default:
         throw new HttpError('Invalid action.', 400);
     }
+
   } catch (error) {
-      res.status(error.code || 500).json({ message: error.message });
+    console.log(error.message);
+    res.status(error.code || 500).json({ message: error.message });
   } 
 };

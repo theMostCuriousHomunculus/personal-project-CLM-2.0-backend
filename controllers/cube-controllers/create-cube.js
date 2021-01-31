@@ -1,4 +1,4 @@
-import { Cube } from '../../models/cube-model.js';
+import Cube from '../../models/cube-model.js';
 
 export default async function (req, res) {
   try {
@@ -9,7 +9,7 @@ export default async function (req, res) {
     });
   
     await cube.save();
-    res.status(201).json({ _id: cube._id, message: 'Cube successfully created!' });
+    res.status(201).json({ _id: cube._id });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

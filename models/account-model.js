@@ -5,9 +5,11 @@ import mongoose from 'mongoose';
 const accountSchema = new mongoose.Schema({
   admin: {
     default: false,
+    required: true,
     type: Boolean
   },
   avatar: {
+    required: true,
     type: String
   },
   buds: [{
@@ -92,4 +94,4 @@ accountSchema.pre('save', async function (next) {
 
 const Account = mongoose.model('Account', accountSchema);
 
-export { Account };
+export default Account;

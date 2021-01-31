@@ -1,73 +1,75 @@
-import { Account } from '../../models/account-model.js';
+import Account from '../../models/account-model.js';
+import HttpError from '../../models/http-error.js';
 
 export default async function (req, res) {
   // this route is protected (i.e. has gone through middleware) so the user account has already been attached to req
   try {
-    let accountChanges = {...req.user._doc};
+    const mutableFields = ['avatar', 'email', 'name', 'password'];
 
-    if (req.body.avatar) {
-      accountChanges.avatar = req.body.avatar;
-    }
-    if (req.body.email) {
-      accountChanges.email = req.body.email;
-    }
-    if (req.body.name) {
-      accountChanges.name = req.body.name;
+    for (let field of mutableFields) {
+      if (req.body[field]) {
+        req.user[field] = req.body[field];
+      }
     }
 
     if (req.body.other_user_id) {
-      // the user is either removing a bud from their bud list, or accepting, rejecting or sending a bud request
       const otherUser = await Account.findById(req.body.other_user_id);
-  
-      if (
-        // don't allow users to accept a bud request that they haven't received
-        req.user.received_bud_requests.includes(otherUser._id) &&
-        otherUser.sent_bud_requests.includes(req.user._id) &&
-        req.body.action === 'accept'
-      ) {
-        req.user.received_bud_requests.pull(otherUser._id);
-        otherUser.sent_bud_requests.pull(req.user._id);
 
-        req.user.buds.push(otherUser._id);
-        await req.user.save();
-        otherUser.buds.push(req.user._id);
-        await otherUser.save();
-      } else if (req.body.action === 'reject') {
-        req.user.received_bud_requests.pull(otherUser._id);
-        otherUser.sent_bud_requests.pull(req.user._id);
-
-        await req.user.save();
-        await otherUser.save();
-      } else if (req.body.action === 'remove') {
-        req.user.buds.pull(otherUser._id);
-        await req.user.save();
-        otherUser.buds.pull(req.user._id);
-        await otherUser.save();
-      } else if (
-        // don't allow user A to send a bud request to user B if user A and user B are already buds, or if user B is currently awaiting a resposne to a bud request he sent to user A or if user A has already sent a bud request to user B and user B has not yet responded
-        !req.user.buds.includes(otherUser._id) &&
-        !req.user.received_bud_requests.includes(otherUser._id) &&
-        !req.user.sent_bud_requests.includes(otherUser._id) &&
-        !otherUser.buds.includes(req.user._id) &&
-        !otherUser.received_bud_requests.includes(req.user._id) &&
-        !otherUser.sent_bud_requests.includes(req.user._id) &&
-        req.body.action === 'send'
-      ) {
-        req.user.sent_bud_requests.push(otherUser._id);
-        await req.user.save();
-        otherUser.received_bud_requests.push(req.user._id);
-        await otherUser.save();
-      } else {
-        // either the user sent an action request of 'accept' when they had not received a bud request from the other user, or the user tried to send a bud request to another user who is already a bud, or the user tried to send a bud request to another user who is currently awaiting a response to a bud request they sent, or they tried to send a bud request to a user who they have already sent a bud request to and who has not yet responded, or the request action was not of type 'accept', 'reject', 'remove' or 'send'
-        return res.status(403).json({ message: 'Invalid action.' });
+      if (!otherUser) {
+        throw new HttpError('We are unable to process your request because the other user does not exist in our database.', 403);
       }
-    }
+
+      if (otherUser._id === req.user._id) {
+        throw new HttpError("You must provide a different user's ID.", 403);
+      }
   
-    const updatedUser = await Account.findByIdAndUpdate(req.user._id,
-      { $set: accountChanges },
-      { new: true });
-    res.status(200).json(updatedUser);
+      switch (req.body.action) {
+        case 'accept':
+          if (
+            req.user.received_bud_requests.includes(otherUser._id) &&
+            otherUser.sent_bud_requests.includes(req.user._id)
+          ) {
+            req.user.received_bud_requests.pull(otherUser._id);
+            otherUser.sent_bud_requests.pull(req.user._id);
+            req.user.buds.push(otherUser._id);
+            otherUser.buds.push(req.user._id);
+            break;
+          } else {
+            throw new HttpError('You cannot accept a bud request that you did not receive or that the other user did not send.',403);
+          }
+        case 'reject':
+          req.user.received_bud_requests.pull(otherUser._id);
+          otherUser.sent_bud_requests.pull(req.user._id);
+          break;
+        case 'remove':
+          req.user.buds.pull(otherUser._id);
+          otherUser.buds.pull(req.user._id);
+          break;
+        case 'send':
+          if (
+            !req.user.buds.includes(otherUser._id) &&
+            !req.user.received_bud_requests.includes(otherUser._id) &&
+            !req.user.sent_bud_requests.includes(otherUser._id) &&
+            !otherUser.buds.includes(req.user._id) &&
+            !otherUser.received_bud_requests.includes(req.user._id) &&
+            !otherUser.sent_bud_requests.includes(req.user._id)
+          ) {
+            req.user.sent_bud_requests.push(otherUser._id);
+            otherUser.received_bud_requests.push(req.user._id);
+            break;
+          } else {
+            throw new HttpError('You cannot send a bud request to another user if you are already buds or if there is already a pending bud request from one of you to the other.', 403);
+          }
+        default:
+          throw new HttpError('Invalid action attempted.  Action must be "accept", "reject", "remove" or "send".', 403);
+      }
+      
+      await otherUser.save();
+    }
+
+    await req.user.save();  
+    res.status(200).send();
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(error.code || 500).json({ message: error.message });
   }
 };

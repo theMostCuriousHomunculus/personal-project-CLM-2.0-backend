@@ -1,4 +1,4 @@
-import { Account } from '../../models/account-model.js';
+import Account from '../../models/account-model.js';
 
 export default async function (req, res) {
   // this route is not protected (i.e. has not gone through any middleware) so the user account has not been attached to req yet

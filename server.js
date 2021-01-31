@@ -43,6 +43,4 @@ app.use(function (req, res, next) {
   res.status(404).send();
 });
 
-server.listen(process.env.PORT, function () {
-    console.log(`Server is up on port ${process.env.PORT}.`);
-});
+export default server;

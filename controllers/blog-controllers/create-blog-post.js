@@ -1,4 +1,4 @@
-import { Blog } from '../../models/blog-model.js';
+import Blog from '../../models/blog-model.js';
 
 export default async function (req, res) {
   try {
@@ -15,7 +15,7 @@ export default async function (req, res) {
     });
   
     await blogPost.save();
-    res.status(201).json({ _id: blogPost._id, message: 'Blog post successfully created!' });
+    res.status(201).json({ _id: blogPost._id });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -1,4 +1,4 @@
-import { Cube } from '../../models/cube-model.js';
+import Cube from '../../models/cube-model.js';
 import { Event } from '../../models/event-model.js';
 import randomSampleWithoutReplacement from '../../utils/random-sample-wo-replacement.js';
 import shuffle from '../../utils/shuffle.js';

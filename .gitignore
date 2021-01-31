@@ -1,3 +1,5 @@
+jest.config.json
+jest-config.js
 node_modules/
 nodemon.json
 secret.js

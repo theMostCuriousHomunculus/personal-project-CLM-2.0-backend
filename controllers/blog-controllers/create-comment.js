@@ -1,4 +1,4 @@
-import { Blog, Comment } from '../../models/blog-model.js';
+import Blog, { Comment } from '../../models/blog-model.js';
 
 export default async function (req, res) {
   try {
@@ -9,11 +9,7 @@ export default async function (req, res) {
     });
     article.comments.push(comment);
     await article.save();
-    // should probably tweek this; no need to send back the whole article, just a confirmation that the comment was successfully added
-    await article.populate({ path: 'author', select: 'avatar name' })
-      .populate({ path: 'comments.author', select: 'avatar name' })
-      .execPopulate();
-    res.status(200).json(article);
+    res.status(201).json({ _id: article.comments[article.comments.length - 1]._id });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

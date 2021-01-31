@@ -112,4 +112,4 @@ cubeSchema.index({ name: "text", description: "text" });
 
 const Cube = mongoose.model('Cube', cubeSchema);
 
-export { cardSchema, Cube };
+export { Cube as default, cardSchema };

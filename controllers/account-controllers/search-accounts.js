@@ -1,4 +1,4 @@
-import { Account } from '../../models/account-model.js';
+import Account from '../../models/account-model.js';
 
 export default async function (req, res) {
   try {

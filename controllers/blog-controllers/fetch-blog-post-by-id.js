@@ -1,4 +1,4 @@
-import { Blog } from '../../models/blog-model.js';
+import Blog from '../../models/blog-model.js';
 
 export default async function (req, res) {
   try {

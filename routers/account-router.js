@@ -7,14 +7,14 @@ import login from '../controllers/account-controllers/login.js';
 import logoutAllDevices from '../controllers/account-controllers/logout-all-devices.js';
 import logoutSingleDevice from '../controllers/account-controllers/logout-single-device.js';
 import register from '../controllers/account-controllers/register.js';
-import searchAccountByName from '../controllers/account-controllers/search-account-by-name.js';
+import searchAccounts from '../controllers/account-controllers/search-accounts.js';
 import t2 from '../middleware/tier-2-access.js';
 
 const router = new express.Router();
 
 router.delete('/', t2, deleteAccount);
 
-router.get('/', searchAccountByName);
+router.get('/', searchAccounts);
 
 router.get('/:accountId', fetchAccountById);
 
@@ -24,6 +24,7 @@ router.patch('/login', login);
 
 router.patch('/logoutAll', t2, logoutAllDevices);
 
+// this route isn't getting used anywhere and i may just remove it from the project
 router.patch('/logoutSingle', t2, logoutSingleDevice);
 
 router.post('/', register);

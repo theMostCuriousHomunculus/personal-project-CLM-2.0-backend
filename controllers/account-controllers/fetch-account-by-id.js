@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
-import { Account } from '../../models/account-model.js';
-import { Cube } from '../../models/cube-model.js';
+import Account from '../../models/account-model.js';
+import Cube from '../../models/cube-model.js';
 import { Event } from '../../models/event-model.js';
 
 export default async function (req, res) {
@@ -28,8 +28,9 @@ export default async function (req, res) {
     if (!user) {
       res.status(404).json({ message: 'Profile not found!' });
     } else {
+      // i may end up refactoring this code; if you are fetching a different user's info, there is no reason to send back mainboard, modules or rotation info for cubes since you can't host an event with another user's cube
       const cubes = await Cube.find({ creator: req.params.accountId })
-        .select('description modules._id modules.name name rotations._id rotations.name');
+        .select('description mainboard modules name rotations');
       const events = await Event.find({ "players.account": req.params.accountId })
         .populate({ path: 'host', select: 'avatar name' })
         .select('createdAt host name');

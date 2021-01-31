@@ -1,4 +1,4 @@
-import { Cube } from '../../models/cube-model.js';
+import Cube from '../../models/cube-model.js';
 
 // with the account page refactor, i don't believe this is being used anywhere yet
 export default async function (req, res) {
