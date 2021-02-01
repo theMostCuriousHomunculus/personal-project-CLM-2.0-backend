@@ -4,6 +4,7 @@ export default async function (cardId) {
   // this is not currently sending the other drafters picks (must manually refresh page to get them); need to fix this
   const eventId = this.socket.handshake.query.eventId;
   const userId = this.socket.handshake.query.userId;
+
   try {
     const event = await Event.findById(eventId);
     const player = event.players.find(function (plr) {
@@ -40,11 +41,12 @@ export default async function (cardId) {
       [...event.players[otherPlayerIndex].queue, packMinusCardDrafted] :
       event.players[otherPlayerIndex].queue;
       
+    event.players[otherPlayerIndex].queue = otherPlayerUpdatedQueue;
+      
     const updatedQueue = player.queue.length > 1 ? player.queue.slice(1) : [];
 
     event.players[playerIndex].mainboard = updatedCardPool;
     event.players[playerIndex].queue = updatedQueue;
-    event.players[otherPlayerIndex].queue = otherPlayerUpdatedQueue;
 
     let finished = event.players.every(function (plr) {
       return plr.packs.length + plr.queue.length === 0;
@@ -59,7 +61,7 @@ export default async function (cardId) {
     });
 
     if (nextPack) {
-      for (plr of event.players) {
+      for (let plr of event.players) {
         plr.queue.push(plr.packs[0]);
         plr.packs.shift();
       }
@@ -67,7 +69,7 @@ export default async function (cardId) {
 
     await event.save();
 
-    for (plr of event.players) {
+    for (let plr of event.players) {
       this.io.to(`${eventId} - ${plr.account.toString()}`).emit('updateEventStatus',
         {
           finished: finished,
