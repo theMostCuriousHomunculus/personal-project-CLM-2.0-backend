@@ -4,6 +4,9 @@ const cardSchema = new mongoose.Schema({
   back_image: {
     type: String
   },
+  chapters: {
+    type: Number
+  },
   cmc: {
     required: true,
     type: Number

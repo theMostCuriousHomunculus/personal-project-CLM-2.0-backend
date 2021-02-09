@@ -11,6 +11,7 @@ class CardProperty {
 export default async function (req, res) {
   const validCardProperties = [
     new CardProperty('back_image', false),
+    new CardProperty('chapters', false),
     new CardProperty('cmc', false),
     new CardProperty('color_identity', false),
     new CardProperty('image', false),
