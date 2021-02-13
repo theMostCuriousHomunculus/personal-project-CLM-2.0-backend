@@ -2,6 +2,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 
+import HttpError from './http-error.js';
+
 const accountSchema = new mongoose.Schema({
   admin: {
     default: false,
@@ -68,13 +70,13 @@ accountSchema.statics.findByCredentials = async (email, enteredPassword) => {
   const user = await Account.findOne({ email })
 
   if (!user) {
-    throw new Error('The provided email address and/or password were incorrect.  Please try again.');
+    throw new HttpError('The provided email address and/or password were incorrect.  Please try again.', 404);
   }
 
   const isMatch = await bcrypt.compare(enteredPassword, user.password);
 
   if (!isMatch) {
-    throw new Error('The provided email address and/or password were incorrect.  Please try again.');
+    throw new HttpError('The provided email address and/or password were incorrect.  Please try again.', 404);
   }
 
   return user;

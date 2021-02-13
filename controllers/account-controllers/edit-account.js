@@ -67,9 +67,16 @@ export default async function (req, res) {
       await otherUser.save();
     }
 
-    await req.user.save();  
-    res.status(200).send();
+    await req.user.save();
+    res.status(204).send();
   } catch (error) {
+
+    if (error.code === 11000) {
+      // 11000 appears to be the mongodb error code for a duplicate key
+      error.message = `The username "${req.body.name}" is already in use.  Usernames must be unique.  Please try a different one.`
+      error.code = 409;
+    }
+
     res.status(error.code || 500).json({ message: error.message });
   }
 };

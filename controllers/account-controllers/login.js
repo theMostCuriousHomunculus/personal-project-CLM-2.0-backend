@@ -11,6 +11,6 @@ export default async function (req, res) {
       userId: user._id
     });
   } catch (error) {
-    res.status(401).json({ message: error.message });
+    res.status(error.code || 500).json({ message: error.message });
   }
 };

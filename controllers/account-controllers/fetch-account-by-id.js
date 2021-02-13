@@ -12,7 +12,7 @@ export default async function (req, res) {
     let user;
 
     if (!token || decodedToken._id !== req.params.accountId) {
-      // the requester is not requesting their own account information, so not sending email address, sent or received requests
+      // the requester is not requesting their own account information, so not sending email address
       user = await Account.findById(req.params.accountId)
         .populate({ path: 'buds', select: 'avatar name' })
         .select('avatar buds name received_bud_requests sent_bud_requests');
