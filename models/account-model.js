@@ -45,6 +45,8 @@ const accountSchema = new mongoose.Schema({
     ref: 'Account',
     type: mongoose.Schema.Types.ObjectId
   }],
+  reset_token: String,
+  reset_token_expiration: Date,
   sent_bud_requests: [{
     ref: 'Account',
     type: mongoose.Schema.Types.ObjectId
