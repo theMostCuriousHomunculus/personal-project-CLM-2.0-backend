@@ -1,0 +1,30 @@
+type Event {
+  _id: ID!
+  createdAt: String
+  finished: Boolean
+  host: Account
+  name: String!
+  players: [Player]
+  updatedAt: String
+}
+
+type Player {
+  account: Account
+  chaff: [Card]
+  mainboard: [Card]
+  packs: [[Card]]
+  queue: [[Card]]
+  sideboard: [Card]
+}
+
+#type Mutation {
+
+#}
+
+#type Query {
+
+#}
+
+type Subscription {
+  count: Int!
+}

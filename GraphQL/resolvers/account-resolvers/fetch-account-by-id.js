@@ -5,7 +5,7 @@ import Cube from '../../../models/cube-model.js';
 import { Event } from '../../../models/event-model.js';
 import HttpError from '../../../models/http-error.js';
 
-export default async function (args, context) {
+export default async function (parent, args, context) {
   const { _id } = args;
   const { req } = context;
   const token = req.header('Authorization') ? req.header('Authorization').replace('Bearer ', '') : null;

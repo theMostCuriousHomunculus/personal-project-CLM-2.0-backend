@@ -1,0 +1,77 @@
+input EditAccountData {
+  action: String
+  avatar: String
+  email: String
+  name: String
+  other_user_id: String
+  password: String
+}
+
+input LoginData {
+  email: String!
+  password: String!
+}
+
+input RegisterData {
+  avatar: String!
+  email: String!
+  name: String!
+  password: String!
+}
+
+input SubmitPasswordResetData {
+  email: String!
+  password: String!
+  reset_token: String!
+}
+
+type Account {
+  _id: ID
+  admin: Boolean
+  avatar: String
+  buds: [Account]
+  email: String
+  name: String
+  password: String
+  received_bud_requests: [Account]
+  reset_token: String
+  reset_token_expiration: String
+  sent_bud_requests: [Account]
+  tokens: [Token]
+}
+
+type Credentials {
+  isAdmin: Boolean
+  token: String!
+  userId: String!
+}
+
+type ProfileData {
+  cubes: [Cube]
+  events: [Event]
+  user: Account!
+}
+
+type Token {
+  _id: ID!
+  token: String!
+}
+
+type Mutation {
+  editAccount(input: EditAccountData): Boolean
+  login(input: LoginData!): Credentials!
+  logoutAllDevices: Boolean
+  logoutSingleDevice: Boolean
+  register(input: RegisterData!): Credentials!
+  requestPasswordReset(email: String!): Boolean
+  submitPasswordReset(input: SubmitPasswordResetData): Credentials!
+}
+
+type Query {
+  fetchAccountByID(_id: ID!): ProfileData!
+  searchAccounts(name: String!): [Account]!
+}
+
+#type Subscription {
+
+#}

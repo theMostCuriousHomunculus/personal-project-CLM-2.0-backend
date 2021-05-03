@@ -1,0 +1,55 @@
+type Card {
+  _id: ID!
+  back_image: String
+  chapters: Int
+  cmc: Int
+  color_identity: [String!]
+  image: String
+  keywords: [String!]
+  loyalty: Int
+  mana_cost: String
+  mtgo_id: Int
+  name: String
+  oracle_id: String
+  power: Int
+  printing: String
+  purchase_link: String
+  toughness: Int
+  type_line: String
+}
+
+type Cube {
+  _id: ID!
+  creator: Account
+  description: String
+  mainboard: [Card]
+  modules: [Module]
+  name: String!
+  rotations: [Rotation]
+  sideboard: [Card]
+}
+
+type Module {
+  _id: ID
+  cards: [Card]
+  name: String
+}
+
+type Rotation {
+  _id: ID
+  cards: [Card]
+  name: String
+  size: Int
+}
+
+#type Mutation {
+
+#}
+
+#type Query {
+
+#}
+
+#type SUbscription {
+
+#}

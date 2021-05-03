@@ -1,6 +1,6 @@
 import Account from '../../../models/account-model.js';
 
-export default async function (args, req) {
+export default async function (parent, args, context) {
   const { name } = args;
   const matchingUsers = await Account.find(
     { $text: { $search: name } },

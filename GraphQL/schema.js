@@ -1,15 +1,175 @@
-import {
-  buildSchema,
-  GraphQLBoolean,
-  GraphQLID,
-  GraphQLInputObjectType,
-  GraphQLInt,
-  GraphQLList,
-  GraphQLNonNull,
-  GraphQLObjectType,
-  GraphQLSchema,
-  GraphQLString
-} from 'graphql';
+// import {
+//   buildSchema,
+//   GraphQLBoolean,
+//   GraphQLID,
+//   GraphQLInputObjectType,
+//   GraphQLInt,
+//   GraphQLList,
+//   GraphQLNonNull,
+//   GraphQLObjectType,
+//   GraphQLSchema,
+//   GraphQLString
+// } from 'graphql';
+// import { loadFilesSync } from '@graphql-tools/load-files';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+// import { mergeTypeDefs } from '@graphql-tools/merge';
+
+import rootResolver from './resolvers/root-resolver.js';
+
+// const typeDefsArray = loadFilesSync(new URL('./typeDefs', import.meta.url).toString(), { extensions: ['graphql'] });
+
+const typeDefs = `
+  input EditAccountData {
+    action: String
+    avatar: String
+    email: String
+    name: String
+    other_user_id: String
+    password: String
+  }
+
+  input EventUpdatedData {
+    cardID: String!
+    eventID: String!
+  }
+
+  input LoginData {
+    email: String!
+    password: String!
+  }
+
+  input RegisterData {
+    avatar: String!
+    email: String!
+    name: String!
+    password: String!
+  }
+
+  input SubmitPasswordResetData {
+    email: String!
+    password: String!
+    reset_token: String!
+  }
+
+  type Account {
+    _id: ID
+    admin: Boolean
+    avatar: String
+    buds: [Account]
+    email: String
+    name: String
+    password: String
+    received_bud_requests: [Account]
+    reset_token: String
+    reset_token_expiration: String
+    sent_bud_requests: [Account]
+    tokens: [Token]
+  }
+
+  type Card {
+    _id: ID!
+    back_image: String
+    chapters: Int
+    cmc: Int
+    color_identity: [String!]
+    image: String
+    keywords: [String!]
+    loyalty: Int
+    mana_cost: String
+    mtgo_id: Int
+    name: String
+    oracle_id: String
+    power: Int
+    printing: String
+    purchase_link: String
+    toughness: Int
+    type_line: String
+  }
+
+  type Credentials {
+    isAdmin: Boolean
+    token: String!
+    userId: String!
+  }
+
+  type Cube {
+    _id: ID!
+    creator: Account
+    description: String
+    mainboard: [Card]
+    modules: [Module]
+    name: String!
+    rotations: [Rotation]
+    sideboard: [Card]
+  }
+
+  type Event {
+    _id: ID!
+    createdAt: String
+    finished: Boolean
+    host: Account
+    name: String!
+    players: [Player]
+    updatedAt: String
+  }
+
+  type Module {
+    _id: ID
+    cards: [Card]
+    name: String
+  }
+
+  type Mutation {
+    editAccount(input: EditAccountData): Boolean
+    login(input: LoginData!): Credentials!
+    logoutAllDevices: Boolean
+    logoutSingleDevice: Boolean
+    register(input: RegisterData!): Credentials!
+    requestPasswordReset(email: String!): Boolean
+    submitPasswordReset(input: SubmitPasswordResetData): Credentials!
+  }
+
+  type Player {
+    account: Account
+    chaff: [Card]
+    mainboard: [Card]
+    packs: [[Card]]
+    queue: [[Card]]
+    sideboard: [Card]
+  }
+
+  type ProfileData {
+    cubes: [Cube]
+    events: [Event]
+    user: Account!
+  }
+
+  type Query {
+    fetchAccountByID(_id: ID!): ProfileData!
+    searchAccounts(name: String!): [Account]!
+  }
+
+  type Rotation {
+    _id: ID
+    cards: [Card]
+    name: String
+    size: Int
+  }
+
+  type Subscription {
+    count: Int!
+  }
+
+  type Token {
+    _id: ID!
+    token: String!
+  }
+`;
+
+export default makeExecutableSchema({
+  resolvers: rootResolver,
+  typeDefs: /*mergeTypeDefs(typeDefsArray)*/typeDefs
+});
 
 // const DraftCardInput = new GraphQLInputObjectType({
 //   name: "DraftCard",
@@ -182,157 +342,3 @@ import {
 //     token: { type: new GraphQLNonNull(GraphQLString) }
 //   }
 // });
-
-export default buildSchema(`
-  input EditAccountData {
-    action: String
-    avatar: String
-    email: String
-    name: String
-    other_user_id: String
-    password: String
-  }
-
-  input EventUpdatedData {
-    cardID: String!
-    eventID: String!
-  }
-
-  input LoginData {
-    email: String!
-    password: String!
-  }
-
-  input RegisterData {
-    avatar: String!
-    email: String!
-    name: String!
-    password: String!
-  }
-
-  input SubmitPasswordResetData {
-    email: String!
-    password: String!
-    reset_token: String!
-  }
-
-  schema {
-    mutation: RootMutation
-    query: RootQuery
-    subscription: Subscription
-  }
-
-  type Account {
-    _id: ID
-    admin: Boolean
-    avatar: String
-    buds: [Account]
-    email: String
-    name: String
-    password: String
-    received_bud_requests: [Account]
-    reset_token: String
-    reset_token_expiration: String
-    sent_bud_requests: [Account]
-    tokens: [Token]
-  }
-
-  type AccountData {
-    cubes: [Cube]
-    events: [Event]
-    user: Account!
-  }
-
-  type Card {
-    _id: ID!
-    back_image: String
-    chapters: Int
-    cmc: Int
-    color_identity: [String!]
-    image: String
-    keywords: [String!]
-    loyalty: Int
-    mana_cost: String
-    mtgo_id: Int
-    name: String
-    oracle_id: String
-    power: Int
-    printing: String
-    purchase_link: String
-    toughness: Int
-    type_line: String
-  }
-
-  type Credentials {
-    isAdmin: Boolean
-    token: String!
-    userId: String!
-  }
-
-  type Cube {
-    _id: ID!
-    creator: Account
-    description: String
-    mainboard: [Card]
-    modules: [Module]
-    name: String!
-    rotations: [Rotation]
-    sideboard: [Card]
-  }
-
-  type Event {
-    _id: ID!
-    createdAt: String
-    finished: Boolean
-    host: Account
-    name: String!
-    players: [Player]
-    updatedAt: String
-  }
-
-  type Module {
-    _id: ID
-    cards: [Card]
-    name: String
-  }
-
-  type Player {
-    account: Account
-    chaff: [Card]
-    mainboard: [Card]
-    packs: [[Card]]
-    queue: [[Card]]
-    sideboard: [Card]
-  }
-
-  type RootMutation {
-    editAccount(input: EditAccountData): Boolean
-    login(input: LoginData): Credentials!
-    logoutAllDevices: Boolean
-    logoutSingleDevice: Boolean
-    register(input: RegisterData): Credentials!
-    requestPasswordReset(email: String!): Boolean
-    submitPasswordReset(input: SubmitPasswordResetData): Credentials!
-  }
-
-  type RootQuery {
-    fetchAccountByID(_id: ID!): AccountData!
-    searchAccounts(name: String!): [Account]!
-  }
-
-  type Rotation {
-    _id: ID
-    cards: [Card]
-    name: String
-    size: Int
-  }
-
-  type Subscription {
-    count: Int
-  }
-
-  type Token {
-    _id: ID!
-    token: String!
-  }
-`);

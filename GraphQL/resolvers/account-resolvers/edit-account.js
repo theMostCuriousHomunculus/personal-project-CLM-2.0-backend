@@ -2,9 +2,10 @@ import Account from '../../../models/account-model.js';
 import HttpError from '../../../models/http-error.js';
 import identifyRequester from '../../middleware/identify-requester.js';
 
-export default async function (args, req) {
+export default async function (parent, args, context) {
 
   const { input: { action, avatar, email, name, other_user_id, password } } = args;
+  const { req } = context;
   const user = await identifyRequester(req);
 
   try {

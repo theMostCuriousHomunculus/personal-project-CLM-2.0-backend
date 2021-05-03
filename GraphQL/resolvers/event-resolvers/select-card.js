@@ -1,23 +1,18 @@
-// import { PubSub } from 'graphql-subscriptions';
 // import { Event } from '../../../models/event-model.js';
 
-// const pubsub = new PubSub();
-
 export default {
-  count: {
-    subscribe(args, context) {
-      const { pubsub } = context;
-      let count = 0;
+  subscribe(parent, args, context, info) {
+    const { pubsub } = context;
+    let count = 0;
 
-      setInterval(() => {
-        count++;
-        pubsub.publish('count', {
-          count
-        })
-      }, 1000);
+    setInterval(() => {
+      count++;
+      pubsub.publish("count", {
+        count
+      });
+    }, 1000);
 
-      return pubsub.asyncIterator('count');
-    }
+    return pubsub.asyncIterator("count");
   }
 };
 

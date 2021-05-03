@@ -4,7 +4,7 @@ import Account from '../../../models/account-model.js';
 import HttpError from '../../../models/http-error.js';
 import transporter from '../../../utils/sendgrid-transporter.js';
 
-export default async function (args, req) {
+export default async function (parent, args, context) {
   const { email } = args;
   const buffer = crypto.randomBytes(32);
   const reset_token = buffer.toString(`hex`);
