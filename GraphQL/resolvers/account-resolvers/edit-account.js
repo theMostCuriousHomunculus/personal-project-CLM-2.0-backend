@@ -74,7 +74,7 @@ export default async function (parent, args, context) {
 
     await user.save();
     
-    return true;
+    return user;
 
   } catch (error) {
 

@@ -19,7 +19,7 @@ import rootResolver from './resolvers/root-resolver.js';
 // const typeDefsArray = loadFilesSync(new URL('./typeDefs', import.meta.url).toString(), { extensions: ['graphql'] });
 
 const typeDefs = `
-  input EditAccountData {
+  input EditAccountInput {
     action: String
     avatar: String
     email: String
@@ -28,52 +28,62 @@ const typeDefs = `
     password: String
   }
 
-  input EventUpdatedData {
+  input EventUpdatedInput {
     cardID: String!
     eventID: String!
   }
 
-  input LoginData {
+  input LoginInput {
     email: String!
     password: String!
   }
 
-  input RegisterData {
+  input RegisterInput {
     avatar: String!
     email: String!
     name: String!
     password: String!
   }
 
-  input SubmitPasswordResetData {
+  input SubmitPasswordResetInput {
     email: String!
     password: String!
     reset_token: String!
   }
 
-  type Account {
+  type AccountType {
     _id: ID
     admin: Boolean
     avatar: String
-    buds: [Account]
+    buds: [AccountType]
+    cubes: [CubeType]
     email: String
+    events: [EventType]
     name: String
-    password: String
-    received_bud_requests: [Account]
-    reset_token: String
-    reset_token_expiration: String
-    sent_bud_requests: [Account]
-    tokens: [Token]
+    received_bud_requests: [AccountType]
+    sent_bud_requests: [AccountType]
   }
 
-  type Card {
-    _id: ID!
+  type BlogPostType {
+    _id: ID
+    author: AccountType
+    body: String
+    comments: [CommentType]
+    createdAt: String
+    image: String
+    subtitle: String
+    title: String
+    updatedAt: String
+  }
+
+  type CardType {
+    _id: ID
     back_image: String
     chapters: Int
     cmc: Int
-    color_identity: [String!]
+    color_identity: [String]
     image: String
-    keywords: [String!]
+    keywords: [String]
     loyalty: Int
     mana_cost: String
     mtgo_id: Int
@@ -86,83 +96,89 @@ const typeDefs = `
     type_line: String
   }
 
+  type CommentType {
+    _id: ID
+    author: AccountType
+    body: String
+    createdAt: String
+    updatedAt: String
+  }
+
   type Credentials {
     isAdmin: Boolean
     token: String!
     userId: String!
   }
 
-  type Cube {
-    _id: ID!
-    creator: Account
+  type CubeType {
+    _id: ID
+    creator: AccountType
     description: String
-    mainboard: [Card]
-    modules: [Module]
-    name: String!
-    rotations: [Rotation]
-    sideboard: [Card]
+    mainboard: [CardType]
+    modules: [ModuleType]
+    name: String
+    rotations: [RotationType]
+    sideboard: [CardType]
   }
 
-  type Event {
-    _id: ID!
+  type EventType {
+    _id: ID
     createdAt: String
     finished: Boolean
-    host: Account
-    name: String!
-    players: [Player]
+    host: AccountType
+    name: String
+    players: [PlayerType]
     updatedAt: String
   }
 
-  type Module {
+  type ModuleType {
     _id: ID
-    cards: [Card]
+    cards: [CardType]
     name: String
   }
 
-  type Mutation {
-    editAccount(input: EditAccountData): Boolean
-    login(input: LoginData!): Credentials!
+  type MutationType {
+    editAccount(input: EditAccountInput): AccountType!
+    login(input: LoginInput!): Credentials!
     logoutAllDevices: Boolean
     logoutSingleDevice: Boolean
-    register(input: RegisterData!): Credentials!
+    register(input: RegisterInput!): Credentials!
     requestPasswordReset(email: String!): Boolean
-    submitPasswordReset(input: SubmitPasswordResetData): Credentials!
+    submitPasswordReset(input: SubmitPasswordResetInput!): Credentials!
+    createBlogPost(input: CreateBlogPostInput!): BlogPostType!
   }
 
-  type Player {
-    account: Account
-    chaff: [Card]
-    mainboard: [Card]
-    packs: [[Card]]
-    queue: [[Card]]
-    sideboard: [Card]
+  type PlayerType {
+    account: AccountType
+    chaff: [CardType]
+    mainboard: [CardType]
+    packs: [[CardType]]
+    queue: [[CardType]]
+    sideboard: [CardType]
   }
 
-  type ProfileData {
+  type ProfileType {
     cubes: [Cube]
     events: [Event]
     user: Account!
   }
 
   type Query {
-    fetchAccountByID(_id: ID!): ProfileData!
-    searchAccounts(name: String!): [Account]!
+    fetchAccountByID(_id: ID!): AccountType!
+    searchAccounts(name: String!): [AccountType]!
+    fetchAllBlogPosts(search: String): [BlogPostType]!
+    fetchBlogPostByID(_id: ID!): BlogPostType!
   }
 
-  type Rotation {
+  type RotationType {
     _id: ID
-    cards: [Card]
+    cards: [CardType]
     name: String
     size: Int
   }
 
   type Subscription {
     count: Int!
-  }
-
-  type Token {
-    _id: ID!
-    token: String!
   }
 `;
 

@@ -11,12 +11,11 @@ import schema from './GraphQL/schema.js';
 // https://github.com/graphql/express-graphql#setup-with-subscription-support
 // https://the-guild.dev/blog/subscriptions-and-live-queries-real-time-with-graphql
 
-const WSserver = new ws.Server({
-  server: HTTPserver,
-  path: '/graphql'
-});
-
 HTTPserver.listen(process.env.PORT, function (req) {
+  const WSserver = new ws.Server({
+    server: HTTPserver,
+    path: '/graphql'
+  });
   useServer({ context: { pubsub, req }, schema }, WSserver);
   console.log(`The server is up on port ${process.env.PORT}.`);
 });

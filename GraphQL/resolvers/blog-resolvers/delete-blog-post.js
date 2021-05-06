@@ -1,8 +1,9 @@
 import Blog from '../../../models/blog-model.js';
 import HttpError from '../../../models/http-error.js';
 
-export default async function (args, req) {
+export default async function (parent, args, context) {
   const { blogPostID } = args;
+  const { req } = context;
   const user = await identifyRequester(req);
   const blogPost = await Blog.findById(blogPostID);
 

@@ -1,6 +1,6 @@
 import Blog from '../../../models/blog-model.js';
 
-export default async function (args, req) {
+export default async function (parent, args, context) {
   const { search } = args;
   let matchingBlogPosts;
 

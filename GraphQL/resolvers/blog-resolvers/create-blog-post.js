@@ -2,9 +2,9 @@ import Blog from '../../../models/blog-model.js';
 import HttpError from '../../../models/http-error.js';
 import identifyRequester from '../../middleware/identify-requester.js';
 
-export default async function (args, req) {
-
+export default async function (parent, args, context) {
   const { input: { body, image, subtitle, title } } = args;
+  const { req } = context;
   const user = await identifyRequester(req);
 
   if (!user.admin) throw new HttpError("Only administrators may post articles on Cube Level Midnight.", 401);

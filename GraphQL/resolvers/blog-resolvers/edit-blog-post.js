@@ -3,8 +3,9 @@ import Blog from '../../../models/blog-model.js';
 import HttpError from '../../../models/http-error.js';
 import identifyRequester from '../../middleware/identify-requester.js';
 
-export default async function (args, req) {
+export default async function (parent, args, context) {
   const { input: { blogPostID, body, image, subtitle, title } } = args;
+  const { req } = context;
   const blogPost = await Blog.findById(blogPostID);
   const user = await identifyRequester(req);
 

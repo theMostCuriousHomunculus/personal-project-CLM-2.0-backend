@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken';
+
 import Account from '../../models/account-model.js';
 import HttpError from '../../models/http-error.js';
 
