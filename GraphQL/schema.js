@@ -19,6 +19,13 @@ import rootResolver from './resolvers/root-resolver.js';
 // const typeDefsArray = loadFilesSync(new URL('./typeDefs', import.meta.url).toString(), { extensions: ['graphql'] });
 
 const typeDefs = `
+  input CreateBlogPostInput {
+    body: String!
+    image: String!
+    subtitle: String
+    title: String!
+  }
+
   input EditAccountInput {
     action: String
     avatar: String
@@ -137,7 +144,7 @@ const typeDefs = `
     name: String
   }
 
-  type MutationType {
+  type Mutation {
     editAccount(input: EditAccountInput): AccountType!
     login(input: LoginInput!): Credentials!
     logoutAllDevices: Boolean
@@ -157,15 +164,17 @@ const typeDefs = `
     sideboard: [CardType]
   }
 
+  """
   type ProfileType {
     cubes: [Cube]
     events: [Event]
     user: Account!
   }
+  """
 
   type Query {
     fetchAccountByID(_id: ID!): AccountType!
-    searchAccounts(name: String!): [AccountType]!
+    searchAccounts(name: String): [AccountType]!
     fetchAllBlogPosts(search: String): [BlogPostType]!
     fetchBlogPostByID(_id: ID!): BlogPostType!
   }

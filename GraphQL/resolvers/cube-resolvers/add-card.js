@@ -1,8 +1,8 @@
 import Cube from '../../../models/cube-model.js';
 import HttpError from '../../../models/http-error.js';
 import identifyRequester from '../../middleware/identify-requester.js';
-import returnComponent from '../../../utils/return-component.js.js';
-import validCardProperties from '../../../constants/valid-card-properties.js.js';
+import returnComponent from '../../../utils/return-component.js';
+import validCardProperties from '../../../constants/valid-card-properties.js';
 
 export default async function (args, req) {
   const { input: { componentID, cubeID } } = args;

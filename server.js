@@ -5,6 +5,7 @@ import { createServer } from 'http';
 
 import graphqlHandler from './GraphQL/GRAPHQL-handler.js';
 import restHandler from './REST/REST-handler.js';
+import ID from './ID.js';
 
 mongoose.connect(process.env.DB_CONNECTION, {
   useCreateIndex: true,
@@ -13,8 +14,6 @@ mongoose.connect(process.env.DB_CONNECTION, {
 });
 
 const app = express();
-
-app.use('/graphql', graphqlHandler);
 
 const HTTPserver = createServer(app);
 const io = socketio(HTTPserver);
@@ -39,6 +38,10 @@ app.use(express.urlencoded({
   useNewUrlParser: true,
   useUnifiedTopology: true
 }));
+
+app.use(ID);
+
+app.use('/graphql', graphqlHandler);
 
 app.use('/rest', restHandler(io));
 

@@ -35,12 +35,13 @@ import fetchCubeByID from './cube-resolvers/fetch-cube-by-id.js';
 // event
 import count from './event-resolvers/select-card.js';
 
-// relational mappings
+// custom field resolvers
 import account from './event-resolvers/account.js';
 import author from './blog-resolvers/author.js';
 import buds from './account-resolvers/buds.js';
 import creator from './cube-resolvers/creator.js';
 import cubes from './account-resolvers/cubes.js';
+import email from './account-resolvers/email.js';
 import events from './account-resolvers/events.js';
 import host from './event-resolvers/host.js';
 import received_bud_requests from './account-resolvers/received-bud-requests.js';
@@ -50,6 +51,7 @@ export default {
   AccountType: {
     buds,
     cubes,
+    email,
     events,
     received_bud_requests,
     sent_bud_requests
@@ -78,20 +80,20 @@ export default {
     submitPasswordReset,
   // blog
     createBlogPost,
-    createComment,
-    deleteBlogPost,
-    deleteComment,
-    editBlogPost,
+    // createComment,
+    // deleteBlogPost,
+    // deleteComment,
+    // editBlogPost,
   // cube
-    addCard,
-    createComponent,
-    createCube,
-    deleteCard,
-    deleteComponent,
-    deleteCube,
-    editCard,
-    editComponent,
-    editCube,
+    // addCard,
+    // createComponent,
+    // createCube,
+    // deleteCard,
+    // deleteComponent,
+    // deleteCube,
+    // editCard,
+    // editComponent,
+    // editCube,
   // event
   },
   PlayerType: {
@@ -102,10 +104,10 @@ export default {
     fetchAccountByID,
     searchAccounts,
   // blog
-    fetchAllBlogPosts,
-    fetchBlogPostByID,
+    // fetchAllBlogPosts,
+    // fetchBlogPostByID,
   // cube
-    fetchCubeByID,
+    // fetchCubeByID,
   // event
   },
   Subscription: {
