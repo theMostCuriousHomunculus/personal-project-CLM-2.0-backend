@@ -3,9 +3,9 @@ import mongoose from 'mongoose';
 import socketio from 'socket.io';
 import { createServer } from 'http';
 
-import graphqlHandler from './GraphQL/GRAPHQL-handler.js';
+import auth from './auth.js';
+import graphqlHandler from './GraphQL/GraphQL-handler.js';
 import restHandler from './REST/REST-handler.js';
-import ID from './ID.js';
 
 mongoose.connect(process.env.DB_CONNECTION, {
   useCreateIndex: true,
@@ -39,7 +39,7 @@ app.use(express.urlencoded({
   useUnifiedTopology: true
 }));
 
-app.use(ID);
+app.use(auth);
 
 app.use('/graphql', graphqlHandler);
 

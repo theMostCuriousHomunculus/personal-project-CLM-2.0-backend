@@ -1,15 +1,11 @@
-import Account from '../../../models/account-model.js';
 import Blog from '../../../models/blog-model.js';
 import HttpError from '../../../models/http-error.js';
-import identifyRequester from '../../middleware/identify-requester.js';
 
-export default async function (parent, args, context) {
+export default async function (parent, args, context, info) {
   const { input: { blogPostID, body, image, subtitle, title } } = args;
-  const { req } = context;
   const blogPost = await Blog.findById(blogPostID);
-  const user = await identifyRequester(req);
 
-  if (user._id !== blogPost.author) {
+  if (context.account._id.toString() !== blogPost.author.toString()) {
     throw new HttpError("You are not authorized to edit this blog post.", 401);
   } else {
     try {
@@ -23,7 +19,7 @@ export default async function (parent, args, context) {
       };
       await blogPost.save();
       
-      return true;
+      return blogPost;
     } catch (error) {
 
       if (error.code === 11000) {

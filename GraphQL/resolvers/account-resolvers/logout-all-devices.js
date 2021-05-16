@@ -1,10 +1,14 @@
-import identifyRequester from '../../middleware/identify-requester.js';
-
-export default async function (parent, args, context) {
-  const { req } = context;
-  const user = await identifyRequester(req);
-  user.tokens = [];
-  await user.save();
+export default async function (parent, args, context, info) {
   
-  return true;
+  const { account } = context;
+
+  if (!account) {
+    return false;
+  } else {
+    account.tokens = [];
+    await account.save();
+    
+    return true;
+  }
+
 };

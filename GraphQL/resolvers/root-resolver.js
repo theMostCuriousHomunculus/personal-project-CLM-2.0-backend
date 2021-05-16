@@ -16,7 +16,7 @@ import createComment from './blog-resolvers/create-comment.js';
 import deleteBlogPost from './blog-resolvers/delete-blog-post.js';
 import deleteComment from './blog-resolvers/delete-comment.js';
 import editBlogPost from './blog-resolvers/edit-blog-post.js';
-import fetchAllBlogPosts from './blog-resolvers/fetch-all-blog-posts.js';
+import searchBlogPosts from './blog-resolvers/search-blog-posts.js';
 import fetchBlogPostByID from './blog-resolvers/fetch-blog-post-by-id.js';
 
 // cube
@@ -80,10 +80,10 @@ export default {
     submitPasswordReset,
   // blog
     createBlogPost,
-    // createComment,
-    // deleteBlogPost,
-    // deleteComment,
-    // editBlogPost,
+    createComment,
+    deleteBlogPost,
+    deleteComment,
+    editBlogPost,
   // cube
     // addCard,
     // createComponent,
@@ -104,8 +104,8 @@ export default {
     fetchAccountByID,
     searchAccounts,
   // blog
-    // fetchAllBlogPosts,
-    // fetchBlogPostByID,
+    fetchBlogPostByID,
+    searchBlogPosts,
   // cube
     // fetchCubeByID,
   // event

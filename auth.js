@@ -9,11 +9,10 @@ export default async function (req, res, next) {
 
     const account = await Account.findById(decodedToken._id);
 
-    req.requesterID = account._id;
-    req.isAdmin = account.admin;
+    req.account = account;
+    req.token = token;
   } catch (error) {
-    // if there isn't a token or if the token is bad, not setting the requesterID
-    req.isAdmin = false;
+    req.account = null;
   } finally {
     next();
   }

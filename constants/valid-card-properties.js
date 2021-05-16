@@ -1,4 +1,4 @@
-const validCardProperties = [
+export default [
   {
     name: 'back_image',
     specialNumeric: false
@@ -64,5 +64,3 @@ const validCardProperties = [
     specialNumeric: false
   }
 ];
-
-export default validCardProperties;

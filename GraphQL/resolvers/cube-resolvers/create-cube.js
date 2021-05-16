@@ -2,12 +2,14 @@ import axios from 'axios';
 import CSVString from 'csv-string';
 
 import Cube from '../../../models/cube-model.js';
+import HttpError from '../../../models/http-error.js';
 import formatScryfallCardData from '../../../utils/format-scryfall-card-data.js';
-import identifyRequester from '../../middleware/identify-requester.js';
 
-export default async function (args, req) {
+export default async function (parent, args, context, info) {
+
+  if (!context.account) throw new HttpError("You must be logged in to create a cube.", 401);
+
   const { input: { cobraID, description, name } } = args;
-  const user = await identifyRequester(req);
   const cardArray = [];
 
   if (cobraID) {
@@ -44,12 +46,12 @@ export default async function (args, req) {
   }
 
   const cube = new Cube({
-    creator: user._id,
+    creator: context.account._id,
     description,
     mainboard: await Promise.all(cardArray),
     name
   });
   await cube.save();
   
-  return { _id: cube._id };
+  return cube;
 };

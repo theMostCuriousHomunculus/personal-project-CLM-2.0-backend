@@ -19,11 +19,17 @@ import rootResolver from './resolvers/root-resolver.js';
 // const typeDefsArray = loadFilesSync(new URL('./typeDefs', import.meta.url).toString(), { extensions: ['graphql'] });
 
 const typeDefs = `
-  input CreateBlogPostInput {
+  input BlogPostInput {
+    _id: String
     body: String!
     image: String!
     subtitle: String
     title: String!
+  }
+
+  input CreateCommentInput {
+    body: String!
+    blogPostID: String!
   }
 
   input EditAccountInput {
@@ -152,7 +158,11 @@ const typeDefs = `
     register(input: RegisterInput!): Credentials!
     requestPasswordReset(email: String!): Boolean
     submitPasswordReset(input: SubmitPasswordResetInput!): Credentials!
-    createBlogPost(input: CreateBlogPostInput!): BlogPostType!
+    createBlogPost(input: BlogPostInput!): BlogPostType!
+    createComment(input: CreateCommentInput!): BlogPostType!
+    deleteBlogPost(_id: String!): Boolean
+    deleteComment(): Boolean
+    editBlogPost(input: BlogPostInput!): BlogPostType!
   }
 
   type PlayerType {

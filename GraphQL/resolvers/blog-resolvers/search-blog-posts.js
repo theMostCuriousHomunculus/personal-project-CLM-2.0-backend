@@ -1,14 +1,14 @@
 import Blog from '../../../models/blog-model.js';
 
-export default async function (parent, args, context) {
-  const { search } = args;
+export default async function (parent, args, context, info) {
+
   let matchingBlogPosts;
 
   // not sure if the if-else is necessary; will test later
-  if (search) {
+  if (args.search) {
     matchingBlogPosts = await Blog
       .find(
-        { $text: { $search: search } },
+        { $text: { $search: args.search } },
         { score: { $meta: 'textScore' } }
       )
       .sort({ score: { $meta: 'textScore' } });

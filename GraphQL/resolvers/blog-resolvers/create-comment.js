@@ -1,17 +1,19 @@
 import Blog, { Comment } from '../../../models/blog-model.js';
-import identifyRequester from '../../middleware/identify-requester.js';
+import HttpError from '../../../models/http-error.js';
 
-export default async function (parent, args, context) {
+export default async function (parent, args, context, info) {
+  const { account } = context;
+
+  if (!account) throw new HttpError("You must be logged in to comment on posts.", 401);
+
   const { body, blogPostID } = args;
-  const { req } = context;
-  const user = await identifyRequester(req);
-  const article = await Blog.findById(blogPostID);
+  const blogPost = await Blog.findById(blogPostID);
   const comment = new Comment({
-    author: user._id,
+    author: account._id,
     body
   });
-  article.comments.push(comment);
-  await article.save();
+  blogPost.comments.push(comment);
+  await blogPost.save();
 
-  return { _id: article.comments[article.comments.length - 1]._id };
+  return blogPost;
 };

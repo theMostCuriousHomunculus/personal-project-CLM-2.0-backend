@@ -1,13 +1,13 @@
 import Account from '../../../models/account-model.js';
 
-export default async function (parent, args, context) {
+export default async function (parent, args, context, info) {
   const { input: { email, password } } = args;
-  const user = await Account.findByCredentials(email, password);
-  const token = await user.generateAuthenticationToken();
+  const account = await Account.findByCredentials(email, password);
+  const token = await account.generateAuthenticationToken();
 
   return {
-    isAdmin: user.admin,
+    isAdmin: account.admin,
     token,
-    userId: user._id
+    userId: account._id
   };
 };

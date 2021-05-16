@@ -1,8 +1,8 @@
 import ws from 'ws';
+import { PubSub } from 'graphql-subscriptions';
 import { useServer } from 'graphql-ws/lib/use/ws';
 
 import HTTPserver from './server.js';
-import pubsub from './GraphQL/pubsub.js';
 import schema from './GraphQL/schema.js';
 
 // https://www.npmjs.com/package/graphql-ws#express
@@ -12,6 +12,7 @@ import schema from './GraphQL/schema.js';
 // https://the-guild.dev/blog/subscriptions-and-live-queries-real-time-with-graphql
 
 HTTPserver.listen(process.env.PORT, function (req) {
+  const pubsub = new PubSub();
   const WSserver = new ws.Server({
     server: HTTPserver,
     path: '/graphql'

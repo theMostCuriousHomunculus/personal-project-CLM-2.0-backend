@@ -1,18 +1,16 @@
 import Blog from '../../../models/blog-model.js';
 import HttpError from '../../../models/http-error.js';
-import identifyRequester from '../../middleware/identify-requester.js';
 
-export default async function (parent, args, context) {
+export default async function (parent, args, context, info) {
   const { input: { body, image, subtitle, title } } = args;
-  const { req } = context;
-  const user = await identifyRequester(req);
+  const { account } = context;
 
-  if (!user.admin) throw new HttpError("Only administrators may post articles on Cube Level Midnight.", 401);
+  if (!account || !account.admin) throw new HttpError("Only administrators may post articles on Cube Level Midnight.", 401);
 
   try {
     const date = new Date();
     const blogPost = new Blog({
-      author: user._id,
+      author: account._id,
       body,
       comments: [],
       createdAt: date,
@@ -24,7 +22,7 @@ export default async function (parent, args, context) {
   
     await blogPost.save();
     
-    return { _id: blogPost._id };
+    return blogPost;
     
   } catch (error) {
 

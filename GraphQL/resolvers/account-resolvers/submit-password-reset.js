@@ -1,25 +1,25 @@
 import Account from '../../../models/account-model.js';
 import HttpError from '../../../models/http-error.js';
 
-export default async function (parent, args, context) {
+export default async function (parent, args, context, info) {
   const { input: { email, password, reset_token } } = args;
-  const user = await Account.findOne({
+  const account = await Account.findOne({
     email,
     reset_token,
     reset_token_expiration: { $gt: Date.now() }
   });
 
-  if (!user) throw new HttpError(`Invalid reset token.`, 401);
+  if (!account) throw new HttpError("Invalid reset token.", 401);
 
-  user.password = password;
-  user.reset_token = null;
-  user.reset_token_expiration = null;
+  account.password = password;
+  account.reset_token = null;
+  account.reset_token_expiration = null;
 
-  const token = await user.generateAuthenticationToken();
+  const token = await account.generateAuthenticationToken();
 
   return {
-    isAdmin: user.admin,
+    isAdmin: account.admin,
     token,
-    userId: user._id
+    userId: account._id
   };
 }

@@ -4,18 +4,18 @@ import Account from '../../../models/account-model.js';
 import HttpError from '../../../models/http-error.js';
 import transporter from '../../../utils/sendgrid-transporter.js';
 
-export default async function (parent, args, context) {
+export default async function (parent, args, context, info) {
   const { email } = args;
   const buffer = crypto.randomBytes(32);
   const reset_token = buffer.toString(`hex`);
-  const user = await Account.findOne({ email });
+  const account = await Account.findOne({ email });
 
-  if (!user) {
-    throw new HttpError(`Could not find a user with the provided email address.`, 404);
+  if (!account) {
+    throw new HttpError("Could not find a user with the provided email address.", 404);
   } else {
-    user.reset_token = reset_token;
-    user.reset_token_expiration = Date.now() + 900000;
-    await user.save();
+    account.reset_token = reset_token;
+    account.reset_token_expiration = Date.now() + 900000;
+    await account.save();
     transporter.sendMail({
       to: email,
       from: `CubeLevelMidnight@gmail.com`,

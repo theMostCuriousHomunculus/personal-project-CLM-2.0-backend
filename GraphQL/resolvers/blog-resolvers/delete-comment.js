@@ -1,15 +1,12 @@
 import Blog, { Comment } from '../../../models/blog-model.js';
 import HttpError from '../../../models/http-error.js';
-import identifyRequester from '../../middleware/identify-requester.js';
 
-export default async function (parent, args, context) {
+export default async function (parent, args, context, info) {
   const { input: { blogPostID, commentID } } = args;
-  const { req } = context;
   const article = await Blog.findById(blogPostID);
   const comment = await Comment.findById(commentID);
-  const user = await identifyRequester(req);
 
-  if (user.admin || user._id === comment.author) {
+  if (context.account.admin || context.account._id === comment.author) {
     article.comments.pull({ _id: req.params.commentId });
     await article.save();
   } else {
