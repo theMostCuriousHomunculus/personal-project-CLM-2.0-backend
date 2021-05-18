@@ -1,19 +1,17 @@
 import Cube from '../../../models/cube-model.js';
 import HttpError from '../../../models/http-error.js';
-import identifyRequester from '../../middleware/identify-requester.js';
 import returnComponent from '../../../utils/return-component.js';
 
-export default async function (args, req) {
+export default async function (parent, args, context, info) {
   const { input: { cardID, componentID, cubeID, destination } } = args;
   const cube = await Cube.findById(cubeID);
-  const user = await identifyRequester(req);
 
-  if (user._id === cube.creator) {
+  if (context.account._id.toString() === cube.creator.toString()) {
     const originComponent = await returnComponent(cube, componentID);
     const card = originComponent.id(cardID);
   
     if (!card) {
-      throw new HttpError('Could not find a card with the provided ID in the provided component.', 404);
+      throw new HttpError("Could not find a card with the provided ID in the provided component.", 404);
     }
   
     originComponent.pull(cardID);

@@ -1,13 +1,15 @@
 import Cube from '../../../models/cube-model.js';
-import identifyRequester from '../../middleware/identify-requester.js';
+import HttpError from '../../../models/http-error.js';
 import randomSampleWithoutReplacement from '../../../utils/random-sample-wo-replacement.js';
 import shuffle from '../../../utils/shuffle.js';
 import { Event } from '../../../models/event-model.js';
 
-export default async function (args, req) {
+export default async function (parent, args, context, info) {
+
+  if (!context.account) throw new HttpError("You must be logged in to create an event.", 401);
+
   const { input: { cards_per_pack, cubeID, event_type, name, packs_per_player } } = args;
   const cube = await Cube.findById(cubeID);
-  const user = await identifyRequester(req);
   let eventCardPool = cube.mainboard;
 
   cube.modules.forEach(function (module) {
@@ -22,9 +24,8 @@ export default async function (args, req) {
 
   shuffle(eventCardPool);
 
-  // creating an initial players array that only contains one player (the user who is creating the event)
   let players = [{
-    account: user._id,
+    account: context.account._id,
     chaff: [],
     mainboard: [],
     packs: [],
@@ -64,12 +65,12 @@ export default async function (args, req) {
 
   const event = new Event({
     finished: event_type === 'sealed',
-    host: user._id,
+    host: context.account._id,
     name,
     players
   });
 
   await event.save();
   
-  return { _id: event._id };
+  return event;
 };

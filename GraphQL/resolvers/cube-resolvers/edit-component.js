@@ -1,6 +1,5 @@
 import Cube from '../../../models/cube-model.js';
 import HttpError from '../../../models/http-error.js';
-import identifyRequester from '../../middleware/identify-requester.js';
 
 const validModuleProperties = [
   'name'
@@ -10,31 +9,32 @@ const validRotationProperties = [
   'size'
 ]
 
-export default async function (args, req) {
+export default async function (parent, args, context, info) {
   const { input: { componentID, cubeID, type } } = args;
   const cube = await Cube.findById(cubeID);
-  const user = await identifyRequester(req);
 
-  if (user._id === cube.creator) {
+  if (context.account._id.toString() === cube.creator.toString()) {
 
     if (type === 'module') {
+      const module = cube.modules.id(componentID);
 
       for (let property of validModuleProperties) {
-        if (typeof input[property] !== 'undefined') cube.modules.id(componentID)[property] = input[property];
+        if (typeof input[property] !== 'undefined') module[property] = input[property];
       }
 
       await cube.save();
       
-      return true;
+      return module;
     } else if (type === 'rotation') {
+      const rotation = cube.rotations.id(componentID);
 
       for (let property of validRotationProperties) {
-        if (typeof input[property] !== 'undefined') cube.rotations.id(componentID)[property] = input[property];
+        if (typeof input[property] !== 'undefined') rotation[property] = input[property];
       }
 
       await cube.save();
 
-      return true;
+      return rotation;
     } else {
       throw new HttpError('Component type must be "module" or "rotation".', 400);
     }

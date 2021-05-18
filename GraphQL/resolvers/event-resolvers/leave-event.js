@@ -1,4 +1,4 @@
-export default async function leave () {
+export default async function (parent, args, context, info) {
   try {
     this.socket.disconnect(true);
   } catch (error) {

@@ -2,7 +2,7 @@ import arrayMove from 'array-move';
 
 import { Event } from '../../models/event-model.js';
 
-export default async function (collection, newIndex, oldIndex) {
+export default async function (parent, args, context, info) {
   try {
     const eventId = this.socket.handshake.query.eventId;
     const userId = this.socket.handshake.query.userId;

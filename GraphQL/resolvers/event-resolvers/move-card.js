@@ -1,6 +1,6 @@
 import { Event } from '../../models/event-model.js';
 
-export default async function (cardId, fromCards, toCards) {
+export default async function (parent, args, context, info) {
   try {
     const eventId = this.socket.handshake.query.eventId;
     const userId = this.socket.handshake.query.userId;

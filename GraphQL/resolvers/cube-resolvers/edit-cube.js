@@ -1,18 +1,16 @@
 import Cube from '../../../models/cube-model.js';
 import HttpError from '../../../models/http-error.js';
-import identifyRequester from '../../middleware/identify-requester.js';
 
 const validCubeProperties = [
   'description',
   'name'
 ];
 
-export default async function (args, req) {
+export default async function (parent, args, context, info) {
   const { input: { cubeID } } = args;
   const cube = await Cube.findById(cubeID);
-  const user = await identifyRequester(req);
 
-  if (user._id === user.creator) {
+  if (context.account._id.toString() === cube.creator.toString()) {
 
     for (let property of validCubeProperties) {
       if (typeof input[property] !== 'undefined') cube[property] = input[property];
@@ -20,7 +18,7 @@ export default async function (args, req) {
 
     await cube.save();
     
-    return true;
+    return cube;
   } else {
     throw new HttpError("You are not authorized to edit this cube.", 401);
   }

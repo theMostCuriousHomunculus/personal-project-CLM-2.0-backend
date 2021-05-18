@@ -1,12 +1,9 @@
 import Cube from '../../../models/cube-model.js';
-import identifyRequester from '../../middleware/identify-requester.js';
 
-export default async function (args, req) {
-  const { cubeID } = args;
-  const cube = await Cube.findById(cubeID);
-  const user = await identifyRequester(req);
+export default async function (parent, args, context, info) {
+  const cube = await Cube.findById(args.cubeID);
 
-  if (user._id === cube.creator) {
+  if (context.account._id.toString() === cube.creator.toString()) {
     await cube.delete();
 
     return true;
