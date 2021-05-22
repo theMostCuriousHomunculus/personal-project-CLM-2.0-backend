@@ -19,6 +19,25 @@ import rootResolver from './resolvers/root-resolver.js';
 // const typeDefsArray = loadFilesSync(new URL('./typeDefs', import.meta.url).toString(), { extensions: ['graphql'] });
 
 const typeDefs = `
+  input AddCardInput {
+    back_image: String
+    chapters: Int
+    cmc: Int
+    color_identity: [String]
+    image: String!
+    keywords: [String]
+    loyalty: Int
+    mana_cost: String
+    mtgo_id: Int
+    name: String!
+    oracle_id: String!
+    power: Int
+    printing: String!
+    purchase_link: String
+    toughness: Int
+    type_line: String
+  }
+
   input BlogPostInput {
     _id: String
     body: String!
@@ -32,6 +51,40 @@ const typeDefs = `
     blogPostID: String!
   }
 
+  input CreateCubeInput {
+    cobraID: String
+    description: String
+    name: String!
+  }
+
+  input CreateModuleInput {
+    cubeID: String!
+    name: String!
+  }
+
+  input CreateRotationInput {
+    cubeID: String!
+    name: String!
+    size: Int
+  }
+
+  input DeleteCardInput {
+    cardID: String!
+    componentID: String!
+    cubeID: String!
+    destinationID: String
+  }
+
+  input DeleteModuleInput {
+    cubeID: String!
+    moduleID: String!
+  }
+
+  input DeleteRotationInput {
+    cubeID: String!
+    rotationID: String!
+  }
+
   input EditAccountInput {
     action: String
     avatar: String
@@ -39,6 +92,47 @@ const typeDefs = `
     name: String
     other_user_id: String
     password: String
+  }
+
+  input EditCardInput {
+    cardID: String!
+    componentID: String!
+    cubeID: String!
+    back_image: String
+    chapters: Int
+    cmc: Int
+    color_identity: [String]
+    image: String
+    keywords: [String]
+    loyalty: Int
+    mana_cost: String
+    mtgo_id: Int
+    name: String
+    oracle_id: String
+    power: Int
+    printing: String
+    purchase_link: String
+    toughness: Int
+    type_line: String
+  }
+
+  input EditCubeInput {
+    cubeID: String!
+    description: String
+    name: String
+  }
+
+  input EditModuleInput {
+    cubeID: String!
+    moduleID: String!
+    name: String
+  }
+
+  input EditRotationInput {
+    cubeID: String!
+    rotationID: String!
+    name: String
+    size: Int
   }
 
   input EventUpdatedInput {
@@ -163,6 +257,18 @@ const typeDefs = `
     deleteBlogPost(_id: String!): Boolean
     deleteComment(): Boolean
     editBlogPost(input: BlogPostInput!): BlogPostType!
+    addCard(input: AddCardInput!): CardType!
+    createCube(input: CreateCubeInput!): CubeType!
+    createModule(input: CreateModuleInput!): ModuleType!
+    createRotation(input: CreateRotationInput!): RotationType!
+    deleteCard(input: DeleteCardInput!): CubeType!
+    deleteCube(cubeID: String!): Boolean
+    deleteModule(input: DeleteModuleInput!): Boolean
+    deleteRotation(input: DeleteRotationInput!): Boolean
+    editCard(input: EditCardInput!): CardType!
+    editCube(input: EditCubeInput!): CubeType!
+    editModule(input: EditModuleInput!): ModuleType!
+    editRotation(input: EditRotationInput!): RotationType!
   }
 
   type PlayerType {
@@ -174,19 +280,13 @@ const typeDefs = `
     sideboard: [CardType]
   }
 
-  """
-  type ProfileType {
-    cubes: [Cube]
-    events: [Event]
-    user: Account!
-  }
-  """
-
   type Query {
     fetchAccountByID(_id: ID!): AccountType!
     searchAccounts(name: String): [AccountType]!
-    fetchAllBlogPosts(search: String): [BlogPostType]!
     fetchBlogPostByID(_id: ID!): BlogPostType!
+    searchBlogPosts(search: String): [BlogPostType]!
+    fetchCubeByID(_id: ID!): CubeType!
+    searchCubes(search: String): [CubeTypes]!
   }
 
   type RotationType {

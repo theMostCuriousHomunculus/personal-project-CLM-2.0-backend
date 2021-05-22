@@ -21,14 +21,17 @@ import fetchBlogPostByID from './blog-resolvers/fetch-blog-post-by-id.js';
 
 // cube
 import addCard from './cube-resolvers/add-card.js';
-import createComponent from './cube-resolvers/create-component.js';
 import createCube from './cube-resolvers/create-cube.js';
+import createModule from './cube-resolvers/create-module.js';
+import createRotation from './cube-resolvers/create-rotation.js';
 import deleteCard from './cube-resolvers/delete-card.js';
-import deleteComponent from './cube-resolvers/delete-component.js';
 import deleteCube from './cube-resolvers/delete-cube.js';
+import deleteModule from './cube-resolvers/delete-module.js';
+import deleteRotation from './cube-resolvers/delete-rotation.js';
 import editCard from './cube-resolvers/edit-card.js';
-import editComponent from './cube-resolvers/edit-component.js';
 import editCube from './cube-resolvers/edit-cube.js';
+import editModule from './cube-resolvers/edit-module.js';
+import editRotation from './cube-resolvers/edit-rotation.js';
 import fetchCubeByID from './cube-resolvers/fetch-cube-by-id.js';
 // import searchCubes from './cube-resolvers/search-cubes.js';
 
@@ -85,15 +88,18 @@ export default {
     deleteComment,
     editBlogPost,
   // cube
-    // addCard,
-    // createComponent,
-    // createCube,
-    // deleteCard,
-    // deleteComponent,
-    // deleteCube,
-    // editCard,
-    // editComponent,
-    // editCube,
+    addCard,
+    createCube,
+    createModule,
+    createRotation,
+    deleteCard,
+    deleteCube,
+    deleteModule,
+    deleteRotation,
+    editCard,
+    editCube,
+    editModule,
+    editRotation,
   // event
   },
   PlayerType: {
@@ -107,7 +113,7 @@ export default {
     fetchBlogPostByID,
     searchBlogPosts,
   // cube
-    // fetchCubeByID,
+    fetchCubeByID,
   // event
   },
   Subscription: {

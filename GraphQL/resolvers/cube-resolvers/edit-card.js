@@ -32,4 +32,4 @@ export default async function (parent, args, context, info) {
     throw new HttpError("You are not authorized to edit this card.", 401);
   }
   
-}
+};
