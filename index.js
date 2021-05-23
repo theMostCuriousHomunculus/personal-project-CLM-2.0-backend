@@ -13,10 +13,11 @@ import schema from './GraphQL/schema.js';
 
 HTTPserver.listen(process.env.PORT, function (req) {
   const pubsub = new PubSub();
+  req.pubsub = pubsub;
   const WSserver = new ws.Server({
     server: HTTPserver,
     path: '/graphql'
   });
-  useServer({ context: { pubsub, req }, schema }, WSserver);
+  useServer({ /*context: { pubsub, req }, */schema }, WSserver);
   console.log(`The server is up on port ${process.env.PORT}.`);
 });

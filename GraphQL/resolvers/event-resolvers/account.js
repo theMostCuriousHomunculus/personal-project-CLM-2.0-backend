@@ -1,8 +1,7 @@
 import Account from '../../../models/account-model.js';
 
 export default async function (parent, args, context, info) {
-  const { account: accountID } = parent;
-  const account = await Account.findById(accountID);
+  const account = await Account.findById(parent.account);
 
   return account;
 };

@@ -33,13 +33,16 @@ import editCube from './cube-resolvers/edit-cube.js';
 import editModule from './cube-resolvers/edit-module.js';
 import editRotation from './cube-resolvers/edit-rotation.js';
 import fetchCubeByID from './cube-resolvers/fetch-cube-by-id.js';
-// import searchCubes from './cube-resolvers/search-cubes.js';
+import searchCubes from './cube-resolvers/search-cubes.js';
 
 // event
-import count from './event-resolvers/select-card.js';
+import createEvent from './event-resolvers/create-event.js';
+import joinEvent from './event-resolvers/join-event.js';
+import moveCard from './event-resolvers/move-card.js';
+import selectCard from './event-resolvers/select-card.js';
+import sortCard from './event-resolvers/sort-card.js';
 
 // custom field resolvers
-import account from './event-resolvers/account.js';
 import author from './blog-resolvers/author.js';
 import buds from './account-resolvers/buds.js';
 import creator from './cube-resolvers/creator.js';
@@ -47,6 +50,7 @@ import cubes from './account-resolvers/cubes.js';
 import email from './account-resolvers/email.js';
 import events from './account-resolvers/events.js';
 import host from './event-resolvers/host.js';
+import players from './event-resolvers/players.js';
 import received_bud_requests from './account-resolvers/received-bud-requests.js';
 import sent_bud_requests from './account-resolvers/sent-bud-requests.js';
 
@@ -69,7 +73,8 @@ export default {
     creator
   },
   EventType: {
-    host
+    host,
+    players
   },
   Mutation: {
   // account
@@ -101,9 +106,10 @@ export default {
     editModule,
     editRotation,
   // event
-  },
-  PlayerType: {
-    account
+    createEvent,
+    moveCard,
+    selectCard,
+    sortCard
   },
   Query: {
   // account
@@ -114,10 +120,11 @@ export default {
     searchBlogPosts,
   // cube
     fetchCubeByID,
+    searchCubes
   // event
   },
   Subscription: {
-    count,
+    joinEvent,
   // account
   // blog
   // cube

@@ -152,6 +152,11 @@ const typeDefs = `
     password: String!
   }
 
+  input SelectCardInput {
+    cardID: String!
+    eventID: String!
+  }
+
   input SubmitPasswordResetInput {
     email: String!
     password: String!
@@ -269,6 +274,10 @@ const typeDefs = `
     editCube(input: EditCubeInput!): CubeType!
     editModule(input: EditModuleInput!): ModuleType!
     editRotation(input: EditRotationInput!): RotationType!
+    createEvent(): 
+    moveCard(): 
+    selectCard(input: SelectCardInput!): EventType!
+    sortCard(): 
   }
 
   type PlayerType {
@@ -298,6 +307,7 @@ const typeDefs = `
 
   type Subscription {
     count: Int!
+    joinEvent(_id: ID!): EventType!
   }
 `;
 
