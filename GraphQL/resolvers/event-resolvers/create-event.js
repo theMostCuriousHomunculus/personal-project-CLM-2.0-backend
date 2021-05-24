@@ -8,12 +8,12 @@ export default async function (parent, args, context, info) {
 
   if (!context.account) throw new HttpError("You must be logged in to create an event.", 401);
 
-  const { input: { cards_per_pack, cubeID, event_type, name, packs_per_player } } = args;
+  const { input: { cards_per_pack, cubeID, event_type, modules, name, other_players, packs_per_player } } = args;
   const cube = await Cube.findById(cubeID);
   let eventCardPool = cube.mainboard;
 
   cube.modules.forEach(function (module) {
-    if (input['modules[]'].includes(module._id.toString())) {
+    if (modules.includes(module._id.toString())) {
       eventCardPool = eventCardPool.concat(module.cards);
     }
   });
@@ -33,7 +33,7 @@ export default async function (parent, args, context, info) {
     sideboard: []
   }];
 
-  input['other_players[]'].forEach(function (other_player) {
+  other_players.forEach(function (other_player) {
     players.push({
       account: other_player,
       chaff: [],

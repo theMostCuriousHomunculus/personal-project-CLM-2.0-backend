@@ -19,6 +19,17 @@ import rootResolver from './resolvers/root-resolver.js';
 // const typeDefsArray = loadFilesSync(new URL('./typeDefs', import.meta.url).toString(), { extensions: ['graphql'] });
 
 const typeDefs = `
+  enum CollectionEnum {
+    chaff
+    mainboard
+    sideboard
+  }
+
+  enum EventEnum {
+    draft
+    sealed
+  }
+
   input AddCardInput {
     back_image: String
     chapters: Int
@@ -57,6 +68,16 @@ const typeDefs = `
     name: String!
   }
 
+  input CreateEventInput {
+    cards_per_pack: Int!
+    cubeID: String!
+    event_type: EventEnum!
+    modules: [String]
+    name: String!
+    other_players: [String]
+    packs_per_player: Int!
+  }
+
   input CreateModuleInput {
     cubeID: String!
     name: String!
@@ -73,6 +94,11 @@ const typeDefs = `
     componentID: String!
     cubeID: String!
     destinationID: String
+  }
+
+  input DeleteCommentInput {
+    blogPostID: String!
+    commentID: String!
   }
 
   input DeleteModuleInput {
@@ -145,6 +171,13 @@ const typeDefs = `
     password: String!
   }
 
+  input MoveCardInput {
+    cardID: String!
+    destination: CollectionEnum!
+    eventID: String!
+    origin: CollectionEnum!
+  }
+
   input RegisterInput {
     avatar: String!
     email: String!
@@ -155,6 +188,13 @@ const typeDefs = `
   input SelectCardInput {
     cardID: String!
     eventID: String!
+  }
+
+  input SortCardInput {
+    collection: CollectionEnum!
+    eventID: String!
+    newIndex: Int!
+    oldIndex: Int!
   }
 
   input SubmitPasswordResetInput {
@@ -260,7 +300,7 @@ const typeDefs = `
     createBlogPost(input: BlogPostInput!): BlogPostType!
     createComment(input: CreateCommentInput!): BlogPostType!
     deleteBlogPost(_id: String!): Boolean
-    deleteComment(): Boolean
+    deleteComment(input: DeleteCommentInput!): Boolean
     editBlogPost(input: BlogPostInput!): BlogPostType!
     addCard(input: AddCardInput!): CardType!
     createCube(input: CreateCubeInput!): CubeType!
@@ -274,18 +314,17 @@ const typeDefs = `
     editCube(input: EditCubeInput!): CubeType!
     editModule(input: EditModuleInput!): ModuleType!
     editRotation(input: EditRotationInput!): RotationType!
-    createEvent(): 
-    moveCard(): 
+    createEvent(input: CreateEventInput!): EventType!
+    moveCard(input: MoveCardInput!): EventType!
     selectCard(input: SelectCardInput!): EventType!
-    sortCard(): 
+    sortCard(input: SortCardInput!): EventType!
   }
 
   type PlayerType {
     account: AccountType
     chaff: [CardType]
+    current_pack: [CardType]
     mainboard: [CardType]
-    packs: [[CardType]]
-    queue: [[CardType]]
     sideboard: [CardType]
   }
 
@@ -295,7 +334,8 @@ const typeDefs = `
     fetchBlogPostByID(_id: ID!): BlogPostType!
     searchBlogPosts(search: String): [BlogPostType]!
     fetchCubeByID(_id: ID!): CubeType!
-    searchCubes(search: String): [CubeTypes]!
+    searchCubes(search: String): [CubeType]!
+    fetchEventByID(_id: ID!): EventType!
   }
 
   type RotationType {
@@ -306,7 +346,6 @@ const typeDefs = `
   }
 
   type Subscription {
-    count: Int!
     joinEvent(_id: ID!): EventType!
   }
 `;

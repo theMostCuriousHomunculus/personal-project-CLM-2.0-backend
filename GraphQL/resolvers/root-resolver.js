@@ -37,6 +37,7 @@ import searchCubes from './cube-resolvers/search-cubes.js';
 
 // event
 import createEvent from './event-resolvers/create-event.js';
+import fetchEventByID from './event-resolvers/fetch-event-by-id.js';
 import joinEvent from './event-resolvers/join-event.js';
 import moveCard from './event-resolvers/move-card.js';
 import selectCard from './event-resolvers/select-card.js';
@@ -120,8 +121,9 @@ export default {
     searchBlogPosts,
   // cube
     fetchCubeByID,
-    searchCubes
+    searchCubes,
   // event
+    fetchEventByID
   },
   Subscription: {
     joinEvent,
