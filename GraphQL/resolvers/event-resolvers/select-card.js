@@ -2,10 +2,10 @@ import HttpError from '../../../models/http-error.js';
 import { Event } from '../../../models/event-model.js';
 
 export default async function (parent, args, context, info) {
-
+  const { input: { cardID, eventID } } = args;
   if (!context.account) throw new HttpError("You must be logged in to select a card.", 401);
 
-  const event = await Event.findById(args.eventID);
+  const event = await Event.findById(eventID);
 
   if (!event) throw new HttpError("Could not find an event with the provided ID.", 404);
 
@@ -13,7 +13,7 @@ export default async function (parent, args, context, info) {
 
   if (!player) throw new HttpError("You were not invited to this event.", 401);
 
-  const cardDrafted = player.queue[0].find(card => card._id.toString() === args.cardID);
+  const cardDrafted = player.queue[0].find(card => card._id.toString() === cardID);
 
   if (!cardDrafted) throw new HttpError("You attempted to draft an invalid card.", 404);
 
@@ -53,7 +53,7 @@ export default async function (parent, args, context, info) {
   }
 
   await event.save();
-  context.pubsub.publish(args.eventID, { event });
+  context.pubsub.publish(eventID, { joinEvent: event });
 
   return event;
 };

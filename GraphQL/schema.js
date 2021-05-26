@@ -21,6 +21,7 @@ import rootResolver from './resolvers/root-resolver.js';
 const typeDefs = `
   enum CollectionEnum {
     chaff
+    current_pack
     mainboard
     sideboard
   }
@@ -315,9 +316,9 @@ const typeDefs = `
     editModule(input: EditModuleInput!): ModuleType!
     editRotation(input: EditRotationInput!): RotationType!
     createEvent(input: CreateEventInput!): EventType!
-    moveCard(input: MoveCardInput!): EventType!
-    selectCard(input: SelectCardInput!): EventType!
-    sortCard(input: SortCardInput!): EventType!
+    moveCard(input: MoveCardInput!): EventType
+    selectCard(input: SelectCardInput!): EventType
+    sortCard(input: SortCardInput!): EventType
   }
 
   type PlayerType {

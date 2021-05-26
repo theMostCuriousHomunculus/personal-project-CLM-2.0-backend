@@ -5,6 +5,7 @@ import { createServer } from 'http';
 
 import auth from './auth.js';
 import graphqlHandler from './GraphQL/GraphQL-handler.js';
+import pubsub from './GraphQL/pubsub.js';
 import restHandler from './REST/REST-handler.js';
 
 mongoose.connect(process.env.DB_CONNECTION, {
@@ -41,7 +42,10 @@ app.use(express.urlencoded({
 
 app.use(auth);
 
-app.use('/graphql', graphqlHandler);
+app.use('/graphql', (req, res, next) => {
+  req.pubsub = pubsub;
+  next();
+}, graphqlHandler);
 
 app.use('/rest', restHandler(io));
 
