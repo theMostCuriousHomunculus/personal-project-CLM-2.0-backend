@@ -18,6 +18,11 @@ const playerSchema = new mongoose.Schema({
 });
 
 const eventSchema = new mongoose.Schema({
+  cube: {
+    ref: 'Cube',
+    required: true,
+    type: mongoose.Schema.Types.ObjectId
+  },
   finished: {
     default: false,
     required: true,

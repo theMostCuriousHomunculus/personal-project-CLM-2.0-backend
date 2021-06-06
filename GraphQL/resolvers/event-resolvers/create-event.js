@@ -64,6 +64,7 @@ export default async function (parent, args, context, info) {
   }
 
   const event = new Event({
+    cube: cube._id,
     finished: event_type === 'sealed',
     host: context.account._id,
     name,
