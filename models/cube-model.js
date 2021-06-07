@@ -49,6 +49,16 @@ const cardSchema = new mongoose.Schema({
   purchase_link: {
     type: String
   },
+  tokens: [{
+    name: {
+      required: true,
+      type: String
+    },
+    scryfall_id: {
+      required: true,
+      type: String
+    }
+  }],
   toughness: {
     type: Number
   },

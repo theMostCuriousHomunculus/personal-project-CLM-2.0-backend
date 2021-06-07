@@ -43,6 +43,27 @@ import moveCard from './event-resolvers/move-card.js';
 import selectCard from './event-resolvers/select-card.js';
 import sortCard from './event-resolvers/sort-card.js';
 
+// match
+import adjustCounters from './match-resolvers/adjust-counters.js';
+import adjustLifeTotal from './match-resolvers/adjust-life-total.js';
+import concedeGame from './match-resolvers/concede-game.js';
+import createCopies from './match-resolvers/create-copies.js';
+import createMatch from './match-resolvers/create-match.js';
+import createTokens from './match-resolvers/create-tokens.js';
+import dragCard from './match-resolvers/drag-card.js';
+import fetchMatchByID from './match-resolvers/fetch-match-by-id.js';
+import flipCard from './match-resolvers/flip-card.js';
+import flipCoin from './match-resolvers/flip-coin.js';
+import gainControlOfCard from './match-resolvers/gain-control-of-card.js';
+import joinMatch from './match-resolvers/join-match.js';
+import revealCard from './match-resolvers/reveal-card.js';
+import rollDice from './match-resolvers/roll-dice.js';
+import shuffleLibrary from './match-resolvers/shuffle-library.js';
+import tapUntapCard from './match-resolvers/tap-untap-card.js';
+import transferCard from './match-resolvers/transfer-card.js';
+import viewCard from './match-resolvers/view-card.js';
+import viewZone from './match-resolvers/view-zone.js';
+
 // custom field resolvers
 import author from './blog-resolvers/author.js';
 import buds from './account-resolvers/buds.js';
@@ -77,6 +98,9 @@ export default {
     host,
     players
   },
+  MatchType: {
+
+  },
   Mutation: {
   // account
     // deleteAccount,
@@ -110,7 +134,25 @@ export default {
     createEvent,
     moveCard,
     selectCard,
-    sortCard
+    sortCard,
+  // match
+    adjustCounters,
+    adjustLifeTotal,
+    concedeGame,
+    createCopies,
+    createMatch,
+    createTokens,
+    dragCard,
+    flipCard,
+    flipCoin,
+    gainControlOfCard,
+    revealCard,
+    rollDice,
+    shuffleLibrary,
+    tapUntapCard,
+    transferCard,
+    viewCard,
+    viewZone,
   },
   Query: {
   // account
@@ -123,13 +165,17 @@ export default {
     fetchCubeByID,
     searchCubes,
   // event
-    fetchEventByID
+    fetchEventByID,
+  // match
+    fetchMatchByID
   },
   Subscription: {
-    joinEvent,
   // account
   // blog
   // cube
   // event
+    joinEvent,
+  // match
+    joinMatch
   }
 };

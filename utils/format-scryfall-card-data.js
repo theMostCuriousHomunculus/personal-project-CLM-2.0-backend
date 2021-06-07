@@ -109,24 +109,24 @@ export default async function (card) {
   switch (card.layout) {
     // just using the front image for the art crop (used for blog images and profile avatars)
     case 'transform':
-      back_image = card.card_faces[1].image_uris.large;
-      image = card.card_faces[0].image_uris.large;
+      back_image = card.card_faces[1].image_uris.normal;
+      image = card.card_faces[0].image_uris.normal;
       break;
     case 'modal_dfc':
-      back_image = card.card_faces[1].image_uris.large;
-      image = card.card_faces[0].image_uris.large;
+      back_image = card.card_faces[1].image_uris.normal;
+      image = card.card_faces[0].image_uris.normal;
       break;
     case 'meld':
       const meldResultPart = card.all_parts.find(function (part) {
         return part.component === 'meld_result';
       });
       const meldResult = await axios.get(meldResultPart.uri);
-      back_image = meldResult.data.image_uris.large;
-      image = card.image_uris.large;
+      back_image = meldResult.data.image_uris.normal;
+      image = card.image_uris.normal;
       break;
     default:
       // split, flip, leveler, saga, adventure and normal layout cards
-      image = card.image_uris.large;
+      image = card.image_uris.normal;
   }
 
   return {
@@ -144,6 +144,7 @@ export default async function (card) {
     power: power && isNaN(power) ? 0 : power,
     printing: `${card.set_name} - ${card.collector_number}`,
     purchase_link: card.purchase_uris.tcgplayer.split("&")[0],
+    tokens: card.tokens,
     toughness: toughness && isNaN(toughness) ? 0 : toughness,
     type_line
   };

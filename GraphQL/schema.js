@@ -229,7 +229,7 @@ const typeDefs = `
     updatedAt: String
   }
 
-  type CardType {
+  type CubeCardType {
     _id: ID
     back_image: String
     chapters: Int
@@ -267,11 +267,19 @@ const typeDefs = `
     _id: ID
     creator: AccountType
     description: String
-    mainboard: [CardType]
+    mainboard: [CubeCardType]
     modules: [ModuleType]
     name: String
     rotations: [RotationType]
-    sideboard: [CardType]
+    sideboard: [CubeCardType]
+  }
+
+  type EventPlayerType {
+    account: AccountType
+    chaff: [CubeCardType]
+    current_pack: [CubeCardType]
+    mainboard: [CubeCardType]
+    sideboard: [CubeCardType]
   }
 
   type EventType {
@@ -280,13 +288,57 @@ const typeDefs = `
     finished: Boolean
     host: AccountType
     name: String
-    players: [PlayerType]
+    players: [EventPlayerType]
     updatedAt: String
+  }
+
+  type MatchCardType {
+    back_image: String
+    controller: AccountType
+    counters: {}
+    flipped: Boolean 
+    image: String
+    index: Int
+    isToken: Boolean
+    name: String
+    owner: AccountType
+    sideboarded: Boolean
+    tapped: Boolean
+    targets: [MatchCardType]
+    tokens: []
+    visibility: [AccountType]
+    x_coordinate: Float
+    y_coordinate: Float
+  }
+
+  type MatchPlayerType {
+    account: AccountType
+    battlefield: [MatchCardType]
+    energy: Int
+    exile: [MatchCardType]
+    graveyard: [MatchCardType]
+    hand: [MatchCardType]
+    library: [MatchCardType]
+    life: Int
+    mainboard: [MatchCardType]
+    poison: Int
+    sideboard: [MatchCardType]
+    temporary: [MatchCardType]
+  }
+
+  type MatchType {
+    _id: ID
+    cube: CubeType
+    event: EventType
+    game_winners: AccountType
+    log: [String]
+    players: [MatchPlayerType]
+    stack: [MatchCardType]
   }
 
   type ModuleType {
     _id: ID
-    cards: [CardType]
+    cards: [CubeCardType]
     name: String
   }
 
@@ -303,7 +355,7 @@ const typeDefs = `
     deleteBlogPost(_id: String!): Boolean
     deleteComment(input: DeleteCommentInput!): Boolean
     editBlogPost(input: BlogPostInput!): BlogPostType!
-    addCard(input: AddCardInput!): CardType!
+    addCard(input: AddCardInput!): CubeCardType!
     createCube(input: CreateCubeInput!): CubeType!
     createModule(input: CreateModuleInput!): ModuleType!
     createRotation(input: CreateRotationInput!): RotationType!
@@ -311,7 +363,7 @@ const typeDefs = `
     deleteCube(cubeID: String!): Boolean
     deleteModule(input: DeleteModuleInput!): Boolean
     deleteRotation(input: DeleteRotationInput!): Boolean
-    editCard(input: EditCardInput!): CardType!
+    editCard(input: EditCardInput!): CubeCardType!
     editCube(input: EditCubeInput!): CubeType!
     editModule(input: EditModuleInput!): ModuleType!
     editRotation(input: EditRotationInput!): RotationType!
@@ -319,14 +371,6 @@ const typeDefs = `
     moveCard(input: MoveCardInput!): EventType
     selectCard(input: SelectCardInput!): EventType
     sortCard(input: SortCardInput!): EventType
-  }
-
-  type PlayerType {
-    account: AccountType
-    chaff: [CardType]
-    current_pack: [CardType]
-    mainboard: [CardType]
-    sideboard: [CardType]
   }
 
   type Query {
@@ -337,17 +381,19 @@ const typeDefs = `
     fetchCubeByID(_id: ID!): CubeType!
     searchCubes(search: String): [CubeType]!
     fetchEventByID(_id: ID!): EventType!
+    fetchMatchByID(_id: ID!): MatchType!
   }
 
   type RotationType {
     _id: ID
-    cards: [CardType]
+    cards: [CubeCardType]
     name: String
     size: Int
   }
 
   type Subscription {
     joinEvent(_id: ID!): EventType!
+    joinEvent(_id: ID!): MatchType!
   }
 `;
 
