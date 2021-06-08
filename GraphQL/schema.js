@@ -321,6 +321,7 @@ const typeDefs = `
     back_image: String
     controller: AccountType
     counters: [CounterObjectType]
+    face_down_image: String
     flipped: Boolean 
     image: String
     index: Int

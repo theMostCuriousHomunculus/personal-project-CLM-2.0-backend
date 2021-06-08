@@ -1,24 +1,19 @@
 import HttpError from '../../../models/http-error.js';
-import { Match } from '../../../models/match-model.js';
 
 export default async function (parent, args, context, info) {
 
-  if (!context.account) throw new HttpError("Please log in.", 401);
+  const { match, player, pubsub } = context;
 
-  const { input: { cardID, matchID, playerID, xCoordinate, yCoordinate } } = args;
+  if (!player) throw new HttpError("You are only a spectator.", 401);
 
-  const match = await Match.findOne({ '_id': matchID, players: { $elemMatch: { account: playerID } } });
-
-  if (!match) throw new HttpError("Could not find a match with the provided matchID and the provided playerID.", 404);
-
-  const player = match.players.find(plr => plr.account.toString() === playerID);
+  const { input: { cardID, xCoordinate, yCoordinate } } = args;
   const card = player.battlefield.find(crd => crd._id.toString() === cardID);
 
   card.x_coordinate = xCoordinate;
   card.y_coordinate = yCoordinate;
 
   await match.save();
-  context.pubsub.publish(matchID, { joinMatch: match });
+  pubsub.publish(match._id.toString(), { joinMatch: match });
 
   return match;
 };

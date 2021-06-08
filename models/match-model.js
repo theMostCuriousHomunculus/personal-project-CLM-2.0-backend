@@ -14,6 +14,15 @@ const cardSchema = new mongoose.Schema({
     counterAmount: Number,
     counterType: String
   }],
+  face_down_image: {
+    default: 'standard',
+    enum: ['foretell', 'manifest', 'morph', 'standard'],
+    // https://scryfall.com/card/tkhm/23/foretell
+    // https://scryfall.com/card/tfrf/4/manifest
+    // https://scryfall.com/card/tdtk/7/morph
+    required: true,
+    type: String
+  },
   flipped: {
     default: false,
     type: Boolean

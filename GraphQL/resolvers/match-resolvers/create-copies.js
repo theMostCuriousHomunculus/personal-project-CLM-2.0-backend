@@ -1,5 +1,4 @@
 import HttpError from '../../../models/http-error.js';
-import { Match } from '../../../models/match-model.js';
 
 export default async function (parent, args, context, info) {
 
@@ -15,24 +14,25 @@ export default async function (parent, args, context, info) {
   let card;
 
   if (zone === 'stack') {
+    card  = match.stack.find(crd => crd._id.toString() === cardID);
     for (const i = 0; i < numberOfCopies; i++) {
       match.stack.push({
         ...card,
-        controller: copyOwner.account,
-        counters: {},
+        controller: account._id,
+        counters: [],
         isToken: true,
-        owner: copyOwner.account
+        owner: account._id
       });
     }
   } else if (zone === 'battlefield') {
     card  = controller[zone].find(crd => crd._id.toString() === cardID);
     for (const i = 0; i < numberOfCopies; i++) {
-      copyOwner.battlefield.push({
+      player.battlefield.push({
         ...card,
-        controller: copyOwner.account,
-        counters: {},
+        controller: account._id,
+        counters: [],
         isToken: true,
-        owner: copyOwner.account,
+        owner: account._id,
         x_coordinate: i,
         y_coordinate: i
       });
@@ -42,7 +42,7 @@ export default async function (parent, args, context, info) {
   }
 
   await match.save();
-  context.pubsub.publish(context.match._id.toString(), { joinMatch: match });
+  pubsub.publish(match._id.toString(), { joinMatch: match });
 
   return match;
 };

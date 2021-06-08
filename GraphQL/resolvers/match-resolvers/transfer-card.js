@@ -1,18 +1,21 @@
 import HttpError from '../../../models/http-error.js';
-import { Match } from '../../../models/match-model.js';
 
 export default async function (parent, args, context, info) {
 
-  if (!context.account) throw new HttpError("Please log in.", 401);
+  const { account, match, player, pubsub } = context;
 
-  const { input: { cardID, destination, index, matchID, origin, playerID, reveal, shuffle } } = args;
+  if (!player) throw new HttpError("You are only a spectator.", 401);
 
-  const match = await Match.findOne({ '_id': matchID, players: { $elemMatch: { account: playerID } } });
+  const { input: { cardID, destinationZone, index, originZone, reveal, shuffle } } = args;
+  let card;
 
-  if (!match) throw new HttpError("Could not find a match with the provided matchID and the provided playerID.", 404);
-
-  const player = match.players.find(plr => plr.account.toString() === playerID);
-  const card = player[origin].find(crd => crd._id.toString() === cardID);
+  if (originZone.toString() === 'stack') {
+    card = match.stack.find(crd => crd._id.toString() === cardID);
+    match.stack = match.stack.filter(crd => crd !== card);
+  } else {
+    card = player[originZone].find(crd => crd._id.toString() === cardID);
+    player[originZone] = player[originZone].filter(crd => crd !== card);
+  }
 
   if (reveal) {
     for (const plr of match.players) {
@@ -20,23 +23,25 @@ export default async function (parent, args, context, info) {
     }
   }
 
-  player[origin] = player[origin].filter(crd => crd !== card);
-
-  // note that this resolver does not actually shuffle the library.  it is up to one of the players to send a separate request to shuffle the library.
-  if (destination === "library" && !shuffle) {
+  // note that this resolver does not actually shuffle the library.  it is up to the player to send a separate request to shuffle the library.
+  if (destinationZone.toString() === "library" && !shuffle) {
     // think scrying or aethergust
     player.library = player.library.slice(0, index).concat([card]).concat(player.library.slice(index));
-  } else if (destination === "library" && shuffle && typeof index === "number") {
+  } else if (destinationZone.toString() === "library" && shuffle && typeof index === "number") {
     // think vampiric tutor
     card.index = index;
     player.temporary.push(card);
   } else {
     // if destination is library, a shuffle is needed but no index is provided OR if the destination is not the library then the card can just be pushed into the destination zone
-    player[destination].push(card);
+    player[destinationZone].push(card);
+
+    if (destinationZone.toString() === 'hand' && !card.visibility.includes(account._id)) card.visibility.push(account._id);
   }
 
+  match.log.push(`${account.name} moved ${match.players.every(plr => card.visibility.includes(plr.account)) ? card.name : 'a card'} from ${originZone.toString() === 'stack' ? 'the stack' : 'their '+ originZone} to ${destinationZone.toString() === 'stack' ? 'the stack' : 'their ' + destinationZone}.`);
+
   await match.save();
-  context.pubsub.publish(matchID, { joinMatch: match });
+  pubsub.publish(match._id.toString(), { joinMatch: match });
 
   return match;
 };

@@ -1,24 +1,24 @@
 import HttpError from '../../../models/http-error.js';
-import { Match } from '../../../models/match-model.js';
+import Account from '../../../models/account-model.js';
 
 export default async function (parent, args, context, info) {
 
-  if (!context.account) throw new HttpError("Please log in.", 401);
+  const { account, match, player, pubsub } = context;
 
-  const { input: { matchID, playerID, zone } } = args;
+  if (!player) throw new HttpError("You are only a spectator.", 401);
 
-  const match = await Match.findOne({ '_id': matchID, players: { $elemMatch: { account: playerID } } });
+  const { input: { controllerID, zone } } = args;
+  const controller = match.players.find(plr => plr.account.toString() === controllerID);
+  const controllerAccount = await Account.findById(controllerID);
 
-  if (!match) throw new HttpError("Could not find a match with the provided matchID and the provided playerID.", 404);
-
-  const player = match.players.find(plr => plr.account.toString() === playerID);
-
-  for (const card of player[zone]) {
-    if (!card.visibility.includes(context.account._id)) card.visibility.push(context.account._id);
+  for (const card of controller[zone]) {
+    if (!card.visibility.includes(account._id)) card.visibility.push(account._id);
   }
 
+  match.log.push(`${account.name} viewed ${controllerAccount.name}'s ${zone}.`);
+
   await match.save();
-  context.pubsub.publish(matchID, { joinMatch: match });
+  pubsub.publish(match._id.toString(), { joinMatch: match });
 
   return match;
 };

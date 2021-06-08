@@ -1,16 +1,11 @@
 import HttpError from '../../../models/http-error.js';
 import shuffle from '../../../utils/shuffle.js';
-import { Match } from '../../../models/match-model.js';
 
 export default async function (parent, args, context, info) {
 
-  if (!context.account) throw new HttpError("Please log in.", 401);
+  const { account, match, player, pubsub } = context;
 
-  const { input: { matchID, playerID } } = args;
-
-  const match = await Match.findOne({ '_id': matchID, players: { $elemMatch: { account: playerID } } });
-
-  if (!match) throw new HttpError("Could not find a match with the provided matchID and the provided playerID.", 404);
+  if (!player) throw new HttpError("You are only a spectator.", 401);
 
   const player = match.players.find(plr => plr.account.toString() === playerID);
 
@@ -20,13 +15,15 @@ export default async function (parent, args, context, info) {
   }
 
   shuffle(player.library);
+  match.log.push(`${account.name} shuffled their library.`)
 
-  // this ensures that, once a player has finished shuffling, any cards that are to be placed at a particular index of their library are
+  // this ensures that, once a player has finished shuffling, any cards that are meant to be placed at a particular index of their library are
   player.temporary.sort((a, b) => (a.index && b.index) ? a.index - b.index : 0);
 
   for (const card of player.temporary) {
     if (typeof card.index === "number") {
       player.library = player.library.slice(0, card.index).concat([card]).concat(player.library.slice(card.index));
+      match.log(`${account.name} placed ${match.players.every(plr => card.visibility.includes(plr.account)) ? card.name : 'a card'} into their library at index ${card.index} (the bottom card has index 0).`);
       card.index = null;
     }
   }
@@ -34,7 +31,7 @@ export default async function (parent, args, context, info) {
   player.temporary = player.temporary.filter(crd => !player.library.includes(crd));
 
   await match.save();
-  context.pubsub.publish(matchID, { joinMatch: match });
+  pubsub.publish(match._id.toString(), { joinMatch: match });
 
   return match;
 };

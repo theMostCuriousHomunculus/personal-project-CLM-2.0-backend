@@ -1,29 +1,23 @@
 import axios from 'axios';
 
 import HttpError from '../../../models/http-error.js';
-import { Match } from '../../../models/match-model.js';
 
 export default async function (parent, args, context, info) {
 
-  if (!context.account) throw new HttpError("Please log in.", 401);
+  const { account, match, player, pubsub } = context;
 
-  const { input: { matchID, numberOfTokens, playerID, scryfallID } } = args;
+  if (!player) throw new HttpError("You are only a spectator.", 401);
 
-  const match = await Match.findOne({ '_id': matchID, players: { $elemMatch: { account: playerID } } });
-
-  if (!match) throw new HttpError("Could not find a match with the provided matchID and the provided playerID.", 404);
-
-  const player = match.players.find(plr => plr.account.toString() === playerID);
-  
+  const { input: { numberOfTokens, scryfallID } } = args;
   const scryfallResponse = await axios.get(`https://api.scryfall.com/cards/${scryfallID}`);
 
   for (const i = 0; i < numberOfTokens; i++) {
     player.battlefield.push({
-      controller: player.account,
+      controller: account._id,
       image: scryfallResponse.data.image_uris.normal,
       isToken: true,
       name: scryfallResponse.data.name,
-      owner: player.account,
+      owner: account._id,
       tokens: scryfallResponse.data.all_parts
         .filter(part => part.component === 'token')
         .map(part => ({ name: part.name, scryfall_id: part.id })),
@@ -34,7 +28,7 @@ export default async function (parent, args, context, info) {
   }
 
   await match.save();
-  context.pubsub.publish(matchID, { joinMatch: match });
+  pubsub.publish(match._id.toString(), { joinMatch: match });
 
   return match;
 };
