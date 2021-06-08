@@ -10,7 +10,10 @@ const cardSchema = new mongoose.Schema({
     required: true,
     type: mongoose.Schema.Types.ObjectId
   },
-  counters: mongoose.Schema.Types.Mixed,
+  counters: [{
+    counterAmount: Number,
+    counterType: String
+  }],
   flipped: {
     default: false,
     type: Boolean

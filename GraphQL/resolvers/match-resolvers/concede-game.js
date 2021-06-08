@@ -1,22 +1,19 @@
 import HttpError from '../../../models/http-error.js';
-import { Match } from '../../../models/match-model.js';
 
 export default async function (parent, args, context, info) {
 
-  if (!context.account) throw new HttpError("Please log in.", 401);
+  const { account, match, player, pubsub } = context;
 
-  const { input: { matchID } } = args;
-
-  const match = await Match.findOne({ '_id': matchID, players: { $elemMatch: { account: context.account._id } } });
-
-  if (!match) throw new HttpError("Could not find a match with the provided matchID where you are a player.", 404);
+  if (!player) throw new HttpError("You are only a spectator.", 401);
 
   // currently only supporting 2 player games
-  match.game_winners = match.game_winners.concat(match.players.filter(plr => plr.account.toString() !== context.account._id.toString()));
-  match.log.push(`${context.account.name} has conceded from the game.`)
+  match.game_winners = match.game_winners.concat(match.players.filter(plr => plr.account.toString() !== account._id.toString()));
+  match.log.push(`${account.name} has conceded from the game.`)
+
+  // TODO: add logic to reset the board (untap all cards, return cards to mainboard / sideboards of owners, etc...)
 
   await match.save();
-  context.pubsub.publish(matchID, { joinMatch: match });
+  pubsub.publish(match._id.toString(), { joinMatch: match });
 
   return match;
 };

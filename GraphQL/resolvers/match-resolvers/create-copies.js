@@ -3,17 +3,16 @@ import { Match } from '../../../models/match-model.js';
 
 export default async function (parent, args, context, info) {
 
-  if (!context.account) throw new HttpError("Please log in.", 401);
+  const { account, match, player, pubsub } = context;
 
-  const { input: { cardID, cardControllerID, matchID, numberOfCopies, zone } } = args;
+  if (!player) throw new HttpError("You are only a spectator.", 401);
 
-  const match = await Match.findOne({ '_id': matchID, players: { $elemMatch: { account: playerID } } });
+  const { input: { cardID, controllerID, numberOfCopies, zone } } = args;
+  const controller = match.players.find(plr => plr.account.toString() === controllerID);
 
-  if (!match) throw new HttpError("Could not find a match with the provided matchID and the provided playerID.", 404);
+  if (!controller) throw new HttpError("Invalid controllerID.", 404);
 
-  const cardController = match.players.find(plr => plr.account.toString() === cardControllerID);
-  const card = cardController[zone].find(crd => crd._id.toString() === cardID);
-  const copyOwner = match.players.find(plr => plr.account === context.account._id);
+  let card;
 
   if (zone === 'stack') {
     for (const i = 0; i < numberOfCopies; i++) {
@@ -26,6 +25,7 @@ export default async function (parent, args, context, info) {
       });
     }
   } else if (zone === 'battlefield') {
+    card  = controller[zone].find(crd => crd._id.toString() === cardID);
     for (const i = 0; i < numberOfCopies; i++) {
       copyOwner.battlefield.push({
         ...card,
@@ -42,7 +42,7 @@ export default async function (parent, args, context, info) {
   }
 
   await match.save();
-  context.pubsub.publish(matchID, { joinMatch: match });
+  context.pubsub.publish(context.match._id.toString(), { joinMatch: match });
 
   return match;
 };

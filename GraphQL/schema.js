@@ -31,6 +31,17 @@ const typeDefs = `
     sealed
   }
 
+  enum PlayZoneEnum {
+    battlefield
+    exile
+    graveyard
+    hand
+    library
+    sideboard
+    stack
+    temporary
+  }
+
   input AddCardInput {
     back_image: String
     chapters: Int
@@ -48,6 +59,14 @@ const typeDefs = `
     purchase_link: String
     toughness: Int
     type_line: String
+  }
+
+  input AdjustCountersInput {
+    cardID: String!
+    controllerID: String!
+    counterAmount: Int!
+    counterType: Int!
+    zone: PlayZoneEnum!
   }
 
   input BlogPostInput {
@@ -257,6 +276,11 @@ const typeDefs = `
     updatedAt: String
   }
 
+  type CounterObjectType {
+    counterAmount: Int,
+    counterType: String
+  }
+
   type Credentials {
     isAdmin: Boolean
     token: String!
@@ -293,9 +317,10 @@ const typeDefs = `
   }
 
   type MatchCardType {
+    _id: ID
     back_image: String
     controller: AccountType
-    counters: {}
+    counters: [CounterObjectType]
     flipped: Boolean 
     image: String
     index: Int
@@ -305,7 +330,7 @@ const typeDefs = `
     sideboarded: Boolean
     tapped: Boolean
     targets: [MatchCardType]
-    tokens: []
+    tokens: [TokenType]
     visibility: [AccountType]
     x_coordinate: Float
     y_coordinate: Float
@@ -371,6 +396,23 @@ const typeDefs = `
     moveCard(input: MoveCardInput!): EventType
     selectCard(input: SelectCardInput!): EventType
     sortCard(input: SortCardInput!): EventType
+    adjustCounters(input: AdjustCountersInput!): MatchType
+    adjustLifeTotal(life: Int!): MatchType
+    concedeGame: MatchType
+    createCopies(): MatchType
+    createMatch(): MatchType!
+    createTokens(): MatchType
+    dragCard(): MatchType
+    flipCard(): MatchType
+    flipCoin(): MatchType
+    gainControlOfCard(): MatchType
+    revealCard(): MatchType
+    rollDice(): MatchType
+    shuffleLibrary(): MatchType
+    tapUntapCard(): MatchType
+    transferCard(): MatchType
+    viewCard(): MatchType
+    viewZone(): MatchType
   }
 
   type Query {
@@ -394,6 +436,11 @@ const typeDefs = `
   type Subscription {
     joinEvent(_id: ID!): EventType!
     joinEvent(_id: ID!): MatchType!
+  }
+
+  type TokenType {
+    name: String
+    scryfall_id: String
   }
 `;
 

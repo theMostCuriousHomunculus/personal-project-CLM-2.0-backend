@@ -14,7 +14,7 @@ export default async function (context) {
   if (context.connectionParams.eventID) {
     const event = await Event.findOne({ '_id': context.connectionParams.eventID, players: { $elemMatch: { account: account._id } } });
 
-    if (!event) throw new Error("You were not invited to this event.");
+    if (!event) throw new Error("An event with that ID does not exist or you were not invited to it.");
 
     context.event = event;
   }
@@ -24,6 +24,7 @@ export default async function (context) {
 
     if (!match) throw new Error("Could not find a match with the provided matchID.");
 
+    context.player = account ? match.players.find(plr => plr.account === account._id) : null;
     context.match = match;
   }
 

@@ -1,32 +1,40 @@
 import HttpError from '../../../models/http-error.js';
-import { Match } from '../../../models/match-model.js';
 
 export default async function (parent, args, context, info) {
 
-  if (!context.account) throw new HttpError("Please log in.", 401);
+  const { account, match, player, pubsub } = context;
 
-  const { input: { cardID, counterAmount, counterType, matchID, playerID, zone } } = args;
+  if (!player) throw new HttpError("You are only a spectator.", 401);
 
-  const match = await Match.findOne({ '_id': matchID, players: { $elemMatch: { account: playerID } } });
+  const { input: { cardID, controllerID, counterAmount, counterType, zone } } = args;
+  const controller = match.players.find(plr => plr.account.toString() === controllerID);
 
-  if (!match) throw new HttpError("Could not find a match with the provided matchID and the provided playerID.", 404);
+  if (!controller) throw new HttpError("Invalid controllerID.", 404);
 
-  const playerIndex = match.players.findIndex(plr => plr.account.toString() === playerID);
-  const player = match.players[playerIndex];
-  const cardIndex = player[zone].findIndex(crd => crd._id.toString() === cardID);
-  const card = player[zone][cardIndex];
-
-  if (counterAmount > card.counters[counterType]) {
-    match.log.push(`${context.account.name} added ${card.counters[counterType] - counterAmount} ${counterType} counters to ${card.name}; from ${card.counters[counterType]} to ${counterAmount}.`);
-  } else if (counterAmount < card.counters[counterType]) {
-    match.log.push(`${context.account.name} removed ${card.counters[counterType] - counterAmount} ${counterType} counters from ${card.name}; from ${card.counters[counterType]} to ${counterAmount}.`);
+  let card;
+  
+  if (zone.toString() === 'stack') {
+    card = match.stack.find(crd => crd._id.toString() === cardID);
+  } else {
+    card = controller[zone].find(crd => crd._id.toString() === cardID);
   }
 
-  card.counters[counterType] = counterAmount;
-  match.markModified(`players[${playerIndex}].${zone}[${cardIndex}].counters`);
+  const counterObject = card.counters.find(obj => obj.counterType === counterType);
+
+  if (!counterObject) {
+    card.counters.push({ counterAmount, counterType });
+  } else if (counterAmount > counterObject.counterAmount) {
+    match.log.push(`${account.name} added ${counterAmount - counterObject.counterAmount} ${counterType} counters to ${card.name}; from ${counterObject.counterAmount} to ${counterAmount}.`);
+  } else if (counterAmount < counterObject.counterAmount) {
+    match.log.push(`${account.name} removed ${counterObject.counterAmount - counterAmount} ${counterType} counters from ${card.name}; from ${counterObject.counterAmount} to ${counterAmount}.`);
+  } else {
+    throw new HttpError(`Amount of ${counterType} counters did not change.`, 400);
+  }
+
+  counterObject.counterAmount = counterAmount;
 
   await match.save();
-  context.pubsub.publish(matchID, { joinMatch: match });
+  pubsub.publish(match._id.toString(), { joinMatch: match });
 
   return match;
 };
