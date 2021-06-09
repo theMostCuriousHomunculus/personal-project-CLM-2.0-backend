@@ -15,7 +15,7 @@ export default async function (parent, args, context, info) {
     player.battlefield.push({
       controller: account._id,
       image: scryfallResponse.data.image_uris.normal,
-      isToken: true,
+      isCopyToken: true,
       name: scryfallResponse.data.name,
       owner: account._id,
       tokens: scryfallResponse.data.all_parts

@@ -75,6 +75,7 @@ import host from './event-resolvers/host.js';
 import players from './event-resolvers/players.js';
 import received_bud_requests from './account-resolvers/received-bud-requests.js';
 import sent_bud_requests from './account-resolvers/sent-bud-requests.js';
+import unknownCard from './match-resolvers/unknown-card.js';
 
 export default {
   AccountType: {
@@ -98,8 +99,11 @@ export default {
     host,
     players
   },
-  MatchType: {
-
+  MatchCardType: {
+    back_image: unknownCard,
+    image: unknownCard,
+    name: unknownCard,
+    tokens: unknownCard
   },
   Mutation: {
   // account

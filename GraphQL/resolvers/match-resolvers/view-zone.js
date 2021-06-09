@@ -9,6 +9,9 @@ export default async function (parent, args, context, info) {
 
   const { input: { controllerID, zone } } = args;
   const controller = match.players.find(plr => plr.account.toString() === controllerID);
+
+  if (!controller) throw new HttpError("Invalid controllerID.", 404);
+
   const controllerAccount = await Account.findById(controllerID);
 
   for (const card of controller[zone]) {

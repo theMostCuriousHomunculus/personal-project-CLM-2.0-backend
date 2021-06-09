@@ -20,7 +20,7 @@ export default async function (parent, args, context, info) {
         ...card,
         controller: account._id,
         counters: [],
-        isToken: true,
+        isCopyToken: true,
         owner: account._id
       });
     }
@@ -31,7 +31,7 @@ export default async function (parent, args, context, info) {
         ...card,
         controller: account._id,
         counters: [],
-        isToken: true,
+        isCopyToken: true,
         owner: account._id,
         x_coordinate: i,
         y_coordinate: i

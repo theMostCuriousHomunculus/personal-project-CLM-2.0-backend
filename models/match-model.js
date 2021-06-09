@@ -35,7 +35,7 @@ const cardSchema = new mongoose.Schema({
     required: false,
     type: Number
   },
-  isToken: {
+  isCopyToken: {
     required: true,
     type: Boolean
   },

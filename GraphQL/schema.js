@@ -31,6 +31,13 @@ const typeDefs = `
     sealed
   }
 
+  enum FaceDownImageEnum {
+    foretell
+    manifest
+    morph
+    standard
+  }
+
   enum PlayZoneEnum {
     battlefield
     exile
@@ -77,9 +84,22 @@ const typeDefs = `
     title: String!
   }
 
+  input ChangeFaceDownImageInput {
+    cardID: String!
+    faceDownImage: FaceDownImageEnum!
+    zone: PlayZoneEnum!
+  }
+
   input CreateCommentInput {
     body: String!
     blogPostID: String!
+  }
+
+  input CreateCopiesInput {
+    cardID: String!
+    controllerID: String!
+    numberOfCopies: Int!
+    zone: PlayZoneEnum!
   }
 
   input CreateCubeInput {
@@ -98,6 +118,11 @@ const typeDefs = `
     packs_per_player: Int!
   }
 
+  input CreateMatchInput {
+    eventID: String
+    playerIDs: [String!]!
+  }
+
   input CreateModuleInput {
     cubeID: String!
     name: String!
@@ -107,6 +132,11 @@ const typeDefs = `
     cubeID: String!
     name: String!
     size: Int
+  }
+
+  input CreateTokensInput {
+    numberOfTokens: Int!
+    scryfallID: String!
   }
 
   input DeleteCardInput {
@@ -129,6 +159,12 @@ const typeDefs = `
   input DeleteRotationInput {
     cubeID: String!
     rotationID: String!
+  }
+
+  input DragCardInput {
+    cardID: String!
+    xCoordinate: Float!
+    yCoordinate: Float!
   }
 
   input EditAccountInput {
@@ -186,6 +222,17 @@ const typeDefs = `
     eventID: String!
   }
 
+  input FlipCardInput {
+    cardID: String!
+    zone: PlayZoneEnum!
+  }
+
+  input GainControlOfCardInput {
+    cardID: String!
+    controllerID: String!
+    zone: PlayZoneEnum!
+  }
+
   input LoginInput {
     email: String!
     password: String!
@@ -205,6 +252,11 @@ const typeDefs = `
     password: String!
   }
 
+  input RevealCardInput {
+    cardID: String!
+    zone: PlayZoneEnum!
+  }
+
   input SelectCardInput {
     cardID: String!
     eventID: String!
@@ -221,6 +273,26 @@ const typeDefs = `
     email: String!
     password: String!
     reset_token: String!
+  }
+
+  input TransferCardInput {
+    cardID: String!
+    destinationZone: PlayZoneEnum!
+    index: Int
+    originZone: PlayZoneEnum!
+    reveal: Boolean!
+    shuffle: Boolean!
+  }
+
+  input ViewCardInput {
+    cardID: String!
+    controllerID: String!
+    zone: PlayZoneEnum!
+  }
+
+  input ViewZoneInput {
+    controllerID: String!
+    zone: PlayZoneEnum!
   }
 
   type AccountType {
@@ -322,13 +394,12 @@ const typeDefs = `
     controller: AccountType
     counters: [CounterObjectType]
     face_down_image: String
-    flipped: Boolean 
+    flipped: Boolean
     image: String
     index: Int
-    isToken: Boolean
+    isCopyToken: Boolean
     name: String
     owner: AccountType
-    sideboarded: Boolean
     tapped: Boolean
     targets: [MatchCardType]
     tokens: [TokenType]
@@ -378,7 +449,7 @@ const typeDefs = `
     submitPasswordReset(input: SubmitPasswordResetInput!): Credentials!
     createBlogPost(input: BlogPostInput!): BlogPostType!
     createComment(input: CreateCommentInput!): BlogPostType!
-    deleteBlogPost(_id: String!): Boolean
+    deleteBlogPost(_id: ID!): Boolean
     deleteComment(input: DeleteCommentInput!): Boolean
     editBlogPost(input: BlogPostInput!): BlogPostType!
     addCard(input: AddCardInput!): CubeCardType!
@@ -399,21 +470,22 @@ const typeDefs = `
     sortCard(input: SortCardInput!): EventType
     adjustCounters(input: AdjustCountersInput!): MatchType
     adjustLifeTotal(life: Int!): MatchType
+    changeFaceDownImage(input: ChangeFaceDownImageInput!): MatchType
     concedeGame: MatchType
-    createCopies(): MatchType
-    createMatch(): MatchType!
-    createTokens(): MatchType
-    dragCard(): MatchType
-    flipCard(): MatchType
-    flipCoin(): MatchType
-    gainControlOfCard(): MatchType
-    revealCard(): MatchType
-    rollDice(): MatchType
-    shuffleLibrary(): MatchType
-    tapUntapCard(): MatchType
-    transferCard(): MatchType
-    viewCard(): MatchType
-    viewZone(): MatchType
+    createCopies(input: CreateCopiesInput!): MatchType
+    createMatch(input: CreateMatchInput!): MatchType!
+    createTokens(input: CreateTokensInput!): MatchType
+    dragCard(input: DragCardInput!): MatchType
+    flipCard(input: FlipCardInput!): MatchType
+    flipCoin: MatchType
+    gainControlOfCard(input: GainControlOfCardInput): MatchType
+    revealCard(input: RevealCardInput!): MatchType
+    rollDice(sides: Int!): MatchType
+    shuffleLibrary: MatchType
+    tapUntapCard(_id: ID!): MatchType
+    transferCard(input: TransferCardInput!): MatchType
+    viewCard(input: ViewCardInput!): MatchType
+    viewZone(input: ViewZoneInput!): MatchType
   }
 
   type Query {
