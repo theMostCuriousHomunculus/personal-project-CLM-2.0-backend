@@ -120,7 +120,7 @@ const typeDefs = `
 
   input CreateMatchInput {
     eventID: String
-    playerIDs: [String!]!
+    playerIDs: [String]!
   }
 
   input CreateModuleInput {
@@ -303,6 +303,7 @@ const typeDefs = `
     cubes: [CubeType]
     email: String
     events: [EventType]
+    matches: [MatchType]
     name: String
     received_bud_requests: [AccountType]
     sent_bud_requests: [AccountType]
@@ -508,7 +509,7 @@ const typeDefs = `
 
   type Subscription {
     joinEvent(_id: ID!): EventType!
-    joinEvent(_id: ID!): MatchType!
+    joinMatch(_id: ID!): MatchType!
   }
 
   type TokenType {

@@ -65,14 +65,18 @@ import viewCard from './match-resolvers/view-card.js';
 import viewZone from './match-resolvers/view-zone.js';
 
 // custom field resolvers
+import account from './match-resolvers/account.js';
 import author from './blog-resolvers/author.js';
 import buds from './account-resolvers/buds.js';
 import creator from './cube-resolvers/creator.js';
+import cube from './match-resolvers/cube.js';
 import cubes from './account-resolvers/cubes.js';
 import email from './account-resolvers/email.js';
+import event from './match-resolvers/event.js';
+import eventPlayers from './event-resolvers/players.js';
 import events from './account-resolvers/events.js';
 import host from './event-resolvers/host.js';
-import players from './event-resolvers/players.js';
+import matches from './account-resolvers/matches.js';
 import received_bud_requests from './account-resolvers/received-bud-requests.js';
 import sent_bud_requests from './account-resolvers/sent-bud-requests.js';
 import unknownCard from './match-resolvers/unknown-card.js';
@@ -83,6 +87,7 @@ export default {
     cubes,
     email,
     events,
+    matches,
     received_bud_requests,
     sent_bud_requests
   },
@@ -97,13 +102,20 @@ export default {
   },
   EventType: {
     host,
-    players
+    players: eventPlayers
   },
   MatchCardType: {
     back_image: unknownCard,
     image: unknownCard,
     name: unknownCard,
     tokens: unknownCard
+  },
+  MatchPlayerType: {
+    account
+  },
+  MatchType: {
+    cube,
+    event
   },
   Mutation: {
   // account

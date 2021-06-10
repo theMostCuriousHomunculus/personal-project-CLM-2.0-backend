@@ -6,7 +6,7 @@ export default async function (parent, args, context, info) {
 
   const { account } = context;
 
-  if (account) throw new HttpError("You must be logged in to create a match.", 401);
+  if (!account) throw new HttpError("You must be logged in to create a match.", 401);
   
   const { input: { eventID, playerIDs } } = args;
   const event = await Event.findById(eventID);

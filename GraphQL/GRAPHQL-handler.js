@@ -5,11 +5,13 @@ import schema from './schema.js';
 export default graphqlHTTP({
   customFormatErrorFn(error) {
     if (!error.originalError) {
+      console.log(error);
       return error;
     } else {
       const data = error.originalError.data;
       const message = error.message;
       const code = error.originalError.code || 500;
+      console.log(error);
 
       return {
         data,

@@ -7,8 +7,6 @@ export default async function (parent, args, context, info) {
 
   if (!player) throw new HttpError("You are only a spectator.", 401);
 
-  const player = match.players.find(plr => plr.account.toString() === playerID);
-
   // some cards may have become visible to one or more players (perhaps because of a scry)
   for (const card of player.library) {
     card.visibility = [];

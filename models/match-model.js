@@ -95,27 +95,6 @@ function coordinateBoundaries(value) {
   return value >= 0 && value < 100;
 }
 
-const matchSchema = new mongoose.Schema({
-  cube: {
-    ref: 'Cube',
-    required: false,
-    type: mongoose.Schema.Types.ObjectId
-  },
-  event: {
-    ref: 'Event',
-    required: false,
-    type: mongoose.Schema.Types.ObjectId
-  },
-  game_winners: [{
-    ref: 'Account',
-    required: true,
-    type: mongoose.Schema.Types.ObjectId
-  }],
-  log: [String],
-  players: [playerSchema],
-  stack: [cardSchema]
-});
-
 const playerSchema = new mongoose.Schema({
   account: {
     ref: 'Account',
@@ -147,6 +126,27 @@ const playerSchema = new mongoose.Schema({
   temporary: [cardSchema]
 }, {
   _id: false
+});
+
+const matchSchema = new mongoose.Schema({
+  cube: {
+    ref: 'Cube',
+    required: false,
+    type: mongoose.Schema.Types.ObjectId
+  },
+  event: {
+    ref: 'Event',
+    required: false,
+    type: mongoose.Schema.Types.ObjectId
+  },
+  game_winners: [{
+    ref: 'Account',
+    required: true,
+    type: mongoose.Schema.Types.ObjectId
+  }],
+  log: [String],
+  players: [playerSchema],
+  stack: [cardSchema]
 });
 
 const Match = mongoose.model('Match', matchSchema);
