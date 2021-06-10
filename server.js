@@ -5,7 +5,6 @@ import { createServer } from 'http';
 
 import auth from './auth.js';
 import graphqlHandler from './GraphQL/GraphQL-handler.js';
-import pubsub from './GraphQL/pubsub.js';
 import restHandler from './REST/REST-handler.js';
 
 mongoose.connect(process.env.DB_CONNECTION, {
@@ -24,7 +23,7 @@ app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization, CubeID, EventID, MatchID'
   );
   res.setHeader('Access-Control-Allow-Methods', 'DELETE, GET, PATCH, POST');
   
@@ -42,10 +41,7 @@ app.use(express.urlencoded({
 
 app.use(auth);
 
-app.use('/graphql', (req, res, next) => {
-  req.pubsub = pubsub;
-  next();
-}, graphqlHandler);
+app.use('/graphql', graphqlHandler);
 
 app.use('/rest', restHandler(io));
 
