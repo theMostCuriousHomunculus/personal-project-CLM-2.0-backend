@@ -1,25 +1,19 @@
 import HttpError from '../../../models/http-error.js';
-import { Event } from '../../../models/event-model.js';
 
 export default async function (parent, args, context, info) {
-  const { input: { cardID, eventID } } = args;
-  if (!context.account) throw new HttpError("You must be logged in to select a card.", 401);
 
-  const event = await Event.findById(eventID);
+  const { event, player, pubsub } = context;
+  const { _id } = args;
 
-  if (!event) throw new HttpError("Could not find an event with the provided ID.", 404);
+  if (!event) throw new HttpError("An event with the provided ID does not exist or you were not invited to it.", 404);
 
-  const player = event.players.find(plr => plr.account.toString() === context.account._id.toString());
-
-  if (!player) throw new HttpError("You were not invited to this event.", 401);
-
-  const cardDrafted = player.queue[0].find(card => card._id.toString() === cardID);
+  const cardDrafted = player.queue[0].find(card => card._id.toString() === _id);
 
   if (!cardDrafted) throw new HttpError("You attempted to draft an invalid card.", 404);
 
   player.mainboard = [...player.mainboard, cardDrafted];
 
-  const packMinusCardDrafted = player.queue[0].filter(card => card._id !== cardDrafted._id);
+  const packMinusCardDrafted = player.queue[0].filter(card => card._id.toString() !== _id);
   const passRight = player.packs.length % 2 === 0;
   const passLeft = player.packs.length % 2 === 1;
   const playerIndex = event.players.indexOf(player);
@@ -53,7 +47,7 @@ export default async function (parent, args, context, info) {
   }
 
   await event.save();
-  context.pubsub.publish(eventID, { joinEvent: event });
+  pubsub.publish(event._id.toString(), { joinEvent: event });
 
   return event;
 };

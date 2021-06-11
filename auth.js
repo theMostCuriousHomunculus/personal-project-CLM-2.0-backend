@@ -24,7 +24,7 @@ export default async function (req, res, next) {
     }
 
     if (req.header('EventID')) {
-      const event = await Event.findOne({ '_id': req.header('EventID'), players: { $elemMatch: { account: account._id } } });
+      const event = await Event.findOne({ '_id': req.header('EventID'), players: { $elemMatch: { account: req.account._id } } });
       req.event = event;
       req.player = event ? event.players.find(plr => plr.account.toString() === req.account._id.toString()) : null;
     }

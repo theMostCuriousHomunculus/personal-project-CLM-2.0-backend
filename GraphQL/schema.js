@@ -118,11 +118,6 @@ const typeDefs = `
     packs_per_player: Int!
   }
 
-  input CreateMatchInput {
-    eventID: String
-    playerIDs: [String]!
-  }
-
   input CreateModuleInput {
     cubeID: String!
     name: String!
@@ -217,11 +212,6 @@ const typeDefs = `
     size: Int
   }
 
-  input EventUpdatedInput {
-    cardID: String!
-    eventID: String!
-  }
-
   input FlipCardInput {
     cardID: String!
     zone: PlayZoneEnum!
@@ -241,7 +231,6 @@ const typeDefs = `
   input MoveCardInput {
     cardID: String!
     destination: CollectionEnum!
-    eventID: String!
     origin: CollectionEnum!
   }
 
@@ -257,14 +246,8 @@ const typeDefs = `
     zone: PlayZoneEnum!
   }
 
-  input SelectCardInput {
-    cardID: String!
-    eventID: String!
-  }
-
   input SortCardInput {
     collection: CollectionEnum!
-    eventID: String!
     newIndex: Int!
     oldIndex: Int!
   }
@@ -382,6 +365,7 @@ const typeDefs = `
   type EventType {
     _id: ID
     createdAt: String
+    cube: CubeType
     finished: Boolean
     host: AccountType
     name: String
@@ -467,14 +451,14 @@ const typeDefs = `
     editRotation(input: EditRotationInput!): RotationType!
     createEvent(input: CreateEventInput!): EventType!
     moveCard(input: MoveCardInput!): EventType
-    selectCard(input: SelectCardInput!): EventType
+    selectCard(_id: ID!): EventType
     sortCard(input: SortCardInput!): EventType
     adjustCounters(input: AdjustCountersInput!): MatchType
     adjustLifeTotal(life: Int!): MatchType
     changeFaceDownImage(input: ChangeFaceDownImageInput!): MatchType
     concedeGame: MatchType
     createCopies(input: CreateCopiesInput!): MatchType
-    createMatch(input: CreateMatchInput!): MatchType!
+    createMatch(playerIDs: [ID]!): MatchType!
     createTokens(input: CreateTokensInput!): MatchType
     dragCard(input: DragCardInput!): MatchType
     flipCard(input: FlipCardInput!): MatchType
@@ -496,8 +480,8 @@ const typeDefs = `
     searchBlogPosts(search: String): [BlogPostType]!
     fetchCubeByID(_id: ID!): CubeType!
     searchCubes(search: String): [CubeType]!
-    fetchEventByID(_id: ID!): EventType!
-    fetchMatchByID(_id: ID!): MatchType!
+    fetchEventByID: EventType!
+    fetchMatchByID: MatchType!
   }
 
   type RotationType {
@@ -508,8 +492,8 @@ const typeDefs = `
   }
 
   type Subscription {
-    joinEvent(_id: ID!): EventType!
-    joinMatch(_id: ID!): MatchType!
+    joinEvent: EventType!
+    joinMatch: MatchType!
   }
 
   type TokenType {

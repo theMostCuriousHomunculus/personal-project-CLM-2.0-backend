@@ -6,10 +6,11 @@ import { Event } from '../../../models/event-model.js';
 
 export default async function (parent, args, context, info) {
 
-  if (!context.account) throw new HttpError("You must be logged in to create an event.", 401);
+  const { account, cube } = context;
 
-  const { input: { cards_per_pack, cubeID, event_type, modules, name, other_players, packs_per_player } } = args;
-  const cube = await Cube.findById(cubeID);
+  if (!account) throw new HttpError("You must be logged in to create an event.", 401);
+
+  const { input: { cards_per_pack, event_type, modules, name, other_players, packs_per_player } } = args;
   let eventCardPool = cube.mainboard;
 
   cube.modules.forEach(function (module) {
@@ -25,7 +26,7 @@ export default async function (parent, args, context, info) {
   shuffle(eventCardPool);
 
   let players = [{
-    account: context.account._id,
+    account: account._id,
     chaff: [],
     mainboard: [],
     packs: [],
@@ -66,7 +67,7 @@ export default async function (parent, args, context, info) {
   const event = new Event({
     cube: cube._id,
     finished: event_type === 'sealed',
-    host: context.account._id,
+    host: account._id,
     name,
     players
   });

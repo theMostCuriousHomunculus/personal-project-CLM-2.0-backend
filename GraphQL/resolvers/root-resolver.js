@@ -101,6 +101,7 @@ export default {
     creator
   },
   EventType: {
+    cube,
     host,
     players: eventPlayers
   },
