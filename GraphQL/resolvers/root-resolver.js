@@ -45,7 +45,9 @@ import sortCard from './event-resolvers/sort-card.js';
 
 // match
 import adjustCounters from './match-resolvers/adjust-counters.js';
+import adjustEnergyCounters from './match-resolvers/adjust-energy-counters.js';
 import adjustLifeTotal from './match-resolvers/adjust-life-total.js';
+import adjustPoisonCounters from './match-resolvers/adjust-poison-counters.js';
 import concedeGame from './match-resolvers/concede-game.js';
 import createCopies from './match-resolvers/create-copies.js';
 import createMatch from './match-resolvers/create-match.js';
@@ -154,7 +156,9 @@ export default {
     sortCard,
   // match
     adjustCounters,
+    adjustEnergyCounters,
     adjustLifeTotal,
+    adjustPoisonCounters,
     concedeGame,
     createCopies,
     createMatch,

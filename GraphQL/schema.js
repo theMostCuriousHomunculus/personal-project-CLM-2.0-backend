@@ -454,7 +454,9 @@ const typeDefs = `
     selectCard(_id: ID!): EventType
     sortCard(input: SortCardInput!): EventType
     adjustCounters(input: AdjustCountersInput!): MatchType
+    adjustEnergyCounters(energy: Int!): MatchType
     adjustLifeTotal(life: Int!): MatchType
+    adjustPoisonCounters(poison: Int!): MatchType
     changeFaceDownImage(input: ChangeFaceDownImageInput!): MatchType
     concedeGame: MatchType
     createCopies(input: CreateCopiesInput!): MatchType
