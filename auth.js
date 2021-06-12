@@ -32,7 +32,7 @@ export default async function (req, res, next) {
     if (req.header('MatchID')) {
       const match = await Match.findById(req.header('MatchID'));
       req.match = match;
-      req.player = match ? match.players.find(plr => plr.account.toString() === req.account._id.toString()) : null;
+      req.player = match && req.account ? match.players.find(plr => plr.account.toString() === req.account._id.toString()) : null;
     }
 
     req.pubsub = pubsub;
