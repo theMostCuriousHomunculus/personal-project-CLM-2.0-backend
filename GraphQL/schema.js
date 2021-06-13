@@ -160,6 +160,7 @@ const typeDefs = `
     cardID: String!
     xCoordinate: Float!
     yCoordinate: Float!
+    zIndex: Int!
   }
 
   input EditAccountInput {
@@ -391,6 +392,7 @@ const typeDefs = `
     visibility: [AccountType]
     x_coordinate: Float
     y_coordinate: Float
+    z_index: Int
   }
 
   type MatchPlayerType {

@@ -52,7 +52,8 @@ export default async function (parent, args, context, info) {
           tokens: [],
           visibility: [player.account],
           x_coordinate: 0,
-          y_coordinate: 0
+          y_coordinate: 0,
+          z_index: 0
         });
       }
 
@@ -72,7 +73,8 @@ export default async function (parent, args, context, info) {
           tokens: [],
           visibility: [player.account],
           x_coordinate: 0,
-          y_coordinate: 0
+          y_coordinate: 0,
+          z_index: 0
         });
       }
 
