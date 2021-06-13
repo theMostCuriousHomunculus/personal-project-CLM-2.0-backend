@@ -118,6 +118,11 @@ const typeDefs = `
     packs_per_player: Int!
   }
 
+  input CreateMatchInput {
+    eventID: ID
+    playerIDs: [ID]!
+  }
+
   input CreateModuleInput {
     cubeID: String!
     name: String!
@@ -462,7 +467,7 @@ const typeDefs = `
     changeFaceDownImage(input: ChangeFaceDownImageInput!): MatchType
     concedeGame: MatchType
     createCopies(input: CreateCopiesInput!): MatchType
-    createMatch(playerIDs: [ID]!): MatchType!
+    createMatch(input: CreateMatchInput!): MatchType!
     createTokens(input: CreateTokensInput!): MatchType
     dragCard(input: DragCardInput!): MatchType
     flipCard(input: FlipCardInput!): MatchType
