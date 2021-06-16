@@ -264,6 +264,10 @@ const typeDefs = `
     reset_token: String!
   }
 
+  input TapUntapCardsInput {
+    cardIDs: [ID!]!
+  }
+
   input TransferCardInput {
     cardID: String!
     destinationZone: PlayZoneEnum!
@@ -470,13 +474,14 @@ const typeDefs = `
     createMatch(input: CreateMatchInput!): MatchType!
     createTokens(input: CreateTokensInput!): MatchType
     dragCard(input: DragCardInput!): MatchType
+    drawCard: MatchType
     flipCard(input: FlipCardInput!): MatchType
     flipCoin: MatchType
     gainControlOfCard(input: GainControlOfCardInput): MatchType
     revealCard(input: RevealCardInput!): MatchType
     rollDice(sides: Int!): MatchType
     shuffleLibrary: MatchType
-    tapUntapCard(_id: ID!): MatchType
+    tapUntapCards(input: TapUntapCardsInput!): MatchType
     transferCard(input: TransferCardInput!): MatchType
     viewCard(input: ViewCardInput!): MatchType
     viewZone(input: ViewZoneInput!): MatchType

@@ -31,8 +31,10 @@ export default async function (parent, args, context, info) {
     // think vampiric tutor
     card.index = index;
     player.temporary.push(card);
+  } else if (destinationZone.toString() === "stack") {
+    match.stack.push(card);
   } else {
-    // if destination is library, a shuffle is needed but no index is provided OR if the destination is not the library then the card can just be pushed into the destination zone
+    // if destination is library, a shuffle is needed but no index is provided OR if the destination is not the library OR the stack then the card can just be pushed into the destination zone
     player[destinationZone].push(card);
 
     if (destinationZone.toString() === 'hand' && !card.visibility.includes(account._id)) card.visibility.push(account._id);

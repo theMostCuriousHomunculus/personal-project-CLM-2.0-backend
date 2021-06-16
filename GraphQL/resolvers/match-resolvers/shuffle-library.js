@@ -21,7 +21,7 @@ export default async function (parent, args, context, info) {
   for (const card of player.temporary) {
     if (typeof card.index === "number") {
       player.library = player.library.slice(0, card.index).concat([card]).concat(player.library.slice(card.index));
-      match.log(`${account.name} placed ${match.players.every(plr => card.visibility.includes(plr.account)) ? card.name : 'a card'} into their library at index ${card.index} (the bottom card has index 0).`);
+      match.log.push(`${account.name} placed ${match.players.every(plr => card.visibility.includes(plr.account)) ? card.name : 'a card'} into their library at index ${card.index} (the bottom card has index 0).`);
       card.index = null;
     }
   }

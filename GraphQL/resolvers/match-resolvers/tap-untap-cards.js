@@ -6,10 +6,13 @@ export default async function (parent, args, context, info) {
 
   if (!player) throw new HttpError("You are only a spectator.", 401);
 
-  const { _id } = args;
-  const card = player.battlefield.find(crd => crd._id.toString() === _id);
+  const { input: { cardIDs } } = args;
 
-  card.tapped = !card.tapped;
+  for (const cardID of cardIDs) {
+    const card = player.battlefield.find(crd => crd._id.toString() === cardID);
+
+    card.tapped = !card.tapped;
+  }
 
   await match.save();
   pubsub.publish(match._id.toString(), { joinMatch: match });
