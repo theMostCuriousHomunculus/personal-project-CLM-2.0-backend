@@ -110,7 +110,6 @@ const typeDefs = `
 
   input CreateEventInput {
     cards_per_pack: Int!
-    cubeID: String!
     event_type: EventEnum!
     modules: [String]
     name: String!
