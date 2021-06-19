@@ -13,12 +13,12 @@ export default async function (parent, args, context, info) {
     const mutableFields = ['avatar', 'email', 'name', 'password'];
 
     for (let field of mutableFields) {
-      if (args.input[field]) {
+      if (args.input[field] && args.input[field] !== 'null' && args.input[field] !== 'undefined') {
         account[field] = args.input[field];
       }
     }
 
-    if (other_user_id) {
+    if (other_user_id && other_user_id !== 'null' && other_user_id !== 'undefined') {
       const otherUser = await Account.findById(other_user_id);
 
       if (!otherUser) {
@@ -76,7 +76,6 @@ export default async function (parent, args, context, info) {
     await account.save();
     
     return account;
-
   } catch (error) {
 
     if (error.code === 11000) {

@@ -8,13 +8,13 @@ export default async function (parent, args, context, info) {
   
   for (const plr of players) {
 
-    if (plr.account.toString() !== account._id.toString() && plr.account.toString() !== host._id.toString()) {
+    if (!account || (plr.account.toString() !== account._id.toString() && plr.account.toString() !== host._id.toString())) {
 
       for (const field of proprietaryFields) plr[field] = null;
 
     }
 
-    if (plr.account.toString() === account._id.toString() && plr.queue.length > 0) {
+    if (account && plr.account.toString() === account._id.toString() && plr.queue.length > 0) {
       plr.current_pack = plr.queue[0];
     } else {
       plr.current_pack = null;

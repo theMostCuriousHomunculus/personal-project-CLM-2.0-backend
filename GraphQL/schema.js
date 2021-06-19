@@ -50,6 +50,7 @@ const typeDefs = `
   }
 
   input AddCardInput {
+    componentID: String!
     back_image: String
     chapters: Int
     cmc: Int
