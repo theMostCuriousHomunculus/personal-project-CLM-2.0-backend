@@ -23,7 +23,7 @@ app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization, CubeID, EventID, MatchID'
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization, BlogPostID, CubeID, EventID, MatchID'
   );
   res.setHeader('Access-Control-Allow-Methods', 'DELETE, GET, PATCH, POST');
   

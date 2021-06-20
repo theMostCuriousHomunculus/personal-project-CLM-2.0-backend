@@ -2,7 +2,7 @@ import Blog from '../../../models/blog-model.js';
 import HttpError from '../../../models/http-error.js';
 
 export default async function (parent, args, context, info) {
-  const blogPost = await Blog.findById(args.blogPostID);
+  const blogPost = await Blog.findById(args._id);
 
   if (blogPost.author.toString() === context.account._id.toString()) {
     await blogPost.delete();

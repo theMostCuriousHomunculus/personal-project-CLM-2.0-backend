@@ -78,7 +78,6 @@ const typeDefs = `
   }
 
   input BlogPostInput {
-    _id: String
     body: String!
     image: String!
     subtitle: String
@@ -89,11 +88,6 @@ const typeDefs = `
     cardID: String!
     faceDownImage: FaceDownImageEnum!
     zone: PlayZoneEnum!
-  }
-
-  input CreateCommentInput {
-    body: String!
-    blogPostID: String!
   }
 
   input CreateCopiesInput {
@@ -443,11 +437,11 @@ const typeDefs = `
     register(input: RegisterInput!): Credentials!
     requestPasswordReset(email: String!): Boolean
     submitPasswordReset(input: SubmitPasswordResetInput!): Credentials!
-    createBlogPost(input: BlogPostInput!): BlogPostType!
-    createComment(input: CreateCommentInput!): BlogPostType!
+    createBlogPost(input: BlogPostInput!): BlogPostType
+    createComment(body: String!): BlogPostType
     deleteBlogPost(_id: ID!): Boolean
     deleteComment(input: DeleteCommentInput!): Boolean
-    editBlogPost(input: BlogPostInput!): BlogPostType!
+    editBlogPost(input: BlogPostInput!): BlogPostType
     addCard(input: AddCardInput!): CubeCardType!
     createCube(input: CreateCubeInput!): CubeType!
     createModule(input: CreateModuleInput!): ModuleType!
@@ -490,7 +484,7 @@ const typeDefs = `
   type Query {
     fetchAccountByID(_id: ID!): AccountType!
     searchAccounts(name: String): [AccountType]!
-    fetchBlogPostByID(_id: ID!): BlogPostType!
+    fetchBlogPostByID: BlogPostType!
     searchBlogPosts(search: String): [BlogPostType]!
     fetchCubeByID(_id: ID!): CubeType!
     searchCubes(search: String): [CubeType]!
@@ -506,6 +500,7 @@ const typeDefs = `
   }
 
   type Subscription {
+    subscribeBlogPost: BlogPostType!
     joinEvent: EventType!
     joinMatch: MatchType!
   }

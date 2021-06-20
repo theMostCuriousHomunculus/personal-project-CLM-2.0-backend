@@ -18,6 +18,7 @@ import deleteComment from './blog-resolvers/delete-comment.js';
 import editBlogPost from './blog-resolvers/edit-blog-post.js';
 import searchBlogPosts from './blog-resolvers/search-blog-posts.js';
 import fetchBlogPostByID from './blog-resolvers/fetch-blog-post-by-id.js';
+import subscribeBlogPost from './blog-resolvers/subscribe-blog-post.js';
 
 // cube
 import addCard from './cube-resolvers/add-card.js';
@@ -195,6 +196,7 @@ export default {
   Subscription: {
   // account
   // blog
+    subscribeBlogPost,
   // cube
   // event
     joinEvent,

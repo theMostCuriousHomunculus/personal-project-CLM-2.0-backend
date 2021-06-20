@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import Account from '../models/account-model.js';
+import Blog from '../models/blog-model.js';
 import pubsub from './pubsub.js';
 import { Event } from '../models/event-model.js';
 import { Match } from '../models/match-model.js';
@@ -14,6 +15,13 @@ export default async function (context) {
     context.account = account;
   }
 
+  if (context.connectionParams.blogPostID) {
+    const blogPost = await Blog.findById(context.connectionParams.blogPostID);
+
+    if (!blogPost) throw new Error("Could not find a blog post with the provided blogPostID.");
+
+    context.blogPost = blogPost;
+  }
 
   if (context.connectionParams.eventID) {
     const event = await Event.findOne({

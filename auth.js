@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import Account from './models/account-model.js';
+import Blog from './models/blog-model.js';
 import Cube from './models/cube-model.js';
 import pubsub from './GraphQL/pubsub.js';
 import { Event } from './models/event-model.js';
@@ -16,6 +17,11 @@ export default async function (req, res, next) {
   
       req.account = account;
       req.token = token;
+    }
+
+    if (req.header('BlogPostID')) {
+      const blogPost = await Blog.findById(req.header('BlogPostID'));
+      req.blogPost = blogPost;
     }
 
     if (req.header('CubeID')) {
