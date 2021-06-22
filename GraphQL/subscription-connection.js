@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 
 import Account from '../models/account-model.js';
 import Blog from '../models/blog-model.js';
+import Cube from '../models/cube-model.js';
 import pubsub from './pubsub.js';
 import { Event } from '../models/event-model.js';
 import { Match } from '../models/match-model.js';
@@ -21,6 +22,14 @@ export default async function (context) {
     if (!blogPost) throw new Error("Could not find a blog post with the provided blogPostID.");
 
     context.blogPost = blogPost;
+  }
+
+  if (context.connectionParams.cubeID) {
+    const cube = await Cube.findById(context.connectionParams.cubeID);
+
+    if (!cube) throw new Error("Could not find a cube with the provided cubeID.");
+
+    context.cube = cube;
   }
 
   if (context.connectionParams.eventID) {

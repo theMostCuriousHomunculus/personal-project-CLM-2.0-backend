@@ -466,7 +466,7 @@ const typeDefs = `
     searchAccounts(name: String): [AccountType]!
     fetchBlogPostByID: BlogPostType!
     searchBlogPosts(search: String): [BlogPostType]!
-    fetchCubeByID(_id: ID!): CubeType!
+    fetchCubeByID: CubeType!
     searchCubes(search: String): [CubeType]!
     fetchEventByID: EventType!
     fetchMatchByID: MatchType!
