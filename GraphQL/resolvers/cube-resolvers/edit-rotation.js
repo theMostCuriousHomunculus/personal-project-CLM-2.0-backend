@@ -1,25 +1,24 @@
-import Cube from '../../../models/cube-model.js';
 import HttpError from '../../../models/http-error.js';
 
 export default async function (parent, args, context, info) {
-  const { input: { cubeID, rotationID } } = args;
-  const cube = await Cube.findById(cubeID);
 
-  if (context.account._id.toString() === cube.creator.toString()) {
-    const rotation = cube.rotations.id(rotationID);
-    const validRotationProperties = [
-      'name',
-      'size'
-    ];
+  const { account, cube, pubsub } = context;
 
-    for (let property of validRotationProperties) {
-      if (typeof input[property] !== 'undefined') rotation[property] = input[property];
-    }
+  if (!account || !cube || account._id.toString() !== cube.creator.toString()) throw new HttpError("You are not authorized to edit this cube.", 401);
 
-    await cube.save();
+  const { input: { rotationID } } = args;
+  const rotation = cube.rotations.id(rotationID);
+  const validRotationProperties = [
+    'name',
+    'size'
+  ];
 
-    return rotation;
-  } else {
-    throw new HttpError("You are not authorized to edit this cube.", 401);
+  for (let property of validRotationProperties) {
+    if (typeof input[property] !== 'undefined') rotation[property] = input[property];
   }
+
+  await cube.save();
+  pubsub.publish(cube._id.toString(), { subscribeCube: cube });
+  
+  return cube;
 };

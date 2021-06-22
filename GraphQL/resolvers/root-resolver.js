@@ -35,6 +35,7 @@ import editModule from './cube-resolvers/edit-module.js';
 import editRotation from './cube-resolvers/edit-rotation.js';
 import fetchCubeByID from './cube-resolvers/fetch-cube-by-id.js';
 import searchCubes from './cube-resolvers/search-cubes.js';
+import subscribeCube from './cube-resolvers/subscribe-cube.js';
 
 // event
 import createEvent from './event-resolvers/create-event.js';
@@ -198,6 +199,7 @@ export default {
   // blog
     subscribeBlogPost,
   // cube
+    subscribeCube,
   // event
     joinEvent,
   // match

@@ -117,13 +117,7 @@ const typeDefs = `
     playerIDs: [ID]!
   }
 
-  input CreateModuleInput {
-    cubeID: String!
-    name: String!
-  }
-
   input CreateRotationInput {
-    cubeID: String!
     name: String!
     size: Int
   }
@@ -145,16 +139,6 @@ const typeDefs = `
     commentID: String!
   }
 
-  input DeleteModuleInput {
-    cubeID: String!
-    moduleID: String!
-  }
-
-  input DeleteRotationInput {
-    cubeID: String!
-    rotationID: String!
-  }
-
   input DragCardInput {
     cardID: String!
     xCoordinate: Float!
@@ -174,7 +158,6 @@ const typeDefs = `
   input EditCardInput {
     cardID: String!
     componentID: String!
-    cubeID: String!
     back_image: String
     chapters: Int
     cmc: Int
@@ -194,19 +177,16 @@ const typeDefs = `
   }
 
   input EditCubeInput {
-    cubeID: String!
     description: String
     name: String
   }
 
   input EditModuleInput {
-    cubeID: String!
     moduleID: String!
     name: String
   }
 
   input EditRotationInput {
-    cubeID: String!
     rotationID: String!
     name: String
     size: Int
@@ -442,18 +422,18 @@ const typeDefs = `
     deleteBlogPost(_id: ID!): Boolean
     deleteComment(input: DeleteCommentInput!): Boolean
     editBlogPost(input: BlogPostInput!): BlogPostType
-    addCard(input: AddCardInput!): CubeCardType!
+    addCard(input: AddCardInput!): CubeType
     createCube(input: CreateCubeInput!): CubeType!
-    createModule(input: CreateModuleInput!): ModuleType!
-    createRotation(input: CreateRotationInput!): RotationType!
-    deleteCard(input: DeleteCardInput!): CubeType!
-    deleteCube(cubeID: String!): Boolean
-    deleteModule(input: DeleteModuleInput!): Boolean
-    deleteRotation(input: DeleteRotationInput!): Boolean
-    editCard(input: EditCardInput!): CubeCardType!
-    editCube(input: EditCubeInput!): CubeType!
-    editModule(input: EditModuleInput!): ModuleType!
-    editRotation(input: EditRotationInput!): RotationType!
+    createModule(name: String!): CubeType
+    createRotation(input: CreateRotationInput!): CubeType
+    deleteCard(input: DeleteCardInput!): Boolean
+    deleteCube: Boolean
+    deleteModule(_id: ID!): Boolean
+    deleteRotation(_id: ID!): Boolean
+    editCard(input: EditCardInput!): CubeType
+    editCube(input: EditCubeInput!): CubeType
+    editModule(input: EditModuleInput!): CubeType
+    editRotation(input: EditRotationInput!): CubeType
     createEvent(input: CreateEventInput!): EventType!
     moveCard(input: MoveCardInput!): EventType
     selectCard(_id: ID!): EventType
@@ -501,6 +481,7 @@ const typeDefs = `
 
   type Subscription {
     subscribeBlogPost: BlogPostType!
+    subscribeCube: CubeType!
     joinEvent: EventType!
     joinMatch: MatchType!
   }
