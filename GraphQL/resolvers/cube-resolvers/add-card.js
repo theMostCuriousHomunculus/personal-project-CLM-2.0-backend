@@ -8,12 +8,12 @@ export default async function (parent, args, context, info) {
 
   if (!account || !cube || account._id.toString() !== cube.creator.toString()) throw new HttpError("You are not authorized to edit this cube.", 401);
 
-  const { input: { componentID } } = args;
-  const component = await returnComponent(cube, componentID);
+  const { input } = args;
+  const component = await returnComponent(cube, input.componentID);
   const card = {};
   
   for (let property of validCardProperties) {
-    if (typeof input[property.name] !== 'undefined') {
+    if (typeof input[property.name] !== 'undefined' && input[property.name] !== 'undefined') {
       if (property.specialNumeric && isNaN(input[property.name])){
         card[property.name] = 0;
       } else {
