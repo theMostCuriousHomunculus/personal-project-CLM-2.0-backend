@@ -117,11 +117,6 @@ const typeDefs = `
     playerIDs: [ID]!
   }
 
-  input CreateRotationInput {
-    name: String!
-    size: Int
-  }
-
   input CreateTokensInput {
     numberOfTokens: Int!
     scryfallID: String!
@@ -129,8 +124,7 @@ const typeDefs = `
 
   input DeleteCardInput {
     cardID: String!
-    componentID: String!
-    cubeID: String!
+    originID: String!
     destinationID: String
   }
 
@@ -425,7 +419,7 @@ const typeDefs = `
     addCard(input: AddCardInput!): CubeType
     createCube(input: CreateCubeInput!): CubeType!
     createModule(name: String!): CubeType
-    createRotation(input: CreateRotationInput!): CubeType
+    createRotation(name: String!): CubeType
     deleteCard(input: DeleteCardInput!): Boolean
     deleteCube: Boolean
     deleteModule(_id: ID!): Boolean

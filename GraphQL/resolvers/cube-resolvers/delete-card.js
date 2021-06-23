@@ -27,5 +27,5 @@ export default async function (parent, args, context, info) {
   await cube.save();
   pubsub.publish(cube._id.toString(), { subscribeCube: cube });
 
-  return cube;
+  return true;
 };

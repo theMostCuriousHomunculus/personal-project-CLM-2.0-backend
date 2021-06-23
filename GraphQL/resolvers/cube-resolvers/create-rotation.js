@@ -6,9 +6,9 @@ export default async function (parent, args, context, info) {
 
   if (!account || !cube || account._id.toString() !== cube.creator.toString()) throw new HttpError("You are not authorized to edit this cube.", 401);
 
-  const { input: { name, size } } = args;
+  const { name } = args;
 
-  cube.rotations.push({ name, size: size ? size : 0 });
+  cube.rotations.push({ name, size: 0 });
 
   await cube.save();
   pubsub.publish(cube._id.toString(), { subscribeCube: cube });
