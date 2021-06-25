@@ -1,11 +1,9 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import socketio from 'socket.io';
 import { createServer } from 'http';
 
-import auth from './auth.js';
+import context from './context.js';
 import graphqlHandler from './GraphQL/GraphQL-handler.js';
-import restHandler from './REST/REST-handler.js';
 
 mongoose.connect(process.env.DB_CONNECTION, {
   useCreateIndex: true,
@@ -16,7 +14,6 @@ mongoose.connect(process.env.DB_CONNECTION, {
 const app = express();
 
 const HTTPserver = createServer(app);
-const io = socketio(HTTPserver);
 
 app.use(express.json());
 app.use(function (req, res, next) {
@@ -39,11 +36,9 @@ app.use(express.urlencoded({
   useUnifiedTopology: true
 }));
 
-app.use(auth);
+app.use(context);
 
 app.use('/graphql', graphqlHandler);
-
-app.use('/rest', restHandler(io));
 
 app.use(function (req, res, next) {
   res.status(404).send();

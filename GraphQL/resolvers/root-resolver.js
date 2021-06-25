@@ -40,7 +40,7 @@ import subscribeCube from './cube-resolvers/subscribe-cube.js';
 // event
 import createEvent from './event-resolvers/create-event.js';
 import fetchEventByID from './event-resolvers/fetch-event-by-id.js';
-import joinEvent from './event-resolvers/join-event.js';
+import subscribeEvent from './event-resolvers/subscribe-event.js';
 import moveCard from './event-resolvers/move-card.js';
 import selectCard from './event-resolvers/select-card.js';
 import sortCard from './event-resolvers/sort-card.js';
@@ -201,7 +201,7 @@ export default {
   // cube
     subscribeCube,
   // event
-    joinEvent,
+    subscribeEvent,
   // match
     joinMatch
   }

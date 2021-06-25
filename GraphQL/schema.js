@@ -476,7 +476,7 @@ const typeDefs = `
   type Subscription {
     subscribeBlogPost: BlogPostType!
     subscribeCube: CubeType!
-    joinEvent: EventType!
+    subscribeEvent: EventType!
     joinMatch: MatchType!
   }
 

@@ -20,7 +20,7 @@ export default async function (parent, args, context, info) {
   player[destination] = destinationCardsClone;
 
   await event.save();
-  pubsub.publish(event._id.toString(), { joinEvent: event });
+  pubsub.publish(event._id.toString(), { subscribeEvent: event });
 
   return event;
 };
