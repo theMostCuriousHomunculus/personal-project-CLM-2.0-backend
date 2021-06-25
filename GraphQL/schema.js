@@ -176,12 +176,12 @@ const typeDefs = `
   }
 
   input EditModuleInput {
-    moduleID: String!
+    moduleID: ID!
     name: String
   }
 
   input EditRotationInput {
-    rotationID: String!
+    rotationID: ID!
     name: String
     size: Int
   }

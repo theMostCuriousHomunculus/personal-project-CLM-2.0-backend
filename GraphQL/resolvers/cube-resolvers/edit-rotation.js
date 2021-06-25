@@ -6,8 +6,8 @@ export default async function (parent, args, context, info) {
 
   if (!account || !cube || account._id.toString() !== cube.creator.toString()) throw new HttpError("You are not authorized to edit this cube.", 401);
 
-  const { input: { rotationID } } = args;
-  const rotation = cube.rotations.id(rotationID);
+  const { input } = args;
+  const rotation = cube.rotations.id(input.rotationID);
   const validRotationProperties = [
     'name',
     'size'

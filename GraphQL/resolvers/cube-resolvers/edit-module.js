@@ -6,8 +6,8 @@ export default async function (parent, args, context, info) {
 
   if (!account || !cube || account._id.toString() !== cube.creator.toString()) throw new HttpError("You are not authorized to edit this cube.", 401);
 
-  const { input: { moduleID } } = args;
-  const module = cube.modules.id(moduleID);
+  const { input } = args;
+  const module = cube.modules.id(input.moduleID);
   const validModuleProperties = [
     'name'
   ];
