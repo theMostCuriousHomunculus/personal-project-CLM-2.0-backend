@@ -22,7 +22,7 @@ app.use(function (req, res, next) {
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept, Authorization, BlogPostID, CubeID, EventID, MatchID'
   );
-  res.setHeader('Access-Control-Allow-Methods', 'DELETE, GET, PATCH, POST');
+  res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, POST');
   
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
