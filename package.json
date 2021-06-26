@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "description": "The new and improved backend for Cube Level Midnight",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
