@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { createServer } from 'http';
 
 import context from './context.js';
-import graphqlHandler from './GraphQL/GraphQL-handler.js';
+import graphqlHandler from './GraphQL/graphql-handler.js';
 
 mongoose.connect(process.env.DB_CONNECTION, {
   useCreateIndex: true,
