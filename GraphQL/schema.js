@@ -245,6 +245,11 @@ const typeDefs = `
     shuffle: Boolean!
   }
 
+  input TurnCardInput {
+    cardID: String!
+    zone: PlayZoneEnum!
+  }
+
   input ViewCardInput {
     cardID: String!
     controllerID: String!
@@ -356,6 +361,7 @@ const typeDefs = `
     back_image: String
     controller: AccountType
     counters: [CounterObjectType]
+    face_down: Boolean
     face_down_image: String
     flipped: Boolean
     image: String
@@ -451,6 +457,7 @@ const typeDefs = `
     shuffleLibrary: MatchType
     tapUntapCards(input: TapUntapCardsInput!): MatchType
     transferCard(input: TransferCardInput!): MatchType
+    turnCard(input: TurnCardInput!): MatchType
     viewCard(input: ViewCardInput!): MatchType
     viewZone(input: ViewZoneInput!): MatchType
   }

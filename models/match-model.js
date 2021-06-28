@@ -14,6 +14,10 @@ const cardSchema = new mongoose.Schema({
     counterAmount: Number,
     counterType: String
   }],
+  face_down: {
+    default: false,
+    type: Boolean
+  },
   face_down_image: {
     default: 'standard',
     enum: ['foretell', 'manifest', 'morph', 'standard'],

@@ -17,6 +17,8 @@ export default async function (parent, args, context, info) {
     player[originZone] = player[originZone].filter(crd => crd !== card);
   }
 
+  if (originZone.toString() === 'library') card.face_down = true;
+
   if (reveal) {
     for (const plr of match.players) {
       if (!card.visibility.includes(plr.account)) card.visibility.push(plr.account);
@@ -35,9 +37,9 @@ export default async function (parent, args, context, info) {
     match.stack.push(card);
   } else {
     // if destination is library, a shuffle is needed but no index is provided OR if the destination is not the library OR the stack then the card can just be pushed into the destination zone
-    player[destinationZone].push(card);
-
     if (destinationZone.toString() === 'hand' && !card.visibility.includes(account._id)) card.visibility.push(account._id);
+    
+    player[destinationZone].push(card);
   }
 
   match.log.push(`${account.name} moved ${match.players.every(plr => card.visibility.includes(plr.account)) ? card.name : 'a card'} from ${originZone.toString() === 'stack' ? 'the stack' : 'their '+ originZone} to ${destinationZone.toString() === 'stack' ? 'the stack' : 'their ' + destinationZone}.`);

@@ -11,6 +11,7 @@ export default async function (parent, args, context, info) {
   if (!card) throw new HttpError("Your library is empty!", 409);
   
   if (!card.visibility.includes(account._id)) card.visibility.push(account._id);
+  card.face_down = false;
 
   player.hand.push(card);
   match.log.push(`${account.name} drew a card.`);

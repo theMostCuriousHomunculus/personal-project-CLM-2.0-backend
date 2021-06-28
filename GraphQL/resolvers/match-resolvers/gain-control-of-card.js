@@ -15,13 +15,20 @@ export default async function (parent, args, context, info) {
   
   if (zone.toString() === 'stack') {
     card = match.stack.find(crd => crd._id.toString() === cardID);
+    card.controller = account._id;
+    
+    if (!card.visibility.some(plrID => plrID.toString() === account._id.toString())) card.visibility.push(account._id);
   } else {
     card = controller[zone].find(crd => crd._id.toString() === cardID);
+    card.controller = account._id;
+
+    if (!card.visibility.some(plrID => plrID.toString() === account._id.toString())) card.visibility.push(account._id);
+    
     controller[zone] = controller[zone].filter(crd => crd !== card);
     player[zone].push(card);
   }
 
-  card.controller = account._id;
+  match.log.push(`${account.name} gained control of ${card.name}.`);
 
   await match.save();
   pubsub.publish(match._id.toString(), { joinMatch: match });

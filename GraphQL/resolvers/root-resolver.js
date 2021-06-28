@@ -67,6 +67,7 @@ import rollDice from './match-resolvers/roll-dice.js';
 import shuffleLibrary from './match-resolvers/shuffle-library.js';
 import tapUntapCards from './match-resolvers/tap-untap-cards.js';
 import transferCard from './match-resolvers/transfer-card.js';
+import turnCard from './match-resolvers/turn-card.js';
 import viewCard from './match-resolvers/view-card.js';
 import viewZone from './match-resolvers/view-zone.js';
 
@@ -178,6 +179,7 @@ export default {
     shuffleLibrary,
     tapUntapCards,
     transferCard,
+    turnCard,
     viewCard,
     viewZone,
   },
