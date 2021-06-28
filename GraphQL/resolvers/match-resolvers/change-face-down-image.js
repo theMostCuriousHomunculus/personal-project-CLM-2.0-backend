@@ -2,7 +2,7 @@ import HttpError from '../../../models/http-error.js';
 
 export default async function (parent, args, context, info) {
 
-  const { account, match, player, pubsub } = context;
+  const { match, player, pubsub } = context;
 
   if (!player) throw new HttpError("You are only a spectator.", 401);
 
@@ -12,7 +12,7 @@ export default async function (parent, args, context, info) {
   if (zone.toString() === 'stack') {
     card = match.stack.find(crd => crd._id.toString() === cardID);
   } else {
-    card = controller[zone].find(crd => crd._id.toString() === cardID);
+    card = player[zone].find(crd => crd._id.toString() === cardID);
   }
 
   card.face_down_image = faceDownImage.toString();

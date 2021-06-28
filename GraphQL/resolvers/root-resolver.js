@@ -50,6 +50,7 @@ import adjustCounters from './match-resolvers/adjust-counters.js';
 import adjustEnergyCounters from './match-resolvers/adjust-energy-counters.js';
 import adjustLifeTotal from './match-resolvers/adjust-life-total.js';
 import adjustPoisonCounters from './match-resolvers/adjust-poison-counters.js';
+import changeFaceDownImage from './match-resolvers/change-face-down-image.js';
 import concedeGame from './match-resolvers/concede-game.js';
 import createCopies from './match-resolvers/create-copies.js';
 import createMatch from './match-resolvers/create-match.js';
@@ -162,6 +163,7 @@ export default {
     adjustEnergyCounters,
     adjustLifeTotal,
     adjustPoisonCounters,
+    changeFaceDownImage,
     concedeGame,
     createCopies,
     createMatch,
