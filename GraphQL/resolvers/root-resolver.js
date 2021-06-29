@@ -61,13 +61,13 @@ import fetchMatchByID from './match-resolvers/fetch-match-by-id.js';
 import flipCard from './match-resolvers/flip-card.js';
 import flipCoin from './match-resolvers/flip-coin.js';
 import gainControlOfCard from './match-resolvers/gain-control-of-card.js';
-import joinMatch from './match-resolvers/join-match.js';
 import revealCard from './match-resolvers/reveal-card.js';
 import rollDice from './match-resolvers/roll-dice.js';
 import shuffleLibrary from './match-resolvers/shuffle-library.js';
 import tapUntapCards from './match-resolvers/tap-untap-cards.js';
 import transferCard from './match-resolvers/transfer-card.js';
 import turnCard from './match-resolvers/turn-card.js';
+import subscribeMatch from './match-resolvers/subscribe-match.js';
 import viewCard from './match-resolvers/view-card.js';
 import viewZone from './match-resolvers/view-zone.js';
 
@@ -207,6 +207,6 @@ export default {
   // event
     subscribeEvent,
   // match
-    joinMatch
+    subscribeMatch
   }
 };

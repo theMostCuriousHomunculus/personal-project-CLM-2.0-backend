@@ -13,7 +13,7 @@ export default async function (parent, args, context, info) {
     card.flipped = !card.flipped;
 
     await match.save();
-    pubsub.publish(match._id.toString(), { joinMatch: match });
+    pubsub.publish(match._id.toString(), { subscribeMatch: match });
   }
 
   return match;

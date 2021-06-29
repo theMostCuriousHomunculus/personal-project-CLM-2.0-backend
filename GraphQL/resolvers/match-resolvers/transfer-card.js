@@ -45,7 +45,7 @@ export default async function (parent, args, context, info) {
   match.log.push(`${account.name} moved ${match.players.every(plr => card.visibility.includes(plr.account)) ? card.name : 'a card'} from ${originZone.toString() === 'stack' ? 'the stack' : 'their '+ originZone} to ${destinationZone.toString() === 'stack' ? 'the stack' : 'their ' + destinationZone}.`);
 
   await match.save();
-  pubsub.publish(match._id.toString(), { joinMatch: match });
+  pubsub.publish(match._id.toString(), { subscribeMatch: match });
 
   return match;
 };

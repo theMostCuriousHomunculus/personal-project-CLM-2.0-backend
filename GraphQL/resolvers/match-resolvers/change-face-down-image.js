@@ -18,7 +18,7 @@ export default async function (parent, args, context, info) {
   card.face_down_image = faceDownImage.toString();
 
   await match.save();
-  pubsub.publish(match._id.toString(), { joinMatch: match });
+  pubsub.publish(match._id.toString(), { subscribeMatch: match });
 
   return match;
 };

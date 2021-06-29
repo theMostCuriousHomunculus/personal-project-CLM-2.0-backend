@@ -29,7 +29,7 @@ export default async function (parent, args, context, info) {
   player.temporary = player.temporary.filter(crd => !player.library.includes(crd));
 
   await match.save();
-  pubsub.publish(match._id.toString(), { joinMatch: match });
+  pubsub.publish(match._id.toString(), { subscribeMatch: match });
 
   return match;
 };

@@ -12,7 +12,7 @@ export default async function (parent, args, context, info) {
   match.log.push(`${account.name} rolled a ${sides}-sided dice and got a ${result}.`);
 
   await match.save();
-  pubsub.publish(match._id.toString(), { joinMatch: match });
+  pubsub.publish(match._id.toString(), { subscribeMatch: match });
 
   return match;
 };

@@ -26,7 +26,7 @@ export default async function (parent, args, context, info) {
   match.log.push(`${match.players.every(plr => card.visibility.includes(plr.account)) ? card.name : 'A card'} ${zone.toString() === 'stack' ? 'on the stack' : 'in ' + controllerAccount.name + "'s " + zone} is now visible to ${account.name}.`);
 
   await match.save();
-  pubsub.publish(match._id.toString(), { joinMatch: match });
+  pubsub.publish(match._id.toString(), { subscribeMatch: match });
 
   return match;
 };

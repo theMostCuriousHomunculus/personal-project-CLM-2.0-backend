@@ -10,6 +10,7 @@ const cardSchema = new mongoose.Schema({
     required: true,
     type: mongoose.Schema.Types.ObjectId
   },
+  // TODO: this is initializing every card with an array of length 1 that contains an object with only an _id
   counters: [{
     counterAmount: Number,
     counterType: String

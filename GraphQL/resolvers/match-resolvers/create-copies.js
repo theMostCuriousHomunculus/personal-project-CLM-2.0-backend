@@ -15,24 +15,30 @@ export default async function (parent, args, context, info) {
 
   if (zone === 'stack') {
     card  = match.stack.find(crd => crd._id.toString() === cardID);
-    for (const i = 0; i < numberOfCopies; i++) {
+    for (let i = 0; i < numberOfCopies; i++) {
       match.stack.push({
-        ...card,
+        back_image: card.back_image,
         controller: account._id,
         counters: [],
+        image: card.image,
         isCopyToken: true,
-        owner: account._id
+        name: card.name,
+        owner: account._id,
+        visibility: [...card.visibility]
       });
     }
   } else if (zone === 'battlefield') {
     card  = controller[zone].find(crd => crd._id.toString() === cardID);
-    for (const i = 0; i < numberOfCopies; i++) {
+    for (let i = 0; i < numberOfCopies; i++) {
       player.battlefield.push({
-        ...card,
+        back_image: card.back_image,
         controller: account._id,
         counters: [],
+        image: card.image,
         isCopyToken: true,
+        name: card.name,
         owner: account._id,
+        visibility: [...card.visibility],
         x_coordinate: i,
         y_coordinate: i
       });
@@ -42,7 +48,7 @@ export default async function (parent, args, context, info) {
   }
 
   await match.save();
-  pubsub.publish(match._id.toString(), { joinMatch: match });
+  pubsub.publish(match._id.toString(), { subscribeMatch: match });
 
   return match;
 };

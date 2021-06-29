@@ -13,7 +13,7 @@ export default async function (parent, args, context, info) {
   // TODO: add logic to reset the board (untap all cards, return cards to mainboard / sideboards of owners, etc...)
 
   await match.save();
-  pubsub.publish(match._id.toString(), { joinMatch: match });
+  pubsub.publish(match._id.toString(), { subscribeMatch: match });
 
   return match;
 };

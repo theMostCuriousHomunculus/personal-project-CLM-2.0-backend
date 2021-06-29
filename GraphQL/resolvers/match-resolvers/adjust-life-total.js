@@ -19,7 +19,7 @@ export default async function (parent, args, context, info) {
   player.life = life;
 
   await match.save();
-  pubsub.publish(match._id.toString(), { joinMatch: match });
+  pubsub.publish(match._id.toString(), { subscribeMatch: match });
 
   return match;
 };

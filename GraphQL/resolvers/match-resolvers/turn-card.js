@@ -32,7 +32,7 @@ export default async function (parent, args, context, info) {
   card.face_down = !card.face_down;
 
   await match.save();
-  pubsub.publish(match._id.toString(), { joinMatch: match });
+  pubsub.publish(match._id.toString(), { subscribeMatch: match });
 
   return match;
 };
