@@ -55,6 +55,7 @@ import concedeGame from './match-resolvers/concede-game.js';
 import createCopies from './match-resolvers/create-copies.js';
 import createMatch from './match-resolvers/create-match.js';
 import createTokens from './match-resolvers/create-tokens.js';
+import destroyCopyToken from './match-resolvers/destroy-copy-token.js';
 import dragCard from './match-resolvers/drag-card.js';
 import drawCard from './match-resolvers/draw-card.js';
 import fetchMatchByID from './match-resolvers/fetch-match-by-id.js';
@@ -169,6 +170,7 @@ export default {
     createCopies,
     createMatch,
     createTokens,
+    destroyCopyToken,
     dragCard,
     drawCard,
     flipCard,

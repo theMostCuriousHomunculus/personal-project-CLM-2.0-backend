@@ -84,6 +84,11 @@ const typeDefs = `
     title: String!
   }
 
+  input CardIDZoneInput {
+    cardID: ID!
+    zone: PlayZoneEnum!
+  }
+
   input ChangeFaceDownImageInput {
     cardID: String!
     faceDownImage: FaceDownImageEnum!
@@ -186,11 +191,6 @@ const typeDefs = `
     size: Int
   }
 
-  input FlipCardInput {
-    cardID: String!
-    zone: PlayZoneEnum!
-  }
-
   input GainControlOfCardInput {
     cardID: String!
     controllerID: String!
@@ -213,11 +213,6 @@ const typeDefs = `
     email: String!
     name: String!
     password: String!
-  }
-
-  input RevealCardInput {
-    cardID: String!
-    zone: PlayZoneEnum!
   }
 
   input SortCardInput {
@@ -243,11 +238,6 @@ const typeDefs = `
     originZone: PlayZoneEnum!
     reveal: Boolean!
     shuffle: Boolean!
-  }
-
-  input TurnCardInput {
-    cardID: String!
-    zone: PlayZoneEnum!
   }
 
   input ViewCardInput {
@@ -447,17 +437,18 @@ const typeDefs = `
     createCopies(input: CreateCopiesInput!): MatchType
     createMatch(input: CreateMatchInput!): MatchType!
     createTokens(input: CreateTokensInput!): MatchType
+    destroyCopyToken(input: CardIDZoneInput!): MatchType
     dragCard(input: DragCardInput!): MatchType
     drawCard: MatchType
-    flipCard(input: FlipCardInput!): MatchType
+    flipCard(input: CardIDZoneInput!): MatchType
     flipCoin: MatchType
     gainControlOfCard(input: GainControlOfCardInput): MatchType
-    revealCard(input: RevealCardInput!): MatchType
+    revealCard(input: CardIDZoneInput!): MatchType
     rollDice(sides: Int!): MatchType
     shuffleLibrary: MatchType
     tapUntapCards(input: TapUntapCardsInput!): MatchType
     transferCard(input: TransferCardInput!): MatchType
-    turnCard(input: TurnCardInput!): MatchType
+    turnCard(input: CardIDZoneInput!): MatchType
     viewCard(input: ViewCardInput!): MatchType
     viewZone(input: ViewZoneInput!): MatchType
   }

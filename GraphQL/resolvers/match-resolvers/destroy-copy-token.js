@@ -12,15 +12,25 @@ export default async function (parent, args, context, info) {
 
   if (zone === 'stack') {
     card = match.stack.find(crd => crd._id.toString() === cardID);
-    match.stack = match.stack.filter(crd => crd._id.toString() !== cardID);
-  } else if (zone === 'battlefield') {
-    card = player[zone].find(crd => crd._id.toString() === cardID);
-    player[zone] = player[zone].filter(crd => crd._id.toString() !== cardID);
+    
+    if (card.isCopyToken) {
+      match.stack = match.stack.filter(crd => crd._id.toString() !== cardID);
+    } else {
+      throw new Error("Cannot destroy cards that are not copies or tokens.")
+    }
+    
   } else {
-    throw new HttpError("Copies can only exist on the stack or on the battlefield.", 400);
+    card = player[zone].find(crd => crd._id.toString() === cardID);
+
+    if (card.isCopyToken) {
+      player[zone] = player[zone].filter(crd => crd._id.toString() !== cardID);
+    } else {
+      throw new Error("Cannot destroy cards that are not copies or tokens.")
+    }
+
   }
 
-  match.log.push(`${account.name} destroyed his copy/token of ${card.name}.`);
+  match.log.push(`${account.name} destroyed their copy/token of ${card.name}.`);
 
   await match.save();
   pubsub.publish(match._id.toString(), { subscribeMatch: match });
