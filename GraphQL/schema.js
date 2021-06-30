@@ -44,6 +44,7 @@ const typeDefs = `
     graveyard
     hand
     library
+    mainboard
     sideboard
     stack
     temporary
@@ -349,6 +350,7 @@ const typeDefs = `
   type MatchCardType {
     _id: ID
     back_image: String
+    cmc: Int
     controller: AccountType
     counters: [CounterObjectType]
     face_down: Boolean
@@ -443,6 +445,7 @@ const typeDefs = `
     flipCard(input: CardIDZoneInput!): MatchType
     flipCoin: MatchType
     gainControlOfCard(input: GainControlOfCardInput): MatchType
+    ready: MatchType
     revealCard(input: CardIDZoneInput!): MatchType
     rollDice(sides: Int!): MatchType
     shuffleLibrary: MatchType

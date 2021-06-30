@@ -17,6 +17,12 @@ export default async function (parent, args, context, info) {
     player[originZone] = player[originZone].filter(crd => crd !== card);
   }
 
+  if (destinationZone.toString() !== 'mainboard' && originZone.toString() !== 'mainboard') {
+    match.log.push(`${account.name} moved ${match.players.every(plr => card.visibility.includes(plr.account)) ? card.name : 'a card'} from ${originZone.toString() === 'stack' ? 'the stack' : 'their '+ originZone} to ${destinationZone.toString() === 'stack' ? 'the stack' : 'their ' + destinationZone}.`);
+  } else {
+    card.sideboarded = !card.sideboarded;
+  }
+
   if (originZone.toString() === 'library') card.face_down = true;
 
   if (reveal) {
@@ -41,8 +47,6 @@ export default async function (parent, args, context, info) {
     
     player[destinationZone].push(card);
   }
-
-  match.log.push(`${account.name} moved ${match.players.every(plr => card.visibility.includes(plr.account)) ? card.name : 'a card'} from ${originZone.toString() === 'stack' ? 'the stack' : 'their '+ originZone} to ${destinationZone.toString() === 'stack' ? 'the stack' : 'their ' + destinationZone}.`);
 
   await match.save();
   pubsub.publish(match._id.toString(), { subscribeMatch: match });

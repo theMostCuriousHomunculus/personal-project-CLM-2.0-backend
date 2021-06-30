@@ -5,6 +5,10 @@ const cardSchema = new mongoose.Schema({
     required: false,
     type: String
   },
+  cmc: {
+    required: true,
+    type: Number
+  },
   controller: {
     ref: 'Account',
     required: true,

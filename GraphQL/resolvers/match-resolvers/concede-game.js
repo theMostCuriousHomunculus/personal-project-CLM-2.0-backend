@@ -7,10 +7,46 @@ export default async function (parent, args, context, info) {
   if (!player) throw new HttpError("You are only a spectator.", 401);
 
   // currently only supporting 2 player games
-  match.game_winners = match.game_winners.concat(match.players.filter(plr => plr.account.toString() !== account._id.toString()));
+  match.game_winners.push(match.players.find(plr => plr.account.toString() !== account._id.toString()).account);
   match.log.push(`${account.name} has conceded from the game.`)
 
+  function resetCard (card) {
+    if (!card.isCopyToken) {
+      card.controller = card.owner;
+      card.counters = [];
+      card.face_down = false;
+      card.face_down_image = 'standard';
+      card.flipped = false;
+      card.index = null;
+      card.tapped = false;
+      card.targets = [];
+      card.visibility = [card.owner];
+      card.x_coordinate = 0;
+      card.y_coordinate = 0;
+      card.z_index = 0;
+
+      if (card.sideboarded) {
+        match.players.find(p => p.account.toString() === card.owner.toString()).sideboard.push(card);
+      } else {
+        match.players.find(p => p.account.toString() === card.owner.toString()).mainboard.push(card);
+      }
+
+    }
+  } 
+
   // TODO: add logic to reset the board (untap all cards, return cards to mainboard / sideboards of owners, etc...)
+  for (const plr of match.players) {
+    for (const zone of ['battlefield', 'exile', 'graveyard', 'hand', 'library', 'temporary']) {
+      for (const card of plr[zone]) {
+        resetCard(card);
+      }
+      plr[zone] = [];
+    }
+  }
+
+  for (const card of match.stack) {
+    resetCard(card);
+  }
 
   await match.save();
   pubsub.publish(match._id.toString(), { subscribeMatch: match });

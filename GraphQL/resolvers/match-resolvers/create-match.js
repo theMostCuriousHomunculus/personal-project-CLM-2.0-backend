@@ -39,6 +39,7 @@ export default async function (parent, args, context, info) {
       for (const card of player.mainboard) {
         plr.mainboard.push({
           back_image: card.back_image,
+          cmc: card.cmc,
           controller: player.account,
           counters: {},
           flipped: false,
@@ -60,6 +61,7 @@ export default async function (parent, args, context, info) {
       for (const card of player.sideboard) {
         plr.sideboard.push({
           back_image: card.back_image,
+          cmc: card.cmc,
           controller: player.account,
           counters: {},
           flipped: false,
@@ -83,7 +85,6 @@ export default async function (parent, args, context, info) {
   }
 
   const match = new Match(matchInfo);
-
   await match.save();
 
   return match;
