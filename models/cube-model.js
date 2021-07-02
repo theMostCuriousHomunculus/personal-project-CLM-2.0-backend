@@ -120,7 +120,6 @@ const cubeSchema = new mongoose.Schema({
   sideboard: [cardSchema]
 });
 
-// allows searching for other users by name for bud request purposes
 cubeSchema.index({ name: "text", description: "text" });
 
 const Cube = mongoose.model('Cube', cubeSchema);

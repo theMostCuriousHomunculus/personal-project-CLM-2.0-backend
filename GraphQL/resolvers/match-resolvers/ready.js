@@ -15,6 +15,11 @@ export default async function (parent, args, context, info) {
 
   player.mainboard = [];
   shuffle(player.library);
+
+  for (let i = 0; i < player.library.length; i++) {
+    player.library[i].index = i;
+  }
+
   match.log.push(`${account.name} is ready to whoop some ass!`);
 
   await match.save();

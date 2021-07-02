@@ -38,6 +38,7 @@ import searchCubes from './cube-resolvers/search-cubes.js';
 import subscribeCube from './cube-resolvers/subscribe-cube.js';
 
 // event
+import addBasics from './event-resolvers/add-basics.js';
 import createEvent from './event-resolvers/create-event.js';
 import fetchEventByID from './event-resolvers/fetch-event-by-id.js';
 import subscribeEvent from './event-resolvers/subscribe-event.js';
@@ -157,6 +158,7 @@ export default {
     editModule,
     editRotation,
   // event
+    addBasics,
     createEvent,
     moveCard,
     selectCard,

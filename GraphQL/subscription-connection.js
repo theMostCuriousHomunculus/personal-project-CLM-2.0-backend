@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import Account from '../models/account-model.js';
 import Blog from '../models/blog-model.js';
 import Cube from '../models/cube-model.js';
+import Deck from '../models/deck-model.js';
 import pubsub from './pubsub.js';
 import { Event } from '../models/event-model.js';
 import { Match } from '../models/match-model.js';
@@ -30,6 +31,14 @@ export default async function (context) {
     if (!cube) throw new Error("Could not find a cube with the provided cubeID.");
 
     context.cube = cube;
+  }
+
+  if (context.connectionParams.deckID) {
+    const deck = await Deck.findById(context.connectionParams.deckID);
+
+    if (!deck) throw new Error("Could not find a deck with the provided deckID.");
+
+    context.deck = deck;
   }
 
   if (context.connectionParams.eventID) {

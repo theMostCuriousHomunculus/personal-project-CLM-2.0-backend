@@ -11,7 +11,7 @@ export default async function (parent, args, context, info) {
   const { input: { numberOfTokens, scryfallID } } = args;
   const scryfallResponse = await axios.get(`https://api.scryfall.com/cards/${scryfallID}`);
 
-  for (const i = 0; i < numberOfTokens; i++) {
+  for (let i = 0; i < numberOfTokens; i++) {
     player.battlefield.push({
       controller: account._id,
       image: scryfallResponse.data.image_uris.normal,

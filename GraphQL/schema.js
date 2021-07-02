@@ -50,6 +50,11 @@ const typeDefs = `
     temporary
   }
 
+  input AddBasicsInput {
+    numberOfCopies: Int!
+    scryfallID: String!
+  }
+
   input AddCardInput {
     componentID: String!
     back_image: String
@@ -426,6 +431,7 @@ const typeDefs = `
     editCube(input: EditCubeInput!): CubeType
     editModule(input: EditModuleInput!): CubeType
     editRotation(input: EditRotationInput!): CubeType
+    addBasics(input: AddBasicsInput!): EventType
     createEvent(input: CreateEventInput!): EventType!
     moveCard(input: MoveCardInput!): EventType
     selectCard(_id: ID!): EventType

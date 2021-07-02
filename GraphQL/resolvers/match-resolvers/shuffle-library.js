@@ -11,7 +11,7 @@ export default async function (parent, args, context, info) {
   for (const card of player.library) {
     card.visibility = [];
   }
-
+  
   shuffle(player.library);
   match.log.push(`${account.name} shuffled their library.`)
 
@@ -27,6 +27,10 @@ export default async function (parent, args, context, info) {
   }
 
   player.temporary = player.temporary.filter(crd => !player.library.includes(crd));
+
+  for (let i = 0; i < player.library.length; i++) {
+    player.library[i].index = i;
+  }
 
   await match.save();
   pubsub.publish(match._id.toString(), { subscribeMatch: match });
