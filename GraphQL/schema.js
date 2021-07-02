@@ -26,6 +26,11 @@ const typeDefs = `
     sideboard
   }
 
+  enum DeckComponentEnum {
+    mainboard
+    sideboard
+  }
+
   enum EventEnum {
     draft
     sealed
@@ -36,6 +41,15 @@ const typeDefs = `
     manifest
     morph
     standard
+  }
+
+  enum FormatEnum {
+    Legacy
+    Modern
+    Pauper
+    Pioneer
+    Standard
+    Vintage
   }
 
   enum PlayZoneEnum {
@@ -53,6 +67,12 @@ const typeDefs = `
   input AddBasicsInput {
     numberOfCopies: Int!
     scryfallID: String!
+  }
+
+  input AddCardsToDeckInput {
+    card: DeckCardInput!
+    component: DeckComponentEnum!
+    numberOfCopies: Int!
   }
 
   input AddCardInput {
@@ -131,6 +151,30 @@ const typeDefs = `
   input CreateTokensInput {
     numberOfTokens: Int!
     scryfallID: String!
+  }
+
+  input DeckCardInput {
+    back_image: String
+    cmc: Int
+    color_identity: [String]
+    image: String
+    keywords: [String]
+    mana_cost: String
+    mtgo_id: Int
+    name: String
+    oracle_id: String
+    tcgplayer_id: Int
+    scryfall_id: String
+    set: String
+    set_name: String
+    tokens: [TokenInput]
+    type_line: String
+  }
+
+  input DeckInput {
+    description: String
+    format: FormatEnum
+    name: String
   }
 
   input DeleteCardInput {
@@ -237,6 +281,11 @@ const typeDefs = `
     cardIDs: [ID!]!
   }
 
+  input TokenInput {
+    name: String!
+    scryfall_id: String!
+  }
+
   input TransferCardInput {
     cardID: String!
     destinationZone: PlayZoneEnum!
@@ -263,6 +312,7 @@ const typeDefs = `
     avatar: String
     buds: [AccountType]
     cubes: [CubeType]
+    decks: [DeckType]
     email: String
     events: [EventType]
     matches: [MatchType]
@@ -331,6 +381,35 @@ const typeDefs = `
     name: String
     rotations: [RotationType]
     sideboard: [CubeCardType]
+  }
+
+  type DeckType {
+    _id: ID
+    creator: AccountType
+    description: String
+    format: FormatEnum
+    mainboard: [DeckCardType]
+    name: String
+    sideboard: [DeckCardType]
+  }
+
+  type DeckCardType {
+    _id: ID
+    back_image: String
+    cmc: Int
+    color_identity: [String]
+    image: String
+    keywords: [String]
+    mana_cost: String
+    mtgo_id: Int
+    name: String
+    oracle_id: String
+    tcgplayer_id: Int
+    scryfall_id: String
+    set: String
+    set_name: String
+    tokens: [TokenType]
+    type_line: String
   }
 
   type EventPlayerType {
@@ -431,6 +510,13 @@ const typeDefs = `
     editCube(input: EditCubeInput!): CubeType
     editModule(input: EditModuleInput!): CubeType
     editRotation(input: EditRotationInput!): CubeType
+    addCardsToDeck(input: AddCardsToDeckInput!): DeckType
+    changeCardPrinting(input: String!): DeckType
+    createDeck(input: DeckInput!): DeckType
+    deleteDeck: Boolean
+    editDeck(input: DeckInput!): DeckType
+    removeCardFromDeck(cardID: ID!): DeckType
+    toggleMainboardSideboard(cardID: ID!): DeckType
     addBasics(input: AddBasicsInput!): EventType
     createEvent(input: CreateEventInput!): EventType!
     moveCard(input: MoveCardInput!): EventType
@@ -469,6 +555,7 @@ const typeDefs = `
     searchBlogPosts(search: String): [BlogPostType]!
     fetchCubeByID: CubeType!
     searchCubes(search: String): [CubeType]!
+    fetchDeckByID: DeckType!
     fetchEventByID: EventType!
     fetchMatchByID: MatchType!
   }
@@ -483,6 +570,7 @@ const typeDefs = `
   type Subscription {
     subscribeBlogPost: BlogPostType!
     subscribeCube: CubeType!
+    subscribeDeck: DeckType!
     subscribeEvent: EventType!
     subscribeMatch: MatchType!
   }

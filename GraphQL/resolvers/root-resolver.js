@@ -37,14 +37,24 @@ import fetchCubeByID from './cube-resolvers/fetch-cube-by-id.js';
 import searchCubes from './cube-resolvers/search-cubes.js';
 import subscribeCube from './cube-resolvers/subscribe-cube.js';
 
+// deck
+import addCardsToDeck from './deck-resolvers/add-cards-to-deck.js';
+import createDeck from './deck-resolvers/create-deck.js';
+import deleteDeck from './deck-resolvers/delete-deck.js';
+import editDeck from './deck-resolvers/edit-deck.js';
+import fetchDeckByID from './deck-resolvers/fetch-deck-by-id.js';
+import removeCardFromDeck from './deck-resolvers/remove-card-from-deck.js';
+import subscribeDeck from './deck-resolvers/subscribe-deck.js';
+import toggleMainboardSideboard from './deck-resolvers/toggle-mainboard-sideboard.js';
+
 // event
 import addBasics from './event-resolvers/add-basics.js';
 import createEvent from './event-resolvers/create-event.js';
 import fetchEventByID from './event-resolvers/fetch-event-by-id.js';
-import subscribeEvent from './event-resolvers/subscribe-event.js';
 import moveCard from './event-resolvers/move-card.js';
 import selectCard from './event-resolvers/select-card.js';
 import sortCard from './event-resolvers/sort-card.js';
+import subscribeEvent from './event-resolvers/subscribe-event.js';
 
 // match
 import adjustCounters from './match-resolvers/adjust-counters.js';
@@ -67,10 +77,10 @@ import ready from './match-resolvers/ready.js';
 import revealCard from './match-resolvers/reveal-card.js';
 import rollDice from './match-resolvers/roll-dice.js';
 import shuffleLibrary from './match-resolvers/shuffle-library.js';
+import subscribeMatch from './match-resolvers/subscribe-match.js';
 import tapUntapCards from './match-resolvers/tap-untap-cards.js';
 import transferCard from './match-resolvers/transfer-card.js';
 import turnCard from './match-resolvers/turn-card.js';
-import subscribeMatch from './match-resolvers/subscribe-match.js';
 import viewCard from './match-resolvers/view-card.js';
 import viewZone from './match-resolvers/view-zone.js';
 
@@ -81,6 +91,7 @@ import buds from './account-resolvers/buds.js';
 import creator from './cube-resolvers/creator.js';
 import cube from './match-resolvers/cube.js';
 import cubes from './account-resolvers/cubes.js';
+import decks from './account-resolvers/decks.js';
 import email from './account-resolvers/email.js';
 import event from './match-resolvers/event.js';
 import eventPlayers from './event-resolvers/players.js';
@@ -95,6 +106,7 @@ export default {
   AccountType: {
     buds,
     cubes,
+    decks,
     email,
     events,
     matches,
@@ -108,6 +120,9 @@ export default {
     author
   },
   CubeType: {
+    creator
+  },
+  DeckType: {
     creator
   },
   EventType: {
@@ -157,6 +172,13 @@ export default {
     editCube,
     editModule,
     editRotation,
+  // deck
+    addCardsToDeck,
+    createDeck,
+    deleteDeck,
+    editDeck,
+    removeCardFromDeck,
+    toggleMainboardSideboard,
   // event
     addBasics,
     createEvent,
@@ -199,6 +221,8 @@ export default {
   // cube
     fetchCubeByID,
     searchCubes,
+  // deck
+    fetchDeckByID,
   // event
     fetchEventByID,
   // match
@@ -210,6 +234,8 @@ export default {
     subscribeBlogPost,
   // cube
     subscribeCube,
+  // deck
+    subscribeDeck,
   // event
     subscribeEvent,
   // match
