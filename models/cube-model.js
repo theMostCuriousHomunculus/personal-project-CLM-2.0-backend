@@ -1,36 +1,23 @@
 import mongoose from 'mongoose';
 
-const cardSchema = new mongoose.Schema({
-  back_image: {
-    type: String
-  },
-  chapters: {
-    type: Number
-  },
+const cubeCardSchema = new mongoose.Schema({
+  back_image: String,
   cmc: {
     required: true,
     type: Number
   },
-  color_identity: [{
+  collector_number: {
     required: true,
-    type: String
-  }],
+    type: Number
+  },
+  color_identity: [String],
   image: {
     required: true,
     type: String
   },
-  keywords: [{
-    type: String
-  }],
-  loyalty: {
-    type: Number
-  },
-  mana_cost: {
-    type: String
-  },
-  mtgo_id: {
-    type: Number
-  },
+  keywords: [String],
+  mana_cost: String,
+  mtgo_id: Number,
   name: {
     required: true,
     type: String
@@ -39,16 +26,19 @@ const cardSchema = new mongoose.Schema({
     required: true,
     type: String
   },
-  power: {
-    type: Number
-  },
-  printing: {
+  scryfall_id: {
     required: true,
     type: String
   },
-  purchase_link: {
+  set: {
+    required: true,
     type: String
   },
+  set_name: {
+    require: true,
+    type: String
+  },
+  tcgplayer_id: Number,
   tokens: [{
     name: {
       required: true,
@@ -59,16 +49,14 @@ const cardSchema = new mongoose.Schema({
       type: String
     }
   }],
-  toughness: {
-    type: Number
-  },
   type_line: {
+    required: true,
     type: String
   }
 });
 
 const moduleSchema = new mongoose.Schema({
-  cards: [cardSchema],
+  cards: [cubeCardSchema],
   name: {
     maxlength: 30,
     required: true,
@@ -78,7 +66,7 @@ const moduleSchema = new mongoose.Schema({
 });
 
 const rotationSchema = new mongoose.Schema({
-  cards: [cardSchema],
+  cards: [cubeCardSchema],
   name: {
     maxlength: 30,
     required: true,
@@ -104,7 +92,7 @@ const cubeSchema = new mongoose.Schema({
     },
     type: String
   },
-  mainboard: [cardSchema],
+  mainboard: [cubeCardSchema],
   modules: [moduleSchema],
   name: {
     index: {
@@ -117,11 +105,11 @@ const cubeSchema = new mongoose.Schema({
     type: String
   },
   rotations: [rotationSchema],
-  sideboard: [cardSchema]
+  sideboard: [cubeCardSchema]
 });
 
 cubeSchema.index({ name: "text", description: "text" });
 
 const Cube = mongoose.model('Cube', cubeSchema);
 
-export { Cube as default, cardSchema };
+export { Cube as default, cubeCardSchema };

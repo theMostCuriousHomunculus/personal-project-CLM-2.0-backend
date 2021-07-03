@@ -21,7 +21,7 @@ import fetchBlogPostByID from './blog-resolvers/fetch-blog-post-by-id.js';
 import subscribeBlogPost from './blog-resolvers/subscribe-blog-post.js';
 
 // cube
-import addCard from './cube-resolvers/add-card.js';
+import addCardToCube from './cube-resolvers/add-card-to-cube.js';
 import createCube from './cube-resolvers/create-cube.js';
 import createModule from './cube-resolvers/create-module.js';
 import createRotation from './cube-resolvers/create-rotation.js';
@@ -160,7 +160,7 @@ export default {
     deleteComment,
     editBlogPost,
   // cube
-    addCard,
+    addCardToCube,
     createCube,
     createModule,
     createRotation,

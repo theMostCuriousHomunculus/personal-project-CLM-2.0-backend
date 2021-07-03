@@ -70,29 +70,14 @@ const typeDefs = `
   }
 
   input AddCardsToDeckInput {
-    card: DeckCardInput!
+    card: CollectionCardInput!
     component: DeckComponentEnum!
     numberOfCopies: Int!
   }
 
-  input AddCardInput {
+  input AddCardToCubeInput {
+    card: CollectionCardInput!
     componentID: String!
-    back_image: String
-    chapters: Int
-    cmc: Int
-    color_identity: [String]
-    image: String!
-    keywords: [String]
-    loyalty: Int
-    mana_cost: String
-    mtgo_id: Int
-    name: String!
-    oracle_id: String!
-    power: Int
-    printing: String!
-    purchase_link: String
-    toughness: Int
-    type_line: String
   }
 
   input AdjustCountersInput {
@@ -153,22 +138,23 @@ const typeDefs = `
     scryfallID: String!
   }
 
-  input DeckCardInput {
+  input CollectionCardInput {
     back_image: String
-    cmc: Int
-    color_identity: [String]
-    image: String
-    keywords: [String]
-    mana_cost: String
+    cmc: Int!
+    collector_number: Int!
+    color_identity: [String]!
+    image: String!
+    keywords: [String]!
+    mana_cost: String!
     mtgo_id: Int
-    name: String
-    oracle_id: String
+    name: String!
+    oracle_id: String!
+    scryfall_id: String!
+    set: String!
+    set_name: String!
     tcgplayer_id: Int
-    scryfall_id: String
-    set: String
-    set_name: String
-    tokens: [TokenInput]
-    type_line: String
+    tokens: [TokenInput]!
+    type_line: String!
   }
 
   input DeckInput {
@@ -205,24 +191,16 @@ const typeDefs = `
   }
 
   input EditCardInput {
-    cardID: String!
-    componentID: String!
+    cardID: ID!
+    componentID: ID!
     back_image: String
-    chapters: Int
-    cmc: Int
-    color_identity: [String]
-    image: String
-    keywords: [String]
-    loyalty: Int
-    mana_cost: String
+    collector_number: Int!
+    image: String!
     mtgo_id: Int
-    name: String
-    oracle_id: String
-    power: Int
-    printing: String
-    purchase_link: String
-    toughness: Int
-    type_line: String
+    scryfall_id: String!
+    set: String!
+    set_name: String!
+    tcgplayer_id: Int
   }
 
   input EditCubeInput {
@@ -333,23 +311,23 @@ const typeDefs = `
     updatedAt: String
   }
 
-  type CubeCardType {
+  type CollectionCardType {
     _id: ID
     back_image: String
-    chapters: Int
     cmc: Int
+    collector_number: Int
     color_identity: [String]
     image: String
     keywords: [String]
-    loyalty: Int
     mana_cost: String
     mtgo_id: Int
     name: String
     oracle_id: String
-    power: Int
-    printing: String
-    purchase_link: String
-    toughness: Int
+    scryfall_id: String
+    set: String
+    set_name: String
+    tcgplayer_id: String
+    tokens: [TokenType]
     type_line: String
   }
 
@@ -376,11 +354,11 @@ const typeDefs = `
     _id: ID
     creator: AccountType
     description: String
-    mainboard: [CubeCardType]
+    mainboard: [CollectionCardType]
     modules: [ModuleType]
     name: String
     rotations: [RotationType]
-    sideboard: [CubeCardType]
+    sideboard: [CollectionCardType]
   }
 
   type DeckType {
@@ -388,36 +366,17 @@ const typeDefs = `
     creator: AccountType
     description: String
     format: FormatEnum
-    mainboard: [DeckCardType]
+    mainboard: [CollectionCardType]
     name: String
-    sideboard: [DeckCardType]
-  }
-
-  type DeckCardType {
-    _id: ID
-    back_image: String
-    cmc: Int
-    color_identity: [String]
-    image: String
-    keywords: [String]
-    mana_cost: String
-    mtgo_id: Int
-    name: String
-    oracle_id: String
-    tcgplayer_id: Int
-    scryfall_id: String
-    set: String
-    set_name: String
-    tokens: [TokenType]
-    type_line: String
+    sideboard: [CollectionCardType]
   }
 
   type EventPlayerType {
     account: AccountType
-    chaff: [CubeCardType]
-    current_pack: [CubeCardType]
-    mainboard: [CubeCardType]
-    sideboard: [CubeCardType]
+    chaff: [CollectionCardType]
+    current_pack: [CollectionCardType]
+    mainboard: [CollectionCardType]
+    sideboard: [CollectionCardType]
   }
 
   type EventType {
@@ -481,7 +440,7 @@ const typeDefs = `
 
   type ModuleType {
     _id: ID
-    cards: [CubeCardType]
+    cards: [CollectionCardType]
     name: String
   }
 
@@ -498,7 +457,7 @@ const typeDefs = `
     deleteBlogPost(_id: ID!): Boolean
     deleteComment(input: DeleteCommentInput!): Boolean
     editBlogPost(input: BlogPostInput!): BlogPostType
-    addCard(input: AddCardInput!): CubeType
+    addCardToCube(input: AddCardToCubeInput!): CubeType
     createCube(input: CreateCubeInput!): CubeType!
     createModule(name: String!): CubeType
     createRotation(name: String!): CubeType
@@ -562,7 +521,7 @@ const typeDefs = `
 
   type RotationType {
     _id: ID
-    cards: [CubeCardType]
+    cards: [CollectionCardType]
     name: String
     size: Int
   }

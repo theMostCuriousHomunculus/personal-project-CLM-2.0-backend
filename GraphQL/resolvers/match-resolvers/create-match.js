@@ -1,6 +1,6 @@
 import HttpError from '../../../models/http-error.js';
 import { Event } from '../../../models/event-model.js';
-import { Match } from '../../../models/match-model.js';
+import Match from '../../../models/match-model.js';
 
 export default async function (parent, args, context, info) {
 

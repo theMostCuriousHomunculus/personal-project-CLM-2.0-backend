@@ -14,12 +14,19 @@ export default async function (parent, args, context, info) {
   for (let i = 0; i < numberOfCopies; i++) {
     player.mainboard.push({
       cmc: 0,
-      color_identiy: [],
+      collector_number: scryfallResponse.data.collector_number,
+      color_identiy: scryfallResponse.data.color_identiy,
       image: scryfallResponse.data.image_uris.normal,
+      keywords: scryfallResponse.data.keywords,
+      mana_cost: scryfallResponse.data.mana_cost,
       mtgo_id: scryfallResponse.data.mtgo_id,
       name: scryfallResponse.data.name,
       oracle_id: scryfallResponse.data.oracle_id,
-      printing: `${scryfallResponse.data.set_name} - ${scryfallResponse.data.collector_number}`,
+      scryfall_id: scryfallResponse.data.id,
+      set: scryfallResponse.data.set,
+      set_name: scryfallResponse.data.set_name,
+      tcgplayer_id: scryfallResponse.data.tcgplayer_id,
+      tokens: [],
       type_line: scryfallResponse.data.type_line
     });
   }

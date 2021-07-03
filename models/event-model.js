@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { cardSchema } from './cube-model.js';
+import { cubeCardSchema } from './cube-model.js';
 
 const playerSchema = new mongoose.Schema({
   account: {
@@ -8,11 +8,11 @@ const playerSchema = new mongoose.Schema({
     ref: 'Account',
     required: true
   },
-  chaff: [cardSchema],
-  mainboard: [cardSchema],
-  packs: [[cardSchema]],
-  queue: [[cardSchema]],
-  sideboard: [cardSchema]
+  chaff: [cubeCardSchema],
+  mainboard: [cubeCardSchema],
+  packs: [[cubeCardSchema]],
+  queue: [[cubeCardSchema]],
+  sideboard: [cubeCardSchema]
 }, {
   _id: false
 });

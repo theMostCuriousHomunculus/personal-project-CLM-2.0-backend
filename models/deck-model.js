@@ -6,6 +6,10 @@ const deckCardSchema = new mongoose.Schema({
     required: true,
     type: Number
   },
+  collector_number: {
+    required: true,
+    type: Number
+  },
   color_identity: [String],
   image: {
     required: true,
@@ -22,7 +26,6 @@ const deckCardSchema = new mongoose.Schema({
     required: true,
     type: String
   },
-  tcgplayer_id: Number,
   scryfall_id: {
     required: true,
     type: String
@@ -35,6 +38,7 @@ const deckCardSchema = new mongoose.Schema({
     require: true,
     type: String
   },
+  tcgplayer_id: Number,
   tokens: [{
     name: {
       required: true,

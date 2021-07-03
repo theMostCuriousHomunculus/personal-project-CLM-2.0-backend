@@ -1,5 +1,6 @@
 import Deck from '../../../models/deck-model.js';
 import HttpError from '../../../models/http-error.js';
+// TODO: import deck list from scryfall, tappedout or mtggoldfish
 
 export default async function (parent, args, context, info) {
 

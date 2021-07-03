@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
 
+import pubsub from './pubsub.js';
 import Account from '../models/account-model.js';
 import Blog from '../models/blog-model.js';
 import Cube from '../models/cube-model.js';
 import Deck from '../models/deck-model.js';
-import pubsub from './pubsub.js';
+import Match from '../models/match-model.js';
 import { Event } from '../models/event-model.js';
-import { Match } from '../models/match-model.js';
 
 export default async function (context) {
 

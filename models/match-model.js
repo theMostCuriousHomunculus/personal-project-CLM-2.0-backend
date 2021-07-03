@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const cardSchema = new mongoose.Schema({
+const matchCardSchema = new mongoose.Schema({
   back_image: {
     required: false,
     type: String
@@ -14,10 +14,15 @@ const cardSchema = new mongoose.Schema({
     required: true,
     type: mongoose.Schema.Types.ObjectId
   },
-  // TODO: this is initializing every card with an array of length 1 that contains an object with only an _id
   counters: [{
-    counterAmount: Number,
-    counterType: String
+    counterAmount: {
+      required: true,
+      type: Number
+    },
+    counterType: {
+      required: true,
+      type: String
+    }
   }],
   face_down: {
     default: false,
@@ -112,29 +117,29 @@ const playerSchema = new mongoose.Schema({
     required: true,
     type: mongoose.Schema.Types.ObjectId
   },
-  battlefield: [cardSchema],
+  battlefield: [matchCardSchema],
   energy: {
     default: 0,
     required: false,
     type: Number
   },
-  exile: [cardSchema],
-  graveyard: [cardSchema],
-  hand: [cardSchema],
-  library: [cardSchema],
+  exile: [matchCardSchema],
+  graveyard: [matchCardSchema],
+  hand: [matchCardSchema],
+  library: [matchCardSchema],
   life: {
     default: 20,
     required: true,
     type: Number
   },
-  mainboard: [cardSchema],
+  mainboard: [matchCardSchema],
   poison: {
     default: 0,
     required: false,
     type: Number
   },
-  sideboard: [cardSchema],
-  temporary: [cardSchema]
+  sideboard: [matchCardSchema],
+  temporary: [matchCardSchema]
 }, {
   _id: false
 });
@@ -157,9 +162,9 @@ const matchSchema = new mongoose.Schema({
   }],
   log: [String],
   players: [playerSchema],
-  stack: [cardSchema]
+  stack: [matchCardSchema]
 });
 
 const Match = mongoose.model('Match', matchSchema);
 
-export { Match };
+export { Match as default, matchCardSchema };
