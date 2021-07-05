@@ -64,11 +64,6 @@ const typeDefs = `
     temporary
   }
 
-  input AddBasicsInput {
-    numberOfCopies: Int!
-    scryfallID: String!
-  }
-
   input AddCardsToDeckInput {
     card: CollectionCardInput!
     component: DeckComponentEnum!
@@ -241,6 +236,11 @@ const typeDefs = `
     email: String!
     name: String!
     password: String!
+  }
+
+  input RemoveCardsFromDeckInput {
+    cardIDs: [ID]!
+    component: DeckComponentEnum!
   }
 
   input SortCardInput {
@@ -474,9 +474,9 @@ const typeDefs = `
     createDeck(input: DeckInput!): DeckType
     deleteDeck: Boolean
     editDeck(input: DeckInput!): DeckType
-    removeCardFromDeck(cardID: ID!): DeckType
+    removeCardsFromDeck(input: RemoveCardsFromDeckInput!): DeckType
     toggleMainboardSideboard(cardID: ID!): DeckType
-    addBasics(input: AddBasicsInput!): EventType
+    addBasics(input: AddCardsToDeckInput!): EventType
     createEvent(input: CreateEventInput!): EventType!
     moveCard(input: MoveCardInput!): EventType
     selectCard(_id: ID!): EventType

@@ -43,7 +43,7 @@ import createDeck from './deck-resolvers/create-deck.js';
 import deleteDeck from './deck-resolvers/delete-deck.js';
 import editDeck from './deck-resolvers/edit-deck.js';
 import fetchDeckByID from './deck-resolvers/fetch-deck-by-id.js';
-import removeCardFromDeck from './deck-resolvers/remove-card-from-deck.js';
+import removeCardsFromDeck from './deck-resolvers/remove-cards-from-deck.js';
 import subscribeDeck from './deck-resolvers/subscribe-deck.js';
 import toggleMainboardSideboard from './deck-resolvers/toggle-mainboard-sideboard.js';
 
@@ -177,7 +177,7 @@ export default {
     createDeck,
     deleteDeck,
     editDeck,
-    removeCardFromDeck,
+    removeCardsFromDeck,
     toggleMainboardSideboard,
   // event
     addBasics,

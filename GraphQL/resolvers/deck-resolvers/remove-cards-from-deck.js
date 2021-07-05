@@ -9,15 +9,11 @@ export default async function (parent, args, context, info) {
     account._id.toString() !== deck.creator.toString()
   ) throw new HttpError("You are not authorized to edit this deck.", 401);
 
-  const { cardID } = args;
+  const { input: { cardIDs, component } } = args;
 
-  const card = deck.id(cardID);
-
-  if (!card) {
-    throw new HttpError("A card with the provided ID does not exist in this deck.", 404);
+  for (const cardID of cardIDs) {
+    deck[component].pull(cardID);
   }
-
-  card.delete();
 
   await deck.save();
   pubsub.publish(deck._id.toString(), { subscribeDeck: deck });

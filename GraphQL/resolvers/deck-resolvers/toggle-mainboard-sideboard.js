@@ -14,10 +14,12 @@ export default async function (parent, args, context, info) {
   let card;
   
   if (deck.mainboard.id(cardID)) {
-    card = deck.mainboard.pull(cardID);
+    card = deck.mainboard.id(cardID);
+    deck.mainboard.pull(cardID);
     deck.sideboard.push(card);
   } else if (deck.sideboard.id(cardID)) {
-    card = deck.sideboard.pull(cardID);
+    card = deck.sideboard.id(cardID);
+    deck.sideboard.pull(cardID);
     deck.mainboard.push(card);
   } else {
     throw new HttpError("A card with the provided ID does not exist in this deck.", 404);
