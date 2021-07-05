@@ -1,6 +1,8 @@
+import Account from '../../../models/account-model.js';
+import Deck from '../../../models/deck-model.js';
 import HttpError from '../../../models/http-error.js';
-import { Event } from '../../../models/event-model.js';
 import Match from '../../../models/match-model.js';
+import { Event } from '../../../models/event-model.js';
 
 export default async function (parent, args, context, info) {
 
@@ -8,21 +10,69 @@ export default async function (parent, args, context, info) {
 
   if (!account) throw new HttpError("You must be logged in to create a match.", 401);
   
-  const { input: { eventID, playerIDs } } = args;
-  const event = await Event.findById(eventID);
+  const { input: { deckIDs, eventID, playerIDs } } = args;
   const matchInfo = {
-    cube: event.cube,
-    event: event._id,
     game_winners: [],
     log: [],
     players: [],
     stack: []
   };
 
-  for (const player of event.players) {
-    if (playerIDs.includes(player.account.toString())) {
+  if (eventID) {
+    const event = await Event.findById(eventID);
+    matchInfo.cube = event.cube;
+    matchInfo.event = event._id;
+
+    for (const player of event.players) {
+      if (playerIDs.includes(player.account.toString())) {
+        const plr = {
+          account: player.account,
+          battlefield: [],
+          energy: 0,
+          exile: [],
+          graveyard: [],
+          hand: [],
+          library: [],
+          life: 20,
+          mainboard: [],
+          poison: 0,
+          sideboard: [],
+          temporary: []
+        };
+
+        ['mainboard', 'sideboard'].forEach(component => {
+          for (const card of player[component]) {
+            plr[component].push({
+              back_image: card.back_image,
+              cmc: card.cmc,
+              controller: player.account,
+              counters: [],
+              flipped: false,
+              image: card.image,
+              isCopyToken: false,
+              name: card.name,
+              owner: player.account,
+              sideboarded: false,
+              tapped: false,
+              targets: [],
+              tokens: [],
+              visibility: [player.account],
+              x_coordinate: 0,
+              y_coordinate: 0,
+              z_index: 0
+            });
+          }
+        });
+
+        matchInfo.players.push(plr);
+      }
+    }
+  } else {
+    for (let i = 0; i < deckIDs.length; i++) {
+      const deck = await Deck.findById(deckIDs[i]);
+      const player = await Account.findById(playerIDs[i]);
       const plr = {
-        account: player.account,
+        account: player._id,
         battlefield: [],
         energy: 0,
         exile: [],
@@ -36,49 +86,29 @@ export default async function (parent, args, context, info) {
         temporary: []
       };
 
-      for (const card of player.mainboard) {
-        plr.mainboard.push({
-          back_image: card.back_image,
-          cmc: card.cmc,
-          controller: player.account,
-          counters: {},
-          flipped: false,
-          image: card.image,
-          isCopyToken: false,
-          name: card.name,
-          owner: player.account,
-          sideboarded: false,
-          tapped: false,
-          targets: [],
-          tokens: [],
-          visibility: [player.account],
-          x_coordinate: 0,
-          y_coordinate: 0,
-          z_index: 0
-        });
-      }
-
-      for (const card of player.sideboard) {
-        plr.sideboard.push({
-          back_image: card.back_image,
-          cmc: card.cmc,
-          controller: player.account,
-          counters: {},
-          flipped: false,
-          image: card.image,
-          isCopyToken: false,
-          name: card.name,
-          owner: player.account,
-          sideboarded: true,
-          tapped: false,
-          targets: [],
-          tokens: [],
-          visibility: [player.account],
-          x_coordinate: 0,
-          y_coordinate: 0,
-          z_index: 0
-        });
-      }
+      ['mainboard', 'sideboard'].forEach(component => {
+        for (const card of deck[component]) {
+          plr[component].push({
+            back_image: card.back_image,
+            cmc: card.cmc,
+            controller: player._id,
+            counters: [],
+            flipped: false,
+            image: card.image,
+            isCopyToken: false,
+            name: card.name,
+            owner: player._id,
+            sideboarded: false,
+            tapped: false,
+            targets: [],
+            tokens: [],
+            visibility: [player._id],
+            x_coordinate: 0,
+            y_coordinate: 0,
+            z_index: 0
+          });
+        }
+      });
 
       matchInfo.players.push(plr);
     }

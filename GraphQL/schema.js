@@ -124,6 +124,7 @@ const typeDefs = `
   }
 
   input CreateMatchInput {
+    deckIDs: [ID]
     eventID: ID
     playerIDs: [ID]!
   }
