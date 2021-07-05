@@ -73,7 +73,7 @@ export default async function (card) {
     art_crop,
     back_image,
     cmc: card.cmc,
-    collector_number: card.collector_number,
+    collector_number: parseInt(card.collector_number),
     color_identity: card.color_identity,
     image,
     keywords: card.keywords,

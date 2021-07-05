@@ -154,6 +154,7 @@ const typeDefs = `
 
   input DeckInput {
     description: String
+    existingListID: String
     format: FormatEnum
     name: String
   }

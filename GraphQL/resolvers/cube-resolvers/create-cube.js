@@ -28,14 +28,12 @@ export default async function (parent, args, context, info) {
     const numberOfScryfallRequests = Math.ceil(cardArray.length / 75);
     const scryfallRequestArrays = [];
 
-    for (let requestNumber = 1; requestNumber <= numberOfScryfallRequests; requestNumber++) {
+    for (let requestNumber = 0; requestNumber < numberOfScryfallRequests; requestNumber++) {
       scryfallRequestArrays.push(cardArray.splice(0, 75));
     }
-    
-    let scryfallResponse;
 
     for (let request of scryfallRequestArrays) {
-      scryfallResponse = await axios.post('https://api.scryfall.com/cards/collection', {
+      const scryfallResponse = await axios.post('https://api.scryfall.com/cards/collection', {
         identifiers: request
       });
 
