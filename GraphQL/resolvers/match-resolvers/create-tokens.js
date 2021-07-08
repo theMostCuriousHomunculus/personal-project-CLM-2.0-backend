@@ -13,7 +13,9 @@ export default async function (parent, args, context, info) {
 
   for (let i = 0; i < numberOfTokens; i++) {
     player.battlefield.push({
+      cmc: 0,
       controller: account._id,
+      counters: [],
       image: scryfallResponse.data.image_uris.normal,
       isCopyToken: true,
       name: scryfallResponse.data.name,

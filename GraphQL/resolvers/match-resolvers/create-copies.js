@@ -18,6 +18,7 @@ export default async function (parent, args, context, info) {
     for (let i = 0; i < numberOfCopies; i++) {
       match.stack.push({
         back_image: card.back_image,
+        cmc: card.cmc,
         controller: account._id,
         counters: [],
         image: card.image,
@@ -32,6 +33,7 @@ export default async function (parent, args, context, info) {
     for (let i = 0; i < numberOfCopies; i++) {
       player.battlefield.push({
         back_image: card.back_image,
+        cmc: card.cmc,
         controller: account._id,
         counters: [],
         image: card.image,
