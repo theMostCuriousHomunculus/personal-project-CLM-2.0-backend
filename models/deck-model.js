@@ -1,5 +1,18 @@
 import mongoose from 'mongoose';
 
+const tokenSchema = new mongoose.Schema({
+  name: {
+    required: true,
+    type: String
+  },
+  scryfall_id: {
+    required: true,
+    type: String
+  }
+}, {
+  _id: false
+});
+
 const deckCardSchema = new mongoose.Schema({
   back_image: String,
   cmc: {
@@ -39,16 +52,7 @@ const deckCardSchema = new mongoose.Schema({
     type: String
   },
   tcgplayer_id: Number,
-  tokens: [{
-    name: {
-      required: true,
-      type: String
-    },
-    scryfall_id: {
-      required: true,
-      type: String
-    }
-  }],
+  tokens: [tokenSchema],
   type_line: {
     required: true,
     type: String

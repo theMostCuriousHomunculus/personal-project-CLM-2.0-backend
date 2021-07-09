@@ -15,6 +15,7 @@ export default async function (parent, args, context, info) {
   const controllerAccount = await Account.findById(controllerID);
 
   for (const card of controller[zone]) {
+    if (card.face_down) card.face_down = false;
     if (!card.visibility.includes(account._id)) card.visibility.push(account._id);
   }
 

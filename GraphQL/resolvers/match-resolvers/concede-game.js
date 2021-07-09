@@ -34,8 +34,11 @@ export default async function (parent, args, context, info) {
     }
   } 
 
-  // TODO: add logic to reset the board (untap all cards, return cards to mainboard / sideboards of owners, etc...)
   for (const plr of match.players) {
+    plr.energy = 0;
+    plr.life = 20;
+    plr.poison = 0;
+    
     for (const zone of ['battlefield', 'exile', 'graveyard', 'hand', 'library', 'temporary']) {
       for (const card of plr[zone]) {
         resetCard(card);

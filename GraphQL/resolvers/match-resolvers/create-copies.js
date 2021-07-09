@@ -25,6 +25,7 @@ export default async function (parent, args, context, info) {
         isCopyToken: true,
         name: card.name,
         owner: account._id,
+        tokens: card.tokens,
         visibility: [...card.visibility]
       });
     }
@@ -40,6 +41,7 @@ export default async function (parent, args, context, info) {
         isCopyToken: true,
         name: card.name,
         owner: account._id,
+        tokens: card.tokens,
         visibility: [...card.visibility],
         x_coordinate: i,
         y_coordinate: i
