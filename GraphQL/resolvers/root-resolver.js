@@ -133,8 +133,7 @@ export default {
   MatchCardType: {
     back_image: unknownCard,
     image: unknownCard,
-    name: unknownCard,
-    tokens: unknownCard
+    name: unknownCard
   },
   MatchPlayerType: {
     account

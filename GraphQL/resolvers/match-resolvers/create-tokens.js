@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import HttpError from '../../../models/http-error.js';
 
 export default async function (parent, args, context, info) {
@@ -8,21 +6,17 @@ export default async function (parent, args, context, info) {
 
   if (!player) throw new HttpError("You are only a spectator.", 401);
 
-  const { input: { numberOfTokens, scryfallID } } = args;
-  const scryfallResponse = await axios.get(`https://api.scryfall.com/cards/${scryfallID}`);
+  const { input: { token, numberOfTokens } } = args;
 
   for (let i = 0; i < numberOfTokens; i++) {
     player.battlefield.push({
-      cmc: 0,
+      back_image: token.back_image,
       controller: account._id,
       counters: [],
-      image: scryfallResponse.data.image_uris.normal,
+      image: token.image,
       isCopyToken: true,
-      name: scryfallResponse.data.name,
+      name: token.name,
       owner: account._id,
-      tokens: scryfallResponse.data.all_parts
-        .filter(part => part.component === 'token')
-        .map(part => ({ name: part.name, scryfall_id: part.id })),
       visibility: match.players.map(plr => plr.account),
       x_coordinate: i,
       y_coordinate: i

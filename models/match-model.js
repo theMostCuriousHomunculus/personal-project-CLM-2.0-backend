@@ -5,10 +5,7 @@ const matchCardSchema = new mongoose.Schema({
     required: false,
     type: String
   },
-  cmc: {
-    required: true,
-    type: Number
-  },
+  cmc: Number,
   controller: {
     ref: 'Account',
     required: true,
@@ -72,16 +69,6 @@ const matchCardSchema = new mongoose.Schema({
   targets: [{
     ref: 'Card',
     type: mongoose.Schema.Types.ObjectId
-  }],
-  tokens: [{
-    name: {
-      required: true,
-      type: String
-    },
-    scryfall_id: {
-      required: true,
-      type: String
-    }
   }],
   visibility: [{
     ref: 'Account',

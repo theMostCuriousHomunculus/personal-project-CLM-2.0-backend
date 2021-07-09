@@ -101,6 +101,24 @@ const typeDefs = `
     zone: PlayZoneEnum!
   }
 
+  input CollectionCardInput {
+    back_image: String
+    cmc: Int!
+    collector_number: Int!
+    color_identity: [String]!
+    image: String!
+    keywords: [String]!
+    mana_cost: String!
+    mtgo_id: Int
+    name: String!
+    oracle_id: String!
+    scryfall_id: String!
+    set: String!
+    set_name: String!
+    tcgplayer_id: Int
+    type_line: String!
+  }
+
   input CreateCopiesInput {
     cardID: String!
     controllerID: String!
@@ -130,27 +148,8 @@ const typeDefs = `
   }
 
   input CreateTokensInput {
+    token: TokenInput!
     numberOfTokens: Int!
-    scryfallID: String!
-  }
-
-  input CollectionCardInput {
-    back_image: String
-    cmc: Int!
-    collector_number: Int!
-    color_identity: [String]!
-    image: String!
-    keywords: [String]!
-    mana_cost: String!
-    mtgo_id: Int
-    name: String!
-    oracle_id: String!
-    scryfall_id: String!
-    set: String!
-    set_name: String!
-    tcgplayer_id: Int
-    tokens: [TokenInput]!
-    type_line: String!
   }
 
   input DeckInput {
@@ -262,8 +261,9 @@ const typeDefs = `
   }
 
   input TokenInput {
+    back_image: String
+    image: String!
     name: String!
-    scryfall_id: String!
   }
 
   input TransferCardInput {
@@ -329,7 +329,6 @@ const typeDefs = `
     set: String
     set_name: String
     tcgplayer_id: String
-    tokens: [TokenType]
     type_line: String
   }
 
@@ -408,7 +407,6 @@ const typeDefs = `
     owner: AccountType
     tapped: Boolean
     targets: [MatchCardType]
-    tokens: [TokenType]
     visibility: [AccountType]
     x_coordinate: Float
     y_coordinate: Float
@@ -534,11 +532,6 @@ const typeDefs = `
     subscribeDeck: DeckType!
     subscribeEvent: EventType!
     subscribeMatch: MatchType!
-  }
-
-  type TokenType {
-    name: String
-    scryfall_id: String
   }
 `;
 
