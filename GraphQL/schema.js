@@ -20,7 +20,6 @@ import rootResolver from './resolvers/root-resolver.js';
 
 const typeDefs = `
   enum CollectionEnum {
-    chaff
     current_pack
     mainboard
     sideboard
@@ -374,7 +373,6 @@ const typeDefs = `
 
   type EventPlayerType {
     account: AccountType
-    chaff: [CollectionCardType]
     current_pack: [CollectionCardType]
     mainboard: [CollectionCardType]
     sideboard: [CollectionCardType]
@@ -475,10 +473,11 @@ const typeDefs = `
     deleteDeck: Boolean
     editDeck(input: DeckInput!): DeckType
     removeCardsFromDeck(input: RemoveCardsFromDeckInput!): DeckType
-    toggleMainboardSideboard(cardID: ID!): DeckType
+    toggleMainboardSideboardDeck(cardID: ID!): DeckType
     addBasics(input: AddCardsToDeckInput!): EventType
     createEvent(input: CreateEventInput!): EventType!
-    moveCard(input: MoveCardInput!): EventType
+    toggleMainboardSideboardEvent(cardID: ID!): EventType
+    removeBasics(input: RemoveCardsFromDeckInput!): EventType
     selectCard(_id: ID!): EventType
     sortCard(input: SortCardInput!): EventType
     adjustCounters(input: AdjustCountersInput!): MatchType
@@ -677,7 +676,6 @@ export default makeExecutableSchema({
 //   name: "Player",
 //   fields: {
 //     account: { type: AccountType },
-//     chaff: { type: new GraphQLList(CardType) },
 //     mainboard: { type: new GraphQLList(CardType) },
 //     packs: { type: new GraphQLList(new GraphQLList(CardType)) },
 //     queue: { type: new GraphQLList(new GraphQLList(CardType)) },

@@ -8,7 +8,6 @@ const playerSchema = new mongoose.Schema({
     ref: 'Account',
     required: true
   },
-  chaff: [cubeCardSchema],
   mainboard: [cubeCardSchema],
   packs: [[cubeCardSchema]],
   queue: [[cubeCardSchema]],

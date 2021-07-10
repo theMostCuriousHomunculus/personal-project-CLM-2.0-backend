@@ -10,7 +10,6 @@ type Event {
 
 type Player {
   account: Account
-  chaff: [Card]
   mainboard: [Card]
   packs: [[Card]]
   queue: [[Card]]

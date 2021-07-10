@@ -1,18 +1,5 @@
 import mongoose from 'mongoose';
 
-const tokenSchema = new mongoose.Schema({
-  name: {
-    required: true,
-    type: String
-  },
-  scryfall_id: {
-    required: true,
-    type: String
-  }
-}, {
-  _id: false
-});
-
 const cubeCardSchema = new mongoose.Schema({
   back_image: String,
   cmc: {
@@ -52,7 +39,6 @@ const cubeCardSchema = new mongoose.Schema({
     type: String
   },
   tcgplayer_id: Number,
-  tokens: [tokenSchema],
   type_line: {
     required: true,
     type: String

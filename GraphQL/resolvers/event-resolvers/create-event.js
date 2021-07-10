@@ -27,7 +27,6 @@ export default async function (parent, args, context, info) {
 
   let players = [{
     account: account._id,
-    chaff: [],
     mainboard: [],
     packs: [],
     queue: [],
@@ -37,7 +36,6 @@ export default async function (parent, args, context, info) {
   other_players.forEach(function (other_player) {
     players.push({
       account: other_player,
-      chaff: [],
       mainboard: [],
       packs: [],
       queue: [],

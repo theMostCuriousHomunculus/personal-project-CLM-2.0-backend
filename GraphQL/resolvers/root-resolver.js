@@ -45,16 +45,17 @@ import editDeck from './deck-resolvers/edit-deck.js';
 import fetchDeckByID from './deck-resolvers/fetch-deck-by-id.js';
 import removeCardsFromDeck from './deck-resolvers/remove-cards-from-deck.js';
 import subscribeDeck from './deck-resolvers/subscribe-deck.js';
-import toggleMainboardSideboard from './deck-resolvers/toggle-mainboard-sideboard.js';
+import toggleMainboardSideboardDeck from './deck-resolvers/toggle-mainboard-sideboard-deck.js';
 
 // event
 import addBasics from './event-resolvers/add-basics.js';
 import createEvent from './event-resolvers/create-event.js';
 import fetchEventByID from './event-resolvers/fetch-event-by-id.js';
-import moveCard from './event-resolvers/move-card.js';
+import removeBasics from './event-resolvers/remove-basics.js';
 import selectCard from './event-resolvers/select-card.js';
 import sortCard from './event-resolvers/sort-card.js';
 import subscribeEvent from './event-resolvers/subscribe-event.js';
+import toggleMainboardSideboardEvent from './event-resolvers/toggle-mainboard-sideboard-event.js';
 
 // match
 import adjustCounters from './match-resolvers/adjust-counters.js';
@@ -177,13 +178,14 @@ export default {
     deleteDeck,
     editDeck,
     removeCardsFromDeck,
-    toggleMainboardSideboard,
+    toggleMainboardSideboardDeck,
   // event
     addBasics,
     createEvent,
-    moveCard,
+    removeBasics,
     selectCard,
     sortCard,
+    toggleMainboardSideboardEvent,
   // match
     adjustCounters,
     adjustEnergyCounters,

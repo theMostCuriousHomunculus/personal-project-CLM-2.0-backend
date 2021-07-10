@@ -4,13 +4,13 @@ export default async function (parent, args, context, info) {
 
   const { host, players } = parent;
   const { account } = context;
-  const proprietaryFields = ["chaff", "mainboard", "sideboard"];
+  const proprietaryFields = ["mainboard", "sideboard"];
   
   for (const plr of players) {
 
     if (!account || (plr.account.toString() !== account._id.toString() && account._id.toString() !== host.toString())) {
 
-      for (const field of proprietaryFields) plr[field] = null;
+      for (const field of proprietaryFields) plr[field] = [];
 
     }
 
