@@ -8,7 +8,7 @@ export default async function (parent, args, context, info) {
   
   for (const plr of players) {
 
-    if (!account || (plr.account.toString() !== account._id.toString() && plr.account.toString() !== host._id.toString())) {
+    if (!account || (plr.account.toString() !== account._id.toString() && account._id.toString() !== host.toString())) {
 
       for (const field of proprietaryFields) plr[field] = null;
 
