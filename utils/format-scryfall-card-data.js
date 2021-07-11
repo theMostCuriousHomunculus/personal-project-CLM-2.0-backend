@@ -85,9 +85,6 @@ export default async function (card) {
     set: card.set,
     set_name: card.set_name,
     tcgplayer_id: card.tcgplayer_id,
-    tokens: card.all_parts ?
-      card.all_parts.filter(part => part.component === 'token').map(part => ({ name: part.name, scryfall_id: part.id })) :
-      [],
     type_line
   };
 }

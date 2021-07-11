@@ -47,6 +47,7 @@ const matchCardSchema = new mongoose.Schema({
     required: true,
     type: Boolean
   },
+  mana_cost: String,
   name: {
     required: true,
     type: String
@@ -56,6 +57,11 @@ const matchCardSchema = new mongoose.Schema({
     required: true,
     type: mongoose.Schema.Types.ObjectId
   },
+  scryfall_id: {
+    required: true,
+    type: String
+  },
+  set: String,
   sideboarded: {
     default: false,
     required: true,
@@ -70,6 +76,7 @@ const matchCardSchema = new mongoose.Schema({
     ref: 'Card',
     type: mongoose.Schema.Types.ObjectId
   }],
+  type_line: String,
   visibility: [{
     ref: 'Account',
     required: true,

@@ -401,10 +401,14 @@ const typeDefs = `
     image: String
     index: Int
     isCopyToken: Boolean
+    mana_cost: String
     name: String
     owner: AccountType
+    scryfall_id: String
+    set: String
     tapped: Boolean
     targets: [MatchCardType]
+    type_line: String
     visibility: [AccountType]
     x_coordinate: Float
     y_coordinate: Float
@@ -500,6 +504,7 @@ const typeDefs = `
     rollDice(sides: Int!): MatchType
     shuffleLibrary: MatchType
     tapUntapCards(input: TapUntapCardsInput!): MatchType
+    toggleMainboardSideboardMatch(cardID: ID!): MatchType
     transferCard(input: TransferCardInput!): MatchType
     turnCard(input: CardIDZoneInput!): MatchType
     viewCard(input: ViewCardInput!): MatchType

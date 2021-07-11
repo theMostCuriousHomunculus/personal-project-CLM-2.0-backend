@@ -17,11 +17,7 @@ export default async function (parent, args, context, info) {
     player[originZone] = player[originZone].filter(crd => crd !== card);
   }
 
-  if (destinationZone.toString() !== 'mainboard' && originZone.toString() !== 'mainboard') {
-    match.log.push(`${account.name} moved ${match.players.every(plr => card.visibility.includes(plr.account)) ? card.name : 'a card'} from ${originZone.toString() === 'stack' ? 'the stack' : 'their '+ originZone} to ${destinationZone.toString() === 'stack' ? 'the stack' : 'their ' + destinationZone}.`);
-  } else {
-    card.sideboarded = !card.sideboarded;
-  }
+  match.log.push(`${account.name} moved ${match.players.every(plr => card.visibility.includes(plr.account)) ? card.name : 'a card'} from ${originZone.toString() === 'stack' ? 'the stack' : 'their '+ originZone} to ${destinationZone.toString() === 'stack' ? 'the stack' : 'their ' + destinationZone}.`);
 
   if (originZone.toString() === 'library') card.face_down = true;
 
