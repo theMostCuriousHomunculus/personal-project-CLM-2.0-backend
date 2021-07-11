@@ -144,6 +144,11 @@ const matchSchema = new mongoose.Schema({
     required: false,
     type: mongoose.Schema.Types.ObjectId
   },
+  decks: [{
+    ref: 'Deck',
+    required: false,
+    type: mongoose.Schema.Types.ObjectId
+  }],
   event: {
     ref: 'Event',
     required: false,
@@ -157,6 +162,8 @@ const matchSchema = new mongoose.Schema({
   log: [String],
   players: [playerSchema],
   stack: [matchCardSchema]
+}, {
+  timestamps: true
 });
 
 const Match = mongoose.model('Match', matchSchema);

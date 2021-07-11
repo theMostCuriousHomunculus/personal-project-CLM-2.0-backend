@@ -432,12 +432,15 @@ const typeDefs = `
 
   type MatchType {
     _id: ID
+    createdAt: String
     cube: CubeType
+    decks: [DeckType]
     event: EventType
     game_winners: AccountType
     log: [String]
     players: [MatchPlayerType]
     stack: [MatchCardType]
+    updatedAt: String
   }
 
   type ModuleType {

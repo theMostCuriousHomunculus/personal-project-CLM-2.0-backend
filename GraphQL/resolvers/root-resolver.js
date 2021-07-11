@@ -88,17 +88,18 @@ import viewZone from './match-resolvers/view-zone.js';
 
 // custom field resolvers
 import account from './match-resolvers/account.js';
+import account_decks from './account-resolvers/decks.js';
 import author from './blog-resolvers/author.js';
 import buds from './account-resolvers/buds.js';
 import creator from './cube-resolvers/creator.js';
 import cube from './match-resolvers/cube.js';
 import cubes from './account-resolvers/cubes.js';
-import decks from './account-resolvers/decks.js';
 import email from './account-resolvers/email.js';
 import event from './match-resolvers/event.js';
 import eventPlayers from './event-resolvers/players.js';
 import events from './account-resolvers/events.js';
 import host from './event-resolvers/host.js';
+import match_decks from './match-resolvers/decks.js';
 import matches from './account-resolvers/matches.js';
 import received_bud_requests from './account-resolvers/received-bud-requests.js';
 import sent_bud_requests from './account-resolvers/sent-bud-requests.js';
@@ -108,7 +109,7 @@ export default {
   AccountType: {
     buds,
     cubes,
-    decks,
+    decks: account_decks,
     email,
     events,
     matches,
@@ -142,6 +143,7 @@ export default {
   },
   MatchType: {
     cube,
+    decks: match_decks,
     event
   },
   Mutation: {

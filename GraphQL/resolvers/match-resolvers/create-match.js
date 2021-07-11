@@ -71,6 +71,8 @@ export default async function (parent, args, context, info) {
       }
     }
   } else {
+    matchInfo.decks = deckIDs;
+    
     for (let i = 0; i < deckIDs.length; i++) {
       const deck = await Deck.findById(deckIDs[i]);
       const player = await Account.findById(playerIDs[i]);
