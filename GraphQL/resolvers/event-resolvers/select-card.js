@@ -11,7 +11,7 @@ export default async function (parent, args, context, info) {
 
   if (!cardDrafted) throw new HttpError("You attempted to draft an invalid card.", 404);
 
-  player.mainboard = [...player.mainboard, cardDrafted];
+  player.mainboard.push(cardDrafted);
 
   const packMinusCardDrafted = player.queue[0].filter(card => card._id.toString() !== _id);
   const passRight = player.packs.length % 2 === 0;
@@ -29,9 +29,7 @@ export default async function (parent, args, context, info) {
     otherPlayerIndex = playerIndex - 1;
   }
   
-  event.players[otherPlayerIndex].queue = packMinusCardDrafted.length > 0 ?
-    [...event.players[otherPlayerIndex].queue, packMinusCardDrafted] :
-    event.players[otherPlayerIndex].queue;
+  if (packMinusCardDrafted.length > 0) event.players[otherPlayerIndex].queue.push(packMinusCardDrafted);
 
   player.queue = player.queue.slice(1);
 

@@ -64,6 +64,7 @@ import adjustLifeTotal from './match-resolvers/adjust-life-total.js';
 import adjustPoisonCounters from './match-resolvers/adjust-poison-counters.js';
 import changeFaceDownImage from './match-resolvers/change-face-down-image.js';
 import concedeGame from './match-resolvers/concede-game.js';
+import current_pack from './event-resolvers/current-pack.js';
 import createCopies from './match-resolvers/create-copies.js';
 import createMatch from './match-resolvers/create-match.js';
 import createTokens from './match-resolvers/create-tokens.js';
@@ -87,7 +88,6 @@ import viewCard from './match-resolvers/view-card.js';
 import viewZone from './match-resolvers/view-zone.js';
 
 // custom field resolvers
-import account from './match-resolvers/account.js';
 import account_decks from './account-resolvers/decks.js';
 import author from './blog-resolvers/author.js';
 import buds from './account-resolvers/buds.js';
@@ -96,13 +96,15 @@ import cube from './match-resolvers/cube.js';
 import cubes from './account-resolvers/cubes.js';
 import email from './account-resolvers/email.js';
 import event from './match-resolvers/event.js';
-import eventPlayers from './event-resolvers/players.js';
+import event_account from './event-resolvers/event-account.js';
 import events from './account-resolvers/events.js';
 import host from './event-resolvers/host.js';
+import match_account from './match-resolvers/match-account.js';
 import match_decks from './match-resolvers/decks.js';
 import matches from './account-resolvers/matches.js';
 import received_bud_requests from './account-resolvers/received-bud-requests.js';
 import sent_bud_requests from './account-resolvers/sent-bud-requests.js';
+import unknownArray from './event-resolvers/unknown-array.js';
 import unknownCard from './match-resolvers/unknown-card.js';
 
 export default {
@@ -128,10 +130,15 @@ export default {
   DeckType: {
     creator
   },
+  EventPlayerType: {
+    account: event_account,
+    current_pack,
+    mainboard: unknownArray,
+    sideboard: unknownArray
+  },
   EventType: {
     cube,
-    host,
-    players: eventPlayers
+    host
   },
   MatchCardType: {
     back_image: unknownCard,
@@ -139,7 +146,7 @@ export default {
     name: unknownCard
   },
   MatchPlayerType: {
-    account
+    account: match_account
   },
   MatchType: {
     cube,
