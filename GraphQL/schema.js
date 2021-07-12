@@ -76,9 +76,8 @@ const typeDefs = `
 
   input AdjustCountersInput {
     cardID: String!
-    controllerID: String!
     counterAmount: Int!
-    counterType: Int!
+    counterType: String!
     zone: PlayZoneEnum!
   }
 

@@ -1,5 +1,18 @@
 import mongoose from 'mongoose';
 
+const counterSchema = new mongoose.Schema({
+  counterAmount: {
+    required: true,
+    type: Number
+  },
+  counterType: {
+    required: true,
+    type: String
+  }
+}, {
+  _id: false
+});
+
 const matchCardSchema = new mongoose.Schema({
   back_image: {
     required: false,
@@ -11,16 +24,7 @@ const matchCardSchema = new mongoose.Schema({
     required: true,
     type: mongoose.Schema.Types.ObjectId
   },
-  counters: [{
-    counterAmount: {
-      required: true,
-      type: Number
-    },
-    counterType: {
-      required: true,
-      type: String
-    }
-  }],
+  counters: [counterSchema],
   face_down: {
     default: false,
     type: Boolean
