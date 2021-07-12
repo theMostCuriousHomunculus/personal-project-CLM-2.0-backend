@@ -75,6 +75,7 @@ import fetchMatchByID from './match-resolvers/fetch-match-by-id.js';
 import flipCard from './match-resolvers/flip-card.js';
 import flipCoin from './match-resolvers/flip-coin.js';
 import gainControlOfCard from './match-resolvers/gain-control-of-card.js';
+import mulligan from './match-resolvers/mulligan.js';
 import ready from './match-resolvers/ready.js';
 import revealCard from './match-resolvers/reveal-card.js';
 import rollDice from './match-resolvers/roll-dice.js';
@@ -212,6 +213,7 @@ export default {
     flipCard,
     flipCoin,
     gainControlOfCard,
+    mulligan,
     ready,
     revealCard,
     rollDice,

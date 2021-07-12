@@ -502,6 +502,7 @@ const typeDefs = `
     flipCard(input: CardIDZoneInput!): MatchType
     flipCoin: MatchType
     gainControlOfCard(input: GainControlOfCardInput): MatchType
+    mulligan: MatchType
     ready: MatchType
     revealCard(input: CardIDZoneInput!): MatchType
     rollDice(sides: Int!): MatchType
