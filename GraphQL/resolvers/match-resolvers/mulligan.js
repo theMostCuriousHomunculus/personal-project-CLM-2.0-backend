@@ -16,7 +16,7 @@ export default async function (parent, args, context, info) {
       card.face_down = true;
       card.face_down_image = 'standard';
       card.flipped = false;
-      card.index = null;
+      card.library_position = null;
       card.tapped = false;
       card.targets = [];
       card.visibility = [];
@@ -51,7 +51,7 @@ export default async function (parent, args, context, info) {
   }
 
   for (let i = 0; i < allMaindeckedCards.length; i++) {
-    allMaindeckedCards[i].index = i;
+    allMaindeckedCards[i].library_position = i;
   }
 
   player.library = allMaindeckedCards;

@@ -43,13 +43,13 @@ const matchCardSchema = new mongoose.Schema({
     required: true,
     type: String
   },
-  index: {
-    required: false,
-    type: Number
-  },
   isCopyToken: {
     required: true,
     type: Boolean
+  },
+  library_position: {
+    required: false,
+    type: Number
   },
   mana_cost: String,
   name: {

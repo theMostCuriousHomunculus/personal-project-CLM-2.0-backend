@@ -33,7 +33,7 @@ export default async function (parent, args, context, info) {
     player.library = player.library.slice(0, index).concat([card]).concat(player.library.slice(index));
   } else if (destinationZone.toString() === "library" && shuffle && typeof index === "number") {
     // think vampiric tutor
-    card.index = index;
+    card.library_position = index;
     player.temporary.push(card);
   } else if (destinationZone.toString() === "stack") {
     match.stack.push(card);

@@ -17,7 +17,7 @@ export default async function (parent, args, context, info) {
       card.face_down = false;
       card.face_down_image = 'standard';
       card.flipped = false;
-      card.index = null;
+      card.library_position = null;
       card.tapped = false;
       card.targets = [];
       card.visibility = [card.owner];

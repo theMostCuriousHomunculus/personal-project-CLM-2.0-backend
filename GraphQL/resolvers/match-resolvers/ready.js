@@ -17,7 +17,7 @@ export default async function (parent, args, context, info) {
   shuffle(player.library);
 
   for (let i = 0; i < player.library.length; i++) {
-    player.library[i].index = i;
+    player.library[i].library_position = i;
   }
 
   match.log.push(`${account.name} is ready to whoop some ass!`);

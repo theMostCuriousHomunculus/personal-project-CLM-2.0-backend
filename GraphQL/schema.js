@@ -398,8 +398,8 @@ const typeDefs = `
     face_down_image: String
     flipped: Boolean
     image: String
-    index: Int
     isCopyToken: Boolean
+    library_position: Int
     mana_cost: String
     name: String
     owner: AccountType

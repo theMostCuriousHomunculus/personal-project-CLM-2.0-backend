@@ -12,6 +12,7 @@ export default async function (parent, args, context, info) {
   
   if (!card.visibility.includes(account._id)) card.visibility.push(account._id);
   card.face_down = false;
+  card.library_position = null;
 
   player.hand.push(card);
   match.log.push(`${account.name} drew a card.`);
